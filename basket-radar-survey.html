@@ -1,0 +1,238 @@
+<title>Basket Radar Shopper Survey</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a single readable column; each question is a numbered card with English, Chinese, answer chips and the assumption it tests. */
+:root {
+  --page: #f5f5f7; --card: #ffffff; --ink: #1d1d1f; --ink2: #6e6e73; --sep: #d2d2d7; --fill: #ececf0;
+  --tint: #0071e3; --test: #8944ab; --test-bg: #f4ecf8; --ok: #248a3d; --ok-bg: #e8f5ec; --warn: #b25000; --warn-bg: #fff3e6;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", "PingFang HK", "Noto Sans HK", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --page: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: #a1a1a6; --sep: #38383a; --fill: #2c2c2e;
+  --tint: #2997ff; --test: #bf5af2; --test-bg: #2a1d33; --ok: #30d158; --ok-bg: #12301b; --warn: #ff9f0a; --warn-bg: #33240d; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --page: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: #a1a1a6; --sep: #38383a; --fill: #2c2c2e;
+  --tint: #2997ff; --test: #bf5af2; --test-bg: #2a1d33; --ok: #30d158; --ok-bg: #12301b; --warn: #ff9f0a; --warn-bg: #33240d; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5; letter-spacing: -.011em; }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 44px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: clamp(34px, 6vw, 52px); line-height: 1.07; letter-spacing: -.035em; margin: 6px 0 12px; text-wrap: balance; }
+h2 { font-size: 28px; letter-spacing: -.03em; line-height: 1.15; margin: 52px 0 6px; text-wrap: balance; }
+h3 { font-size: 19px; letter-spacing: -.02em; margin: 26px 0 8px; }
+p { margin: 0 0 12px; max-width: 68ch; }
+.eyebrow { color: var(--tint); font-weight: 600; font-size: 15px; }
+.lead { font-size: 20px; color: var(--ink2); line-height: 1.4; letter-spacing: -.015em; }
+.muted { color: var(--ink2); }
+a { color: var(--tint); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 24px 0 8px; }
+.facts div { background: var(--card); border-radius: 14px; padding: 14px 16px; }
+.facts b { display: block; font-size: 24px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.facts span { font-size: 13px; color: var(--ink2); }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.toc a { text-decoration: none; background: var(--fill); color: var(--ink); border-radius: 99px; padding: 6px 13px; font-size: 14px; }
+.toc a:hover { background: var(--sep); }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.btn { border: 0; border-radius: 99px; padding: 9px 18px; font: inherit; font-size: 15px; font-weight: 600; background: var(--tint); color: #fff; cursor: pointer; }
+.btn.ghost { background: var(--fill); color: var(--tint); }
+.btn:active { transform: scale(.97); }
+button:focus-visible, a:focus-visible, textarea:focus-visible { outline: 3px solid var(--tint); outline-offset: 2px; }
+.sec { margin-top: 34px; }
+.sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--sep); padding-bottom: 6px; margin-bottom: 12px; }
+.sec-h h3 { margin: 0; }
+.sec-h span { font-size: 13px; color: var(--ink2); }
+.q { background: var(--card); border-radius: 16px; padding: 16px 18px; margin-bottom: 10px; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; }
+.q .id { font-weight: 700; color: var(--ink2); font-size: 14px; padding-top: 2px; font-variant-numeric: tabular-nums; }
+.q .en { font-weight: 600; letter-spacing: -.015em; }
+.q .zh { color: var(--ink2); font-size: 15px; }
+.q .opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.q .opts span { font-size: 13.5px; background: var(--fill); border-radius: 8px; padding: 3px 9px; }
+.q .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+.tag { font-size: 12px; font-weight: 600; border-radius: 99px; padding: 2px 9px; background: var(--fill); color: var(--ink2); }
+.tag.t { background: var(--test-bg); color: var(--test); }
+.tag.r { background: var(--warn-bg); color: var(--warn); }
+.note { font-size: 13.5px; color: var(--ink2); margin-top: 6px; }
+.callout { background: var(--card); border-radius: 16px; padding: 16px 18px; margin: 14px 0; border-left: 4px solid var(--tint); }
+.callout.warn { border-left-color: var(--warn); }
+.tablebox { overflow-x: auto; background: var(--card); border-radius: 16px; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 720px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--sep); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink2); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.k { font-weight: 600; white-space: nowrap; }
+.blank td { height: 44px; }
+ol.steps { padding-left: 20px; } ol.steps li { margin-bottom: 6px; max-width: 68ch; }
+.copybox { width: 100%; min-height: 160px; margin-top: 10px; font: 13px/1.45 ui-monospace, "SF Mono", Menlo, monospace; background: var(--card); color: var(--ink); border: 1px solid var(--sep); border-radius: 12px; padding: 12px; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); transform: translateX(-50%); background: var(--ink); color: var(--page); border-radius: 99px; padding: 10px 18px; font-size: 14px; font-weight: 600; }
+footer { margin-top: 56px; font-size: 13px; color: var(--ink2); border-top: 1px solid var(--sep); padding-top: 14px; }
+@media (max-width: 520px) { .q { grid-template-columns: 1fr; } .lead { font-size: 18px; } }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Basket Radar 慳家雷達 · Customer evidence, spec section 3.2</div>
+  <h1>Shopper survey and interview guide</h1>
+  <p class="lead">A 10-minute survey with a short demo, plus five or more 15-minute conversations. Every question tests an assumption in the business plan. Each one says in advance what result would surprise us, so the report can lead with what we didn't expect.</p>
+  <div class="facts">
+    <div><b>10 min</b><span>median completion time (target)</span></div>
+    <div><b>40</b><span>questions, 7 sections</span></div>
+    <div><b>n ≥ 100</b><span>responses, ≥ 60 from the target customer</span></div>
+    <div><b>5–8</b><span>follow-up conversations</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#why">What we test</a><a href="#survey">The survey</a><a href="#interviews">Interview guide</a><a href="#run">Running it</a><a href="#analyse">Analysis &amp; surprise log</a>
+  </nav>
+
+  <h2 id="why">What the survey tests</h2>
+  <p>The plan rests on assumptions A1–A19 (Appendix A of the plan). The survey checks the ones a shopper can tell us about. The "would surprise us" column is written before any data comes in. Keep it that way, so the team can't move the goalposts later.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>Assumption in the plan</th><th>Plan value</th><th>Questions</th><th>Would surprise us</th><th>If surprised, we change</th></tr></thead>
+    <tbody id="maptable"></tbody>
+  </table></div>
+
+  <h2 id="survey">The survey</h2>
+  <p>Questions are in English and Traditional Chinese. Ask about the <b>past 30 days</b>, not "would you", because people predict their own behaviour badly. Section D uses the demo at <a href="https://michellesrm.github.io/basket-radar.html" target="_blank" rel="noopener">michellesrm.github.io/basket-radar.html</a>.</p>
+  <div class="callout">
+    <b>Opening text for respondents</b>
+    <p class="muted" style="margin:6px 0 0">We are HKU students designing a grocery app for Hong Kong families. This anonymous survey takes about 10 minutes. There are no right answers, and you can stop at any time. We do not ask for your name. If you agree to a follow-up chat, your contact is used only to arrange it and is deleted after the project. 我們是港大學生，正在為香港家庭設計一個買餸應用程式。此匿名問卷約需10分鐘，答案沒有對錯，你可隨時停止。我們不會收集你的姓名；如你同意跟進訪談，聯絡方法只用作安排訪談，並會在項目完結後刪除。</p>
+  </div>
+  <div class="bar"><button class="btn" type="button" id="copyAll">Copy all questions as text</button><span class="muted" style="font-size:14px">Paste into Google Forms or Microsoft Forms, one question per item.</span></div>
+  <textarea class="copybox" id="copyFallback" hidden aria-label="Survey text to copy" readonly></textarea>
+  <div id="sections"></div>
+
+  <h2 id="interviews">Interview guide · 15 minutes</h2>
+  <p>The survey shows <i>how many</i>; conversations show <i>why</i>. Talk to at least five people from the target group: the main grocery shopper in a household of three or more. Talk to them at home, or just after a supermarket trip, with their most recent receipt in hand. Ask what they did, not what they would do.</p>
+  <ol class="steps">
+    <li><b>The last trip.</b> "Show me your last supermarket receipt. Walk me through that trip: which store, why that one, what was on the list?" 「可唔可以畀我睇吓你上次超市嘅單？講吓嗰次點解揀嗰間、買咗乜。」</li>
+    <li><b>Running out.</b> "When did you last run out of something like milk or eggs? What happened?" 「上次牛奶或者雞蛋用晒係幾時？之後點做？」</li>
+    <li><b>Prices.</b> "How did you check prices last week? Show me on your phone." Watch whether they open the Consumer Council app, a chain app, or nothing. 「上星期你點格價？可唔可以喺手機示範？」</li>
+    <li><b>Multi-buy.</b> Show the Slimilk example (Wellcome HK$32 with "2 for $37"; ParknShop HK$22 with "Buy 2 save $8"). Ask which is cheaper for two packs, and watch how they work it out.</li>
+    <li><b>Coupons and waste.</b> "Open your yuu or MoneyBack app. Are there coupons you forgot about? Did anything expire in your fridge this month?"</li>
+    <li><b>The demo.</b> Hand them the demo on your phone. Say nothing for two minutes, and note where they tap, hesitate or smile.</li>
+    <li><b>Receipts and money.</b> "Would you photograph every receipt for this? What would make it worth it: points, cashback, or nothing?" "Would you pay HK$98 a year for the family list? Who in your family would use it?"</li>
+    <li><b>Trust.</b> "A brand pays us when you buy its product after seeing an offer. How do you feel about that?"</li>
+  </ol>
+  <div class="callout warn"><b>Note-taking rules.</b> Write down exact words only when you heard them, and ask permission to quote. Record who you spoke to by role, household size and district, never by name. Write the surprise column on the same day, before you talk it over with the team.</div>
+  <div class="tablebox"><table>
+    <thead><tr><th>#</th><th>Who (role · household size · district)</th><th>Date</th><th>What they did (behaviour)</th><th>Quote (with permission)</th><th>What surprised us</th></tr></thead>
+    <tbody id="ivrows"></tbody>
+  </table></div>
+
+  <h2 id="run">Running it</h2>
+  <h3>Who to ask, and where</h3>
+  <p><b>Target:</b> at least 100 complete responses, with at least 60 from the main grocery shopper in a household of three or more. Single people still answer, but they are reported separately. <b>Channels:</b> housing estate and school parents' WhatsApp or Facebook groups, members' families, HKU staff and student groups, and posts on Threads and Xiaohongshu. Note which channel each response came from, because each one skews the sample differently: HKU contacts are younger, parents' groups more price-sensitive.</p>
+  <h3>Timeline</h3>
+  <ol class="steps">
+    <li><b>Pilot (2 days):</b> five people complete it while thinking aloud. Fix any question they misread, and check it takes about 10 minutes.</li>
+    <li><b>Field (7–10 days):</b> share the link and track daily counts by channel. Start interviews alongside.</li>
+    <li><b>Analyse (3 days):</b> fill the surprise log below; update assumptions A4–A15 in the plan; write the "what surprised us" paragraph for section 3.2.</li>
+  </ol>
+  <h3>Google Forms setup</h3>
+  <ul>
+    <li>One form section per survey section. Branch after A1 and A3: a "No" to A1 ends the survey; non-shoppers skip section C.</li>
+    <li>Turn <b>off</b> email collection. G4 (contact for follow-up) is optional and kept in a separate form, so contact details never sit next to answers.</li>
+    <li>Shuffle the rows of D5 (feature usefulness) so the order doesn't bias the ratings.</li>
+    <li>E1–E4: number answers only, HK$0–2,000. Put E1–E4 on their own page, before E5 shows our price, so the price doesn't anchor them.</li>
+    <li>D-section tasks: open the demo link in a new tab and keep the questions visible.</li>
+  </ul>
+  <div class="callout warn"><b>Honesty rule from the spec.</b> Invented quotes or survey results count as academic misconduct. Report the real n for every number. Don't drop answers you dislike. If fewer than 100 people respond, say so and report what you have.</div>
+
+  <h2 id="analyse">Analysis and the surprise log</h2>
+  <h3>How to read the results</h3>
+  <ul>
+    <li><b>Report every number with its n.</b> Example: "34% (n = 87 main shoppers)". Show the target group separately from everyone else.</li>
+    <li><b>Price questions (E1–E4):</b> plot the four curves. The acceptable range runs from where "too cheap" crosses "getting expensive" to where "bargain" crosses "too expensive". Check whether HK$98 falls inside it.</li>
+    <li><b>Demo tasks (D1–D3):</b> report how many answered correctly and the median ease score (1–7). Under 5.5 means the screen needs work.</li>
+    <li><b>Open answers:</b> two team members code them separately into themes, then compare. Quote one or two answers per theme.</li>
+  </ul>
+  <h3>Surprise log, to fill with real results</h3>
+  <p class="muted">One row per surprise. Lead the 3.2 section with the two largest, then say what changed in the plan.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>Question</th><th>We expected</th><th>We found (with n)</th><th>Why it matters</th><th>What we changed in the plan</th></tr></thead>
+    <tbody id="surprise"></tbody>
+  </table></div>
+
+  <footer>Basket Radar is a student concept for MAIB7005 at HKU and is not affiliated with any retailer. Demo prices for Kowloon Dairy, Nestlé, Vita, Trappist, Meiji and Meadows milk come from the Consumer Council's Online Price Watch data (17 Nov 2026); everything else in the demo is sample data.</footer>
+</div>
+
+<script>
+const S = [
+ { id: "A", title: "About you", zh: "關於你", time: "1 min", qs: [
+  ["A1", "Do you live in Hong Kong?", "你是否居住在香港？", ["Yes 是", "No 否 (end)"], "screen"],
+  ["A2", "How many people live in your household, including you? Do not count domestic helpers.", "你的住戶有幾多人（包括你，不計家務助理）？", ["1", "2", "3", "4", "5 or more"], "Target: 3+"],
+  ["A3", "Who does most of your household's supermarket shopping?", "家中主要由誰負責超市購物？", ["Me 我", "Shared equally 大家平分", "Someone else 其他人"], "Target: me / shared"],
+  ["A4", "Your age group", "你的年齡組別", ["18–24", "25–34", "35–44", "45–54", "55–64", "65+"], "profile"],
+  ["A5", "Where do you do most of your grocery shopping?", "你最常在哪區買餸？", ["Hong Kong Island 港島", "Kowloon 九龍", "New Territories 新界", "Outlying islands 離島"], "profile"]]},
+ { id: "B", title: "How you shop now (past 30 days)", zh: "你現時的購物習慣（過去30日）", time: "3 min", qs: [
+  ["B1", "Where did you buy groceries in the past 30 days? Choose all that apply.", "過去30日，你曾在哪裏買餸？（可選多項）", ["Wellcome 惠康", "ParknShop 百佳", "AEON", "Market Place", "Fusion", "city'super", "M&S Food", "Best Mart 360 優品360", "DCH Food Mart 大昌食品", "HKTVmall", "Wet market 街市", "Other 其他"], "A7"],
+  ["B2", "How many supermarket trips did you make last week?", "上星期你去了超市幾多次？", ["0", "1", "2", "3", "4", "5+"], "profile"],
+  ["B3", "About how much does your household spend at supermarkets in a typical month?", "你的住戶平均每月在超市花費多少？", ["< HK$1,000", "1,000–1,999", "2,000–2,999", "3,000–4,999", "5,000+", "Not sure 不清楚"], "A2–A3"],
+  ["B4", "The last time you chose a supermarket, what was the main reason?", "上次你揀超市，最主要的原因是？", ["Nearest or on my way 最近／順路", "Prices or offers 價錢／優惠", "Only place with the item 只有那裏有貨", "Points or membership 積分／會員", "Online delivery 網購送貨", "Other 其他"], "A6"],
+  ["B5", "To save HK$10 on your weekly shop, how far out of your way would you go?", "為了每星期慳HK$10，你願意多行幾遠？", ["Not at all 不會", "Up to 5 min 5分鐘內", "5–10 min", "10–20 min", "Over 20 min 20分鐘以上"], "A6"],
+  ["B6", "In a typical week, how many minutes do you spend checking prices, flyers or offers?", "一般一星期，你花幾多分鐘格價、睇宣傳單張或優惠？", ["0", "1–5", "6–15", "16–30", "Over 30"], "A4"],
+  ["B7", "What do you use to check grocery prices? Choose all that apply.", "你用甚麼格價？（可選多項）", ["Consumer Council app or site 消委會格價資訊通", "yuu app", "MoneyBack or ParknShop app", "HKTVmall", "Flyers or newspapers 單張／報紙", "WhatsApp or Facebook groups", "Another app 其他應用程式", "I don't check 不會格價"], "A7, competition"],
+  ["B8", "In the past 30 days, did a yuu or MoneyBack coupon you had expire unused?", "過去30日，你有沒有yuu或MoneyBack優惠券過期未用？", ["Yes, several 有，幾張", "Yes, one 有，一張", "No 沒有", "I don't collect coupons 我不收集優惠券", "Not sure 不清楚"], "coupon wallet"],
+  ["B9", "In the past 30 days, how many times did you run out of a staple (milk, eggs, bread, rice, toilet paper) before buying more?", "過去30日，你有幾多次在補貨前已用完日常必需品（牛奶、雞蛋、麵包、米、廁紙）？", ["0", "1", "2", "3–4", "5+"], "AI list"],
+  ["B10", "In the past 30 days, which foods did you throw away because they expired? Choose all that apply.", "過去30日，你因過期而丟掉了哪些食物？（可選多項）", ["Milk 牛奶", "Bread 麵包", "Eggs 雞蛋", "Fruit or vegetables 蔬果", "Meat or fish 肉／魚", "Other 其他", "None 沒有"], "waste"],
+  ["B11", "Roughly what was all that thrown-away food worth?", "這些丟掉的食物大約值多少錢？", ["Nothing 沒有", "< HK$20", "HK$20–49", "HK$50–99", "HK$100+", "Not sure 不清楚"], "waste"]]},
+ { id: "C", title: "Quick price check", zh: "格價小測試", time: "1 min", note: "Real prices from the Consumer Council file, 17 Nov 2026. Answer without a calculator.", qs: [
+  ["C1", "Kowloon Dairy low-fat milk, 946 mL. Wellcome: HK$32.00 each, \"2 for $37\". ParknShop: HK$22.00 each, \"Buy 2 save $8\". For 2 packs, how much more does Wellcome charge than ParknShop?", "維記低脂高鈣奶946毫升：惠康每盒$32，「2盒$37」；百佳每盒$22，「買2盒減$8」。買2盒，惠康比百佳貴多少？", ["About HK$20 more 約貴$20", "About HK$10 more 約貴$10", "About HK$1 more 約貴$1", "Wellcome is cheaper 惠康較平", "Not sure 不清楚"], "insight: shelf price misleads"],
+  ["C2", "When you see a multi-buy offer, do you work out the price per item?", "見到「買多件」優惠時，你會計每件的價錢嗎？", ["Always 每次都會", "Sometimes 有時", "Never 從不"], "insight"]]},
+ { id: "D", title: "Try the demo (5 minutes)", zh: "試用示範（約5分鐘）", time: "5 min", note: "Open michellesrm.github.io/basket-radar.html on your phone. It uses sample data.", qs: [
+  ["D1", "Task 1. On \"My List\", why does the app suggest buying eggs?", "任務1：在「My List」，應用程式為何建議你買雞蛋？", ["Short answer 簡答", "Then: how easy was that? 1 (very hard) – 7 (very easy) 難易度1–7"], "AI list clarity"],
+  ["D2", "Task 2. In \"Compare\", which low-fat milk brand is cheapest per 100 mL?", "任務2：在「Compare」，哪個牌子的低脂奶每100毫升最便宜？", ["Kowloon Dairy 維記", "Nestlé 牛奶公司", "Trappist 十字牌", "Vita 維他", "Meiji 明治", "Couldn't find it 找不到", "Then: ease 1–7"], "brand comparison"],
+  ["D3", "Task 3. Tap \"Log receipt\" and save the sample receipt. How much did that trip save?", "任務3：按「Log receipt」並儲存示範收據。那次購物慳了多少？", ["Number 數字", "Couldn't find it 找不到", "Then: ease 1–7"], "savings feature"],
+  ["D4", "Rate from 1 (strongly disagree) to 7 (strongly agree): \"This app does what I need\" and \"This app is easy to use\".", "請評分1（非常不同意）至7（非常同意）：「這應用程式能滿足我的需要」；「這應用程式容易使用」。", ["1–7", "1–7"], "UMUX-Lite usability"],
+  ["D5", "How useful would each feature be to you? 1 = not useful, 5 = very useful.", "以下每項功能對你有多大用處？1＝沒用，5＝非常有用", ["AI grocery list AI購物清單", "Real price after offers 計埋優惠的實際價錢", "Brands side by side 不同牌子比較", "Barcode scan 掃描條碼", "Shelf prices from shoppers 用戶回報的貨架價", "Coupon wallet 優惠券錢包", "Points on every receipt 收據積分", "Savings tracker 慳錢記錄", "Family list and waste dashboard 家庭清單及浪費記錄"], "feature priority"],
+  ["D6", "Which ONE feature would make you open the app every week?", "哪一項功能最會令你每星期都打開這應用程式？（只選一項）", ["Same list as D5 同D5"], "retention driver"],
+  ["D7", "How much would you trust the AI list's suggestions? What would make you trust it more?", "你有幾信任AI清單的建議？怎樣會令你更信任？", ["1 (not at all) – 5 (completely)", "Short answer 簡答"], "A5"],
+  ["D8", "How often would you photograph or forward a receipt to the app?", "你會多經常把收據拍照或轉發給應用程式？", ["Every trip 每次", "Most trips 大部分", "Only when it earns cashback 只在有回贈時", "Rarely 很少", "Never 從不"], "A8"],
+  ["D9", "A brand offers HK$4 back on a milk that costs within 5% of the cheapest one. You would…", "某品牌為一款價錢與最平相差5%以內的牛奶提供$4回贈，你會……", ["Try it 試試", "Only if it's my usual brand 只限我常買的牌子", "Ignore brand offers 不理會品牌優惠", "Trust the app less 會減少信任此應用程式"], "A12–A13"],
+  ["D10", "If it earned points, would you report a shelf price while shopping?", "如果可以賺積分，你會在購物時回報貨架價錢嗎？", ["Yes, often 會，經常", "Sometimes 有時", "No 不會"], "shelf reports"]]},
+ { id: "E", title: "The family plan", zh: "家庭計劃", time: "1 min", note: "Describe it first: a shared family list, a waste dashboard and your own restock cycles. Ask E1–E4 before showing any price.", qs: [
+  ["E1", "At what yearly price would the family plan be so cheap that you'd doubt its quality?", "家庭計劃每年收費多少，你會覺得太便宜而懷疑質素？", ["HK$ number 金額"], "A15 (Van Westendorp)"],
+  ["E2", "At what yearly price would it be a bargain?", "每年收費多少，你會覺得抵買？", ["HK$ number 金額"], "A15"],
+  ["E3", "At what yearly price would it start to feel expensive, but you'd still consider it?", "每年收費多少，你會開始覺得貴但仍會考慮？", ["HK$ number 金額"], "A15"],
+  ["E4", "At what yearly price would it be too expensive to consider?", "每年收費多少，你會覺得太貴而不考慮？", ["HK$ number 金額"], "A15"],
+  ["E5", "The family plan will cost HK$98 a year. Would you join the waitlist? You won't be charged.", "家庭計劃每年HK$98。你會加入等候名單嗎？（不會收費）", ["Yes 會", "Maybe later 遲啲先", "No 不會"], "A15 (fake door)"],
+  ["E6", "Which would you rather have?", "你較喜歡哪一個？", ["Free app with brand cashback offers 免費版，有品牌回贈", "HK$98 a year, no brand offers 每年$98，沒有品牌優惠", "Neither 兩者都不要"], "business model"]]},
+ { id: "F", title: "Data and trust", zh: "數據與信任", time: "1 min", qs: [
+  ["F1", "Would you let your anonymised shopping data be combined with other households' for reports to brands?", "你是否願意讓你的匿名購物數據與其他住戶合併，用作提供給品牌的報告？", ["Yes 願意", "Yes, if I earn points 有積分就願意", "Only if I can see what is shared 要先看到分享甚麼", "No 不願意"], "panel opt-in"],
+  ["F2", "What worries you most about an app that reads your receipts?", "對於一個會讀取你收據的應用程式，你最擔心甚麼？", ["Short answer 簡答"], "risk: privacy"]]},
+ { id: "G", title: "Last thoughts", zh: "最後意見", time: "1 min", qs: [
+  ["G1", "What surprised you most in the demo?", "示範中最令你意外的是甚麼？", ["Short answer 簡答"], "surprise"],
+  ["G2", "What is one thing that would stop you using it?", "有甚麼原因會令你不使用它？", ["Short answer 簡答"], "adoption risk"],
+  ["G3", "Would you recommend it to a friend? 0 (not at all) – 10 (definitely)", "你會推薦給朋友嗎？0（絕不）至10（一定會）", ["0–10"], "NPS"],
+  ["G4", "Would you do a 15-minute follow-up chat? If yes, leave a contact in the separate form.", "你願意接受15分鐘跟進訪談嗎？如願意，請在另一份表格留下聯絡方法。", ["Yes 願意", "No 不願意"], "recruit interviews"]]}
+];
+const MAP = [
+  ["A4 · time spent checking prices", "15 min a week", "B6", "Median under 5 min: shoppers barely check prices today", "Sell planning and reminders, not time saved"],
+  ["A5 · share of advice followed", "50%", "D7, D9, B4", "Most rate trust 1–2, or pick \"nearest\" in B4 whatever the price", "Lower realistic saving; lead with reminders, not price"],
+  ["A6 · cheapest store on the usual route", "60%", "B4, B5", "Over half won't go out of their way at all", "Recommend only stores on the route; drop the off-route price hints"],
+  ["A7 · shops at 2+ chains and uses apps", "60% of 3+ households", "B1, B7", "Under 40% used two or more chains last month", "Smaller serviceable market; Wellcome–ParknShop merger risk matters more"],
+  ["A8 · MAU who log receipts", "40%", "D8", "Under 25% pick every / most trips / for cashback", "Cashback must carry logging; consider e-receipt forwarding first"],
+  ["A12–A13 · brands fund cashback; offers accepted", "15% redeem; HK$5 fee", "D9, E6", "Over 30% say brand offers would make them trust the app less", "Fewer, clearly labelled offers; rethink the main revenue line"],
+  ["A15 · family plan price and conversion", "HK$98 a year; 2.2%", "E1–E5", "HK$98 is outside the acceptable range, or over 15% say yes to the waitlist", "Re-price; or, if demand is strong, raise its role in the model"],
+  ["Insight · shelf prices mislead", "30% of products", "C1, C2", "Most answer \"about HK$1 more\" correctly", "Headline insight is weaker; lead with run-out reminders"],
+  ["Coupon wallet value", "yuu and MoneyBack coupons get forgotten", "B8", "Under 20% had a coupon expire unused", "Move the coupon wallet down the roadmap"],
+  ["AI list need", "Families run out of staples", "B9, D1, D6", "Most report 0 run-outs, or the AI list is not in the top 3 of D5/D6", "Wedge becomes price comparison plus savings; AI list later"],
+  ["Panel opt-in", "≥ 30% opt in", "F1", "Under 30% say yes, or yes with points", "Brand-insight revenue later or smaller"]
+];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+document.getElementById("maptable").innerHTML = MAP.map(r => `<tr><td class="k">${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td></tr>`).join("");
+document.getElementById("sections").innerHTML = S.map(s => `<section class="sec" id="sec-${s.id}"><div class="sec-h"><h3>${s.id} · ${esc(s.title)} <span style="font-weight:400">${esc(s.zh)}</span></h3><span>${s.time}</span></div>
+  ${s.note ? `<p class="note" style="margin:-4px 0 10px">${esc(s.note)}</p>` : ""}
+  ${s.qs.map(q => `<div class="q"><div class="id">${q[0]}</div><div><div class="en">${esc(q[1])}</div><div class="zh" lang="zh-HK">${esc(q[2])}</div>
+    <div class="opts">${q[3].map(o => `<span>${esc(o)}</span>`).join("")}</div>
+    <div class="meta"><span class="tag ${/^A\d|A\d/.test(q[4]) ? "t" : q[4].includes("risk") ? "r" : ""}">Tests: ${esc(q[4])}</span></div></div></div>`).join("")}</section>`).join("");
+const blank = (n, cols) => Array.from({ length: n }, (_, i) => `<tr class="blank"><td>${i + 1}</td>${"<td></td>".repeat(cols - 1)}</tr>`).join("");
+document.getElementById("ivrows").innerHTML = blank(5, 6);
+document.getElementById("surprise").innerHTML = blank(4, 5).replace(/<td>\d<\/td>/g, "<td></td>");
+function asText() {
+  return S.map(s => `SECTION ${s.id}. ${s.title} / ${s.zh}${s.note ? "\n(" + s.note + ")" : ""}\n\n` + s.qs.map(q => `${q[0]}. ${q[1]}\n${q[2]}\n` + q[3].map(o => `  - ${o}`).join("\n")).join("\n\n")).join("\n\n\n");
+}
+function toast(m) { const t = document.createElement("div"); t.className = "toast"; t.textContent = m; document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
+document.getElementById("copyAll").addEventListener("click", () => {
+  const text = asText(), box = document.getElementById("copyFallback");
+  const fallback = () => { box.value = text; box.hidden = false; box.focus(); box.select(); toast("Select all and copy the text below"); };
+  try { navigator.clipboard.writeText(text).then(() => toast("Copied all 40 questions"), fallback); } catch (e) { fallback(); }
+});
+</script>
