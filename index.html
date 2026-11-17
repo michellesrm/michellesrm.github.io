@@ -1,0 +1,541 @@
+<title>Basket Radar Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a guided tour on the left, a working phone prototype on the right; on phones the app fills the screen. */
+:root {
+  --ground: #f1f3ee;      /* page */
+  --paper: #ffffff;       /* app surfaces */
+  --ink: #17231c;         /* text */
+  --mute: #5f6d64;        /* secondary text */
+  --line: #dfe5dd;        /* hairlines */
+  --leaf: #0f6a43;        /* brand / good value */
+  --leaf-soft: #e3f1e8;
+  --tag: #ffd84a;         /* shelf-tag yellow, used for prices that matter */
+  --tag-ink: #2b2300;
+  --warn: #c2410c;        /* running out */
+  --warn-soft: #fdebe1;
+  --offer: #6d3fc0;       /* brand offers, deliberately separate from ranking */
+  --offer-soft: #efe8fb;
+  --chip: #edf1ec;
+  --shadow: 0 18px 50px rgba(23, 35, 28, .14);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #0f1612; --paper: #17201a; --ink: #e8efe9; --mute: #9aa89f; --line: #2a362e;
+  --leaf: #4cc48a; --leaf-soft: #1b3a2a; --tag: #ffd84a; --tag-ink: #2b2300; --warn: #ff8a5c; --warn-soft: #3a2218;
+  --offer: #b896f5; --offer-soft: #2c2240; --chip: #222c25; --shadow: 0 18px 50px rgba(0,0,0,.5); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --ground: #0f1612; --paper: #17201a; --ink: #e8efe9; --mute: #9aa89f; --line: #2a362e;
+  --leaf: #4cc48a; --leaf-soft: #1b3a2a; --tag: #ffd84a; --tag-ink: #2b2300; --warn: #ff8a5c; --warn-soft: #3a2218;
+  --offer: #b896f5; --offer-soft: #2c2240; --chip: #222c25; --shadow: 0 18px 50px rgba(0,0,0,.5); color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 40px; align-items: start; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- tour ---------- */
+.tour { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); min-width: 0; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.brand h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+.brand .zh { font-family: var(--body); font-size: 20px; color: var(--leaf); font-weight: 700; }
+.lede { color: var(--mute); max-width: 52ch; margin: 8px 0 16px; }
+.sample { display: inline-flex; gap: 8px; align-items: center; font-size: 12.5px; background: var(--tag); color: var(--tag-ink); padding: 4px 10px; border-radius: 4px; font-weight: 600; }
+.steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 6px; }
+.steps button { width: 100%; text-align: left; display: grid; grid-template-columns: 30px 1fr; gap: 10px; background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 10px 12px; }
+.steps button:hover { background: var(--paper); border-color: var(--line); }
+.steps button.on { background: var(--paper); border-color: var(--leaf); }
+.steps .n { font-family: var(--mono); font-size: 12px; color: var(--leaf); padding-top: 3px; }
+.steps b { display: block; font-size: 15px; }
+.steps span.d { color: var(--mute); font-size: 13px; }
+.foot { margin-top: 18px; font-size: 12.5px; color: var(--mute); max-width: 56ch; }
+
+/* ---------- phone ---------- */
+.phone { background: var(--paper); border-radius: 34px; box-shadow: var(--shadow); border: 10px solid #1b231e; overflow: hidden; height: 800px; display: flex; flex-direction: column; position: relative; }
+.bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px 8px; border-bottom: 1px solid var(--line); }
+.bar .t { font-family: var(--display); font-weight: 800; font-size: 18px; }
+.pts { font-family: var(--mono); font-size: 12px; background: var(--leaf-soft); color: var(--leaf); padding: 3px 8px; border-radius: 99px; font-weight: 600; }
+.screen { flex: 1; overflow-y: auto; padding: 14px 16px 90px; }
+.tabs { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--line); background: var(--paper); }
+.tabs button { background: none; border: 0; padding: 9px 2px 12px; font-size: 11.5px; color: var(--mute); display: grid; justify-items: center; gap: 2px; }
+.tabs button.on { color: var(--leaf); font-weight: 700; }
+.tabs svg { width: 21px; height: 21px; }
+.fab { position: absolute; right: 16px; bottom: 70px; background: var(--leaf); color: var(--paper); border: 0; border-radius: 99px; padding: 11px 16px; font-weight: 700; box-shadow: var(--shadow); display: flex; gap: 6px; align-items: center; }
+
+/* ---------- app pieces ---------- */
+.sec { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); font-weight: 700; margin: 16px 0 8px; }
+.sec:first-child { margin-top: 2px; }
+.card { border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: var(--paper); }
+.stack { display: grid; gap: 10px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.row > * { min-width: 0; }
+.name { font-weight: 700; }
+.sub { color: var(--mute); font-size: 12.5px; }
+.price { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tagp { background: var(--tag); color: var(--tag-ink); font-family: var(--mono); font-weight: 600; padding: 1px 7px; border-radius: 4px; white-space: nowrap; }
+.pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--chip); color: var(--mute); white-space: nowrap; }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.good { background: var(--leaf-soft); color: var(--leaf); }
+.pill.offer { background: var(--offer-soft); color: var(--offer); }
+.btn { border: 1px solid var(--line); background: var(--paper); border-radius: 10px; padding: 8px 12px; font-weight: 600; font-size: 13.5px; }
+.btn.pri { background: var(--leaf); color: var(--paper); border-color: var(--leaf); }
+.btn.ghost { background: transparent; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.meter { height: 6px; background: var(--chip); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--leaf); }
+.meter.w i { background: var(--warn); }
+.hero { background: var(--leaf); color: var(--paper); border-radius: 16px; padding: 14px; }
+.hero .big { font-family: var(--display); font-size: 26px; font-weight: 800; }
+.hero .sub { color: var(--paper); opacity: .85; }
+table.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.cmp td, table.cmp th { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.cmp th { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); }
+table.cmp td.r, table.cmp th.r { text-align: right; }
+.best td { background: var(--leaf-soft); }
+.strike { text-decoration: line-through; color: var(--mute); font-size: 12px; }
+.offerbox { border: 1.5px dashed var(--offer); background: var(--offer-soft); border-radius: 12px; padding: 10px 12px; }
+.offerbox .lbl { color: var(--offer); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.spark { width: 100%; height: 44px; display: block; }
+.search { display: flex; gap: 8px; }
+.search input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 10px; padding: 9px 11px; font: inherit; }
+.list { display: grid; gap: 0; }
+.list .it { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.list .it:last-child { border-bottom: 0; }
+.chk { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; background: var(--paper); }
+.chk.on { background: var(--leaf); border-color: var(--leaf); color: var(--paper); }
+.who { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--chip); color: var(--ink); flex: none; }
+.bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; padding-top: 6px; }
+.bars div { flex: 1; display: grid; justify-items: center; gap: 3px; font-size: 11px; color: var(--mute); align-content: end; height: 100%; }
+.bars i { display: block; width: 100%; background: var(--warn); border-radius: 4px 4px 0 0; opacity: .85; }
+.lock { font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--tag-ink); background: var(--tag); padding: 2px 7px; border-radius: 4px; }
+.note { font-size: 12.5px; color: var(--mute); }
+
+/* modal sheet */
+.sheet-bg { position: absolute; inset: 0; background: rgba(10, 16, 12, .45); display: flex; align-items: flex-end; z-index: 5; }
+.sheet { background: var(--paper); width: 100%; max-height: 88%; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 16px 16px 22px; }
+.sheet h3 { font-size: 20px; margin-bottom: 6px; }
+.rcpt { font-family: var(--mono); font-size: 12.5px; background: var(--ground); border-radius: 10px; padding: 10px 12px; }
+.rcpt .ln { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; padding: 3px 0; align-items: center; }
+.conf { font-size: 10.5px; padding: 0 5px; border-radius: 4px; background: var(--leaf-soft); color: var(--leaf); }
+.conf.lo { background: var(--warn-soft); color: var(--warn); }
+.scanner { height: 150px; border-radius: 12px; background: #101712; position: relative; overflow: hidden; display: grid; place-items: center; color: #cfe; font-family: var(--mono); font-size: 13px; }
+.scanner::after { content: ""; position: absolute; left: 10%; right: 10%; height: 2px; background: #ff5a4a; top: 50%; box-shadow: 0 0 12px #ff5a4a; animation: sweep 1.4s ease-in-out infinite alternate; }
+@keyframes sweep { from { top: 25%; } to { top: 75%; } }
+@media (prefers-reduced-motion: reduce) { .scanner::after { animation: none; } }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 120px; background: var(--ink); color: var(--paper); border-radius: 12px; padding: 10px 14px; font-size: 13.5px; z-index: 6; }
+.field { display: grid; gap: 4px; margin: 8px 0; font-size: 13px; }
+.field input, .field select { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; background: var(--paper); color: var(--ink); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { border: 0; background: var(--paper); padding: 6px 10px; font-size: 13px; }
+.seg button.on { background: var(--leaf); color: var(--paper); }
+
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .tour { position: static; }
+  .steps { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .phone { max-width: 420px; width: 100%; margin: 0 auto; }
+}
+@media (max-width: 480px) {
+  .phone { border-width: 0; border-radius: 18px; height: 760px; }
+  .brand h1 { font-size: 32px; }
+}
+</style>
+
+<div class="wrap">
+  <section class="tour" aria-label="Feature tour">
+    <div class="brand"><h1>Basket Radar</h1><span class="zh">慳家雷達</span></div>
+    <p class="lede">A restocking assistant for Hong Kong families. It knows what is running out, finds the real price after multi-buy offers and your coupons, and pays you points for every receipt. Pick a step to see each feature in the app.</p>
+    <span class="sample">Sample data for demonstration · not live prices or real offers</span>
+    <ol class="steps" id="steps"></ol>
+    <p class="foot">Slimilk, Trappist and DQY egg prices and offers are copied from the Consumer Council's Online Price Watch file of 17 Nov 2026. Other prices, coupons, branches, opening hours, the household and its points are invented for this demo. Brand offers use a fictional brand.</p>
+  </section>
+
+  <div class="phone" id="phone">
+    <div class="bar"><span class="t" id="title">Today</span><span class="pts" id="ptsTop"></span></div>
+    <main class="screen" id="screen"></main>
+    <button class="fab" id="fab" type="button" aria-label="Log a receipt">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Log receipt</button>
+    <nav class="tabs" id="tabs"></nav>
+    <div id="overlay"></div>
+  </div>
+</div>
+
+<script>
+/* ---------------- sample data ---------------- */
+const STORES = {
+  WELLCOME:  { name: "Wellcome",  branch: "near home",   walk: 4,  close: "22:00" },
+  PARKNSHOP: { name: "ParknShop", branch: "near office", walk: 6,  close: "22:00" },
+  AEON:      { name: "AEON",      branch: "mall",        walk: 12, close: "22:00" },
+  JASONS:    { name: "Jasons",    branch: "MTR exit",    walk: 15, close: "21:00" }
+};
+const ROUTE = ["WELLCOME", "PARKNSHOP"];              // stores on the user's usual route
+// p = shelf price, o = offer text, e = effective price per item, q = quantity needed, d = P(deal next week)
+const P = {
+  slim: { name: "Kowloon Dairy Slimilk Low Fat Hi-Ca", size: "946 mL", ml: 946, cat: "Milk", ean: "4891133000953", real: true,
+    prices: { WELLCOME: { p: 32, o: "2 for $37", e: 18.5, q: 2, d: .03 }, PARKNSHOP: { p: 22, o: "Buy 2 to save $8", e: 18, q: 2, d: .66 },
+              JASONS: { p: 33, o: "2 for $39", e: 19.5, q: 2, d: .03 }, AEON: { p: 23.9, o: "", e: 23.9, q: 1, d: .03 } },
+    hist: [24.5,20,24.5,21,19.5,24.5,19,19,18,18,18,18] },
+  trap: { name: "Trappist Hi-Calcium Low Fat", size: "946 mL", ml: 946, cat: "Milk", ean: "4892214001946", real: true,
+    prices: { WELLCOME: { p: 18.5, o: "", e: 18.5, q: 1, d: .03 }, PARKNSHOP: { p: 23.5, o: "", e: 23.5, q: 1, d: .03 },
+              JASONS: { p: 21, o: "", e: 21, q: 1, d: .03 }, AEON: { p: 21.9, o: "", e: 21.9, q: 1, d: .03 } },
+    hist: [21,21,20,20,19.5,19.5,18.5,18.5,18.5,18.5,18.5,18.5] },
+  egg: { name: "DQY Fresh Eggs Grade AA Large", size: "8 pcs", ml: null, cat: "Eggs", ean: "6970000014425", real: true,
+    prices: { WELLCOME: { p: 29, o: "2 for $45", e: 22.5, q: 2, d: .03 }, PARKNSHOP: { p: 27, o: "", e: 27, q: 1, d: .2 },
+              JASONS: { p: 30, o: "2 for $45", e: 22.5, q: 2, d: .03 } },
+    hist: [27,27,22.5,27,27,22.5,22.5,27,27,22.5,22.5,22.5] },
+  bread: { name: "Wholemeal Sandwich Loaf", size: "450 g", ml: null, cat: "Bread", ean: "4890008100309",
+    prices: { WELLCOME: { p: 16.9, o: "", e: 16.9, q: 1, d: .12 }, PARKNSHOP: { p: 16.9, o: "Buy 2 save $3", e: 15.4, q: 2, d: .3 },
+              AEON: { p: 15.9, o: "", e: 15.9, q: 1, d: .1 } },
+    hist: [16.9,16.9,15.4,16.9,16.9,15.4,16.9,16.9,15.4,15.4,16.9,15.4] },
+  soy: { name: "Calcium Soya Milk", size: "1 L", ml: 1000, cat: "Soy milk", ean: "4891028710119",
+    prices: { WELLCOME: { p: 16.5, o: "", e: 16.5, q: 1, d: .18 }, PARKNSHOP: { p: 15.9, o: "", e: 15.9, q: 1, d: .22 },
+              AEON: { p: 14.9, o: "", e: 14.9, q: 1, d: .1 } },
+    hist: [16.5,16.5,15.9,15.9,16.5,15.9,15.9,15.9,14.9,15.9,15.9,15.9] },
+  tissue: { name: "Bathroom Tissue", size: "10 rolls", ml: null, cat: "Paper", ean: "4892214350105",
+    prices: { WELLCOME: { p: 49.9, o: "2 for $85", e: 42.5, q: 2, d: .25 }, PARKNSHOP: { p: 52, o: "", e: 52, q: 1, d: .41 },
+              AEON: { p: 45.9, o: "", e: 45.9, q: 1, d: .15 } },
+    hist: [52,49.9,45,52,42.5,49.9,52,42.5,49.9,49.9,42.5,42.5] },
+  rice: { name: "Thai Jasmine Rice", size: "5 kg", ml: null, cat: "Rice", ean: "8851234500055",
+    prices: { WELLCOME: { p: 98, o: "", e: 98, q: 1, d: .2 }, PARKNSHOP: { p: 95, o: "Buy 2 save $20", e: 85, q: 2, d: .35 },
+              AEON: { p: 92, o: "", e: 92, q: 1, d: .1 } },
+    hist: [98,98,92,95,95,85,95,95,92,92,95,95] },
+  // fictional brand, used for the brand-offer feature
+  hill: { name: "Hillside Farm A2 Low Fat Milk (new)", size: "946 mL", ml: 946, cat: "Milk", ean: "4890000946002", fictional: true,
+    prices: { WELLCOME: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 }, PARKNSHOP: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 } },
+    hist: [24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9],
+    offer: { back: 6.1, brand: "Hillside Farm" } },
+  hillorg: { name: "Hillside Farm Organic Whole Milk", size: "1 L", ml: 1000, cat: "Milk", ean: "4890000100013", fictional: true,
+    prices: { WELLCOME: { p: 38, o: "", e: 38, q: 1, d: .05 } }, hist: [38,38,38,38,38,38,38,38,38,38,38,38],
+    offer: { back: 5, brand: "Hillside Farm" } }
+};
+const SUBS = { slim: ["trap", "hill", "hillorg"], trap: ["slim", "hill"], egg: [], bread: [], soy: [], tissue: [], rice: [] };
+
+// household: stock in units, use per day, last bought, cycle (days), use-by
+const HOME = {
+  slim:   { stock: 1,   unit: "pack",  rate: .4,   last: "12 Nov", cycle: 5,  useBy: "20 Nov" },
+  egg:    { stock: 3,   unit: "eggs",  rate: 1.5,  last: "10 Nov", cycle: 6,  per: 8 },
+  bread:  { stock: .5,  unit: "loaf",  rate: .25,  last: "13 Nov", cycle: 4,  useBy: "18 Nov" },
+  soy:    { stock: 2,   unit: "cartons", rate: .5, last: "11 Nov", cycle: 6 },
+  tissue: { stock: 6,   unit: "rolls", rate: .3,   last: "2 Nov",  cycle: 30, per: 10 },
+  rice:   { stock: 2,   unit: "kg",    rate: .15,  last: "20 Oct", cycle: 33, per: 5 }
+};
+const WATCH = ["slim", "egg", "bread", "soy", "tissue", "rice"];
+
+let COUPONS = [
+  { id: "c1", src: "yuu", item: "slim", store: "WELLCOME", off: 3, minQty: 2, until: "30 Nov", text: "HK$3 off Slimilk 946 mL, buy 2" },
+  { id: "c2", src: "MoneyBack", item: "tissue", store: "PARKNSHOP", off: 8, minQty: 1, until: "25 Nov", text: "HK$8 off Bathroom Tissue 10 rolls" }
+];
+const NEW_COUPONS = [
+  { id: "c3", src: "yuu", item: "egg", store: "WELLCOME", off: 4, minQty: 2, until: "28 Nov", text: "HK$4 off DQY eggs, buy 2" },
+  { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: "15 Dec", text: "HK$10 off Thai Jasmine Rice 5 kg" }
+];
+let POINTS = 1240;
+let LEDGER = [
+  { d: "16 Nov", t: "Receipt · ParknShop", p: 20 },
+  { d: "15 Nov", t: "Shelf price confirmed · Wellcome", p: 5 },
+  { d: "12 Nov", t: "Receipt · Wellcome", p: 20 },
+  { d: "12 Nov", t: "Brand offer · Hillside Farm A2 milk", p: 60 },
+  { d: "9 Nov",  t: "Receipt · AEON", p: 20 }
+];
+let SHELF = { slim: { PARKNSHOP: { price: 21.9, n: 3, ago: "2 h" } } };   // crowd shelf reports
+let BARCODE_MAP = Object.fromEntries(Object.entries(P).map(([k, v]) => [v.ean, k]));
+const UNKNOWN_EAN = "4895555123456";
+let FAMILY = [
+  { t: "Slimilk 946 mL × 2", who: "M", done: false }, { t: "Eggs, 8 pcs", who: "K", done: false },
+  { t: "Wholemeal loaf", who: "M", done: true },     { t: "Calcium soya milk", who: "D", done: false },
+  { t: "Bananas", who: "K", done: false }
+];
+const WASTE = { months: [["Jun", 92], ["Jul", 75], ["Aug", 81], ["Sep", 58], ["Oct", 49], ["Nov", 46]],
+  items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
+let PLUS_PREVIEW = false, JOINED = false;
+
+/* ---------------- helpers ---------------- */
+const $ = s => document.querySelector(s);
+const hk = (x, d = 2) => "HK$" + x.toFixed(d);
+const daysLeft = k => HOME[k].stock / HOME[k].rate;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function couponFor(k, store) { return COUPONS.find(c => c.item === k && c.store === store); }
+function rows(k) {
+  return Object.entries(P[k].prices).map(([s, r]) => {
+    const c = couponFor(k, s);
+    const withC = c ? r.e - c.off / Math.max(c.minQty, r.q) : null;
+    const shelf = SHELF[k] && SHELF[k][s];
+    return { s, ...r, coupon: c, withC, final: withC ?? r.e, shelf };
+  }).sort((a, b) => a.final - b.final);
+}
+function best(k, routeOnly) {
+  const r = rows(k).filter(x => !routeOnly || ROUTE.includes(x.s));
+  return r[0];
+}
+function per100(k, price) { return P[k].ml ? price / P[k].ml * 100 : null; }
+function spark(vals) {
+  const w = 300, h = 44, mn = Math.min(...vals) - 1, mx = Math.max(...vals) + 1;
+  const pts = vals.map((v, i) => [i / (vals.length - 1) * (w - 8) + 4, h - 4 - (v - mn) / (mx - mn) * (h - 8)]);
+  const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const last = pts[pts.length - 1];
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${d} L ${w - 4} ${h} L 4 ${h} Z" fill="var(--leaf-soft)"/>
+    <path d="${d}" fill="none" stroke="var(--leaf)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="3.5" fill="var(--leaf)"/></svg>`;
+}
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  $("#phone").appendChild(t); setTimeout(() => t.remove(), 2600);
+}
+function addPoints(p, label) { POINTS += p; LEDGER.unshift({ d: "17 Nov", t: label, p }); $("#ptsTop").textContent = POINTS.toLocaleString() + " pts"; }
+
+/* ---------------- screens ---------------- */
+const ICONS = {
+  today: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  compare: '<path d="M4 6v12M8 6v12M11 6v12M15 6v12M18 6v12M21 6v12"/>',
+  watch: '<path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2M3 9h18"/>',
+  family: '<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M14 20c.3-2.8 1.8-4.5 3.5-4.5S21 17 22 20"/>'
+};
+const TABS = [["today", "Today"], ["compare", "Compare"], ["watch", "Watchlist"], ["wallet", "Wallet"], ["family", "Family"]];
+let TAB = "today", CURRENT = "slim";
+
+function render() {
+  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button type="button" class="${TAB === k ? "on" : ""}" data-tab="${k}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>${l}</button>`).join("");
+  $("#title").textContent = { today: "Today · Tue 17 Nov", compare: "Compare", watch: "Watchlist", wallet: "Wallet", family: "Family" }[TAB];
+  $("#ptsTop").textContent = POINTS.toLocaleString() + " pts";
+  $("#screen").innerHTML = ({ today, compare, watch, wallet, family })[TAB]();
+  $("#screen").scrollTop = 0;
+  renderSteps();
+}
+
+function today() {
+  const low = WATCH.filter(k => daysLeft(k) <= 4).sort((a, b) => daysLeft(a) - daysLeft(b));
+  const trip = {}; let total = 0, usual = 0;
+  low.forEach(k => {
+    const b = best(k, true), q = Math.max(b.q, 1);
+    (trip[b.s] ||= []).push({ k, b, q }); total += b.final * q;
+    usual += P[k].prices.PARKNSHOP ? P[k].prices.PARKNSHOP.p * q : b.p * q;
+  });
+  const uses = WATCH.filter(k => HOME[k].useBy);
+  return `
+  <div class="hero"><div class="sub">Running low this week</div>
+    <div class="big">${low.length} items · ${hk(total)}</div>
+    <div class="sub">on your route, after offers and your coupons. Shelf prices at your usual store: ${hk(usual)}.</div></div>
+  <div class="sec">Buy before you run out</div>
+  <div class="stack">${low.map(k => {
+    const b = best(k, true), any = best(k, false), d = daysLeft(k), h = HOME[k];
+    return `<div class="card"><div class="row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">${P[k].size} · ${h.stock} ${h.unit} left · lasts ~${d.toFixed(0)} day${d < 1.5 ? "" : "s"}</div></div>
+      <span class="pill ${d <= 2 ? "warn" : ""}">${d <= 2 ? "Runs out soon" : "This week"}</span></div>
+      <div class="meter ${d <= 2 ? "w" : ""}" style="margin:8px 0"><i style="width:${Math.min(100, d / h.cycle * 100)}%"></i></div>
+      <div class="row"><div class="sub">Buy ${b.q} at <b>${STORES[b.s].name}</b>${b.o ? " · " + esc(b.o) : ""}${b.coupon ? " · with your " + b.coupon.src + " coupon" : ""}</div>
+      <span class="tagp">${hk(b.final)}</span></div>
+      ${any.s !== b.s ? `<div class="sub" style="margin-top:4px">${STORES[any.s].name} is ${hk(b.final - any.final)} cheaper but off your route.</div>` : ""}
+      <div class="btns"><button class="btn" type="button" data-open="${k}">See all prices</button></div></div>`; }).join("")}</div>
+  <div class="sec">Use first</div>
+  <div class="stack">${uses.map(k => `<div class="card row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">Bought ${HOME[k].last} · best before ${HOME[k].useBy}</div></div><span class="pill warn">Use by ${HOME[k].useBy}</span></div>`).join("")}</div>
+  <div class="sec">Your trip</div>
+  <div class="stack">${Object.entries(trip).map(([s, items]) => `<div class="card">
+    <div class="row"><div><div class="name">${STORES[s].name} · ${STORES[s].branch}</div><div class="sub">${STORES[s].walk} min walk · open until ${STORES[s].close}</div></div><span class="pill good">Open now</span></div>
+    <div class="sub" style="margin-top:6px">${items.map(i => `${i.q} × ${esc(P[i.k].name)}`).join("<br>")}</div></div>`).join("")}</div>`;
+}
+
+function compare() {
+  const k = CURRENT, prod = P[k], r = rows(k);
+  const cheapestEquiv = Math.min(...[k, ...(SUBS[k] || [])].filter(x => P[x].ml).flatMap(x => rows(x).map(y => per100(x, y.e))));   // best price everyone pays, before personal coupons
+  const subs = (SUBS[k] || []).filter(x => !P[x].offer);
+  const offers = (SUBS[k] || []).concat([k]).filter(x => P[x].offer).map(x => {
+    const shelf = Math.min(...Object.values(P[x].prices).map(v => v.e));
+    const after = shelf - P[x].offer.back, p100 = per100(x, after);
+    return { x, shelf, after, p100, ok: p100 <= cheapestEquiv * 1.05, gap: p100 / cheapestEquiv - 1 };
+  });
+  const shown = offers.filter(o => o.ok), hidden = offers.filter(o => !o.ok);
+  return `
+  <div class="search"><input id="q" placeholder="Search milk, eggs, rice…" aria-label="Search products"><button class="btn pri" type="button" data-act="scan">Scan barcode</button></div>
+  <div class="sec">${esc(prod.cat)}</div>
+  <div class="card"><div class="name" style="font-size:17px">${esc(prod.name)}</div>
+    <div class="sub">${prod.size} · barcode <span class="mono">${prod.ean}</span>${prod.real ? " · prices from the Consumer Council file" : prod.fictional ? " · fictional brand" : " · sample prices"}</div>
+    <table class="cmp" style="margin-top:8px"><tr><th>Store</th><th>Shelf</th><th class="r">You pay</th></tr>
+    ${r.map((x, i) => `<tr class="${i === 0 ? "best" : ""}"><td><b>${STORES[x.s].name}</b>${ROUTE.includes(x.s) ? "" : ' <span class="sub">off route</span>'}
+      ${x.shelf ? `<div class="sub">Shelf report: ${hk(x.shelf.price)} · ${x.shelf.n} shopper${x.shelf.n > 1 ? "s" : ""} · ${x.shelf.ago === "just now" ? "just now" : x.shelf.ago + " ago"}</div>` : ""}</td>
+      <td><span class="${x.e < x.p ? "strike" : ""}">${hk(x.p)}</span>${x.o ? `<div class="sub">${esc(x.o)}</div>` : ""}</td>
+      <td class="r"><span class="tagp">${hk(x.final)}</span>${x.coupon ? `<div class="sub">with ${x.coupon.src} coupon</div>` : x.q > 1 ? `<div class="sub">each, buy ${x.q}</div>` : ""}</td></tr>`).join("")}
+    </table>
+    <div class="row" style="margin-top:10px"><div class="sub">Sale next week at ${STORES[r[0].s].name}</div><span class="pill">${Math.round(r[0].d * 100)}% likely</span></div>
+    <div class="sec" style="margin-top:10px">12-week best price</div>${spark(prod.hist)}
+    <div class="btns"><button class="btn" type="button" data-act="report">Report shelf price</button><button class="btn ghost" type="button" data-act="wrongcat">Wrong category?</button></div></div>
+  ${subs.length ? `<div class="sec">Same type, compared per 100 mL</div><div class="stack">${subs.map(x => { const b = best(x, false);
+    return `<button type="button" class="card row" style="text-align:left;width:100%" data-open="${x}"><div><div class="name">${esc(P[x].name)}</div><div class="sub">${P[x].size} · ${STORES[b.s].name}</div></div>
+      <div style="text-align:right"><span class="tagp">${hk(b.final)}</span><div class="sub">${per100(x, b.final) ? hk(per100(x, b.final)) + "/100 mL" : ""}</div></div></button>`; }).join("")}</div>` : ""}
+  ${shown.map(o => `<div class="sec">Brand offer</div><div class="offerbox"><div class="lbl">Brand offer · paid by ${esc(P[o.x].offer.brand)}</div>
+    <div class="name" style="margin-top:4px">${esc(P[o.x].name)} · ${P[o.x].size}</div>
+    <div class="sub">${hk(o.shelf)} at the shelf, ${hk(P[o.x].offer.back)} back after you log the receipt → ${hk(o.after)} (${hk(o.p100)}/100 mL), ${(o.gap * 100).toFixed(1)}% above the best value. Shown because it is within 5%.</div>
+    <div class="btns"><button class="btn" type="button" data-act="claim" data-x="${o.x}">Save offer</button></div></div>`).join("")}
+  ${hidden.length ? `<p class="note" style="margin-top:10px">${hidden.length} brand offer hidden: ${hidden.map(o => esc(P[o.x].name) + " would still cost " + (o.gap * 100).toFixed(0) + "% more than the best value").join("; ")}. Offers never change the ranking.</p>` : ""}`;
+}
+
+function watch() {
+  return `<p class="note" style="margin-top:0">Your staples, tracked like a stock list: best price this week, change on last week, chance of a deal, and how long your stock lasts.</p>
+  <div class="stack">${WATCH.map(k => {
+    const b = best(k, false), prev = P[k].hist[P[k].hist.length - 2], ch = b.e - prev, d = daysLeft(k), h = HOME[k];
+    return `<button type="button" class="card" style="text-align:left;width:100%" data-open="${k}">
+      <div class="row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">${P[k].size} · best at ${STORES[b.s].name}</div></div>
+      <div style="text-align:right"><span class="tagp">${hk(b.final)}</span><div class="sub mono" style="color:${ch > 0 ? "var(--warn)" : ch < 0 ? "var(--leaf)" : "var(--mute)"}">${ch > 0 ? "▲" : ch < 0 ? "▼" : "■"} ${hk(Math.abs(ch))}</div></div></div>
+      ${spark(P[k].hist)}
+      <div class="row"><span class="sub">Stock lasts ~${d.toFixed(0)} days · cycle ${h.cycle} d</span><span class="pill">${Math.round(Math.max(...Object.values(P[k].prices).map(v => v.d)) * 100)}% deal next wk</span></div></button>`; }).join("")}</div>`;
+}
+
+function wallet() {
+  const matched = COUPONS.filter(c => WATCH.includes(c.item));
+  return `
+  <div class="hero"><div class="sub">Basket Radar points</div><div class="big">${POINTS.toLocaleString()} pts</div>
+    <div class="sub">≈ ${hk(POINTS / 100)} in cashback. Earned on receipts from any chain, on top of yuu and MoneyBack.</div></div>
+  <div class="sec">Your coupons, matched to your list</div>
+  <div class="stack">${COUPONS.map(c => `<div class="card row"><div><div class="name">${esc(c.text)}</div><div class="sub">${c.src} · ${STORES[c.store].name} · until ${c.until}</div></div>
+    <span class="pill ${matched.includes(c) ? "good" : ""}">${matched.includes(c) ? "On your list" : "Not needed"}</span></div>`).join("")}</div>
+  <div class="btns"><button class="btn pri" type="button" data-act="coupons">Add coupon screenshot</button></div>
+  <p class="note">You share a screenshot of the coupon list in your yuu or MoneyBack app; we read it on your phone. We do not log in to those apps.</p>
+  <div class="sec">How you earn</div>
+  <div class="card sub">Receipt from any chain <b class="price">+20</b> · Confirmed shelf price <b class="price">+5</b> · Brand offer bought <b class="price">+60</b><br>100 points = HK$1 back. Points are paid for by brands, not by your shopping.</div>
+  <div class="sec">Recent points</div>
+  <div class="card list">${LEDGER.slice(0, 7).map(l => `<div class="it"><div style="flex:1"><div>${esc(l.t)}</div><div class="sub">${l.d}</div></div><span class="price" style="color:var(--leaf)">+${l.p}</span></div>`).join("")}</div>`;
+}
+
+function family() {
+  const locked = !PLUS_PREVIEW;
+  const max = Math.max(...WASTE.months.map(m => m[1]));
+  const head = `<div class="card"><div class="row"><div><div class="name">Family plan</div><div class="sub">HK$98 a year · shared list, waste dashboard, your own restock cycles</div></div><span class="lock">PLUS</span></div>
+    <div class="btns">${JOINED ? `<span class="pill good">Thanks, you're on the list</span>` : `<button class="btn pri" type="button" data-act="join">Join family plan</button>`}
+    <button class="btn" type="button" data-act="preview">${locked ? "Preview features" : "Hide preview"}</button></div>
+    ${JOINED ? `<p class="note">This button is a demand test: the plan is not built yet. We count how many people tap it before we build it.</p>` : ""}</div>`;
+  if (locked) return head + `<p class="note">Tap "Preview features" to see what the plan would include.</p>`;
+  return head + `
+  <div class="sec">Shared list · 3 members</div>
+  <div class="card list">${FAMILY.map((f, i) => `<div class="it"><button type="button" class="chk ${f.done ? "on" : ""}" data-fam="${i}" aria-label="Mark ${esc(f.t)} bought">${f.done ? "✓" : ""}</button>
+    <span style="flex:1;${f.done ? "text-decoration:line-through;color:var(--mute)" : ""}">${esc(f.t)}</span><span class="who" title="Added by">${f.who}</span></div>`).join("")}</div>
+  <div class="sec">Waste this month</div>
+  <div class="card"><div class="row"><div><div class="big" style="font-family:var(--display);font-size:24px;font-weight:800">${hk(WASTE.months[5][1], 0)}</div><div class="sub">thrown away in November, down from ${hk(WASTE.months[0][1], 0)} in June</div></div></div>
+    <div class="bars">${WASTE.months.map(m => `<div><i style="height:${m[1] / max * 60}px"></i>${m[0]}</div>`).join("")}</div>
+    <div class="list" style="margin-top:6px">${WASTE.items.map(w => `<div class="it"><span style="flex:1">${esc(w[0])}</span><span class="price">${hk(w[1])}</span></div>`).join("")}</div></div>
+  <div class="sec">Restock cycles</div>
+  <div class="card list">${WATCH.map(k => `<div class="it"><span style="flex:1">${esc(P[k].name)}</span>
+    <label class="sub" for="cyc-${k}">every</label><input id="cyc-${k}" data-cyc="${k}" type="number" min="1" max="90" value="${HOME[k].cycle}" style="width:56px;border:1px solid var(--line);border-radius:8px;padding:4px 6px;background:var(--paper);color:var(--ink);font:inherit"><span class="sub">days</span></div>`).join("")}</div>`;
+}
+
+/* ---------------- sheets (modals) ---------------- */
+function sheet(html) {
+  $("#overlay").innerHTML = `<div class="sheet-bg" data-close="1"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+}
+function close() { $("#overlay").innerHTML = ""; }
+
+function receiptSheet(step = 0) {
+  const lines = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96], ["WHL SANDW LOAF 450G", "bread", 1, 16.9, .71], ["BANANA PHILIPPINE", null, 1, 12.9, .9]];
+  if (step === 0) return sheet(`<h3>Log a receipt</h3><p class="note">Take a photo or forward an e-receipt. For the demo, use a sample receipt.</p>
+    <div class="rcpt">PARKNSHOP · 17/11/2026 19:42<br>${lines.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}
+    TOTAL ${lines.reduce((a, l) => a + l[2] * l[3], 0).toFixed(2)}</div>
+    <div class="btns"><button class="btn pri" type="button" data-act="rc-read">Read this receipt</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+  sheet(`<h3>Here's what we read</h3><p class="note">Matched to products and your watchlist. Lines we are unsure of are flagged for a one-tap check.</p>
+    <div class="rcpt">${lines.map(l => `<div class="ln"><span>${l[1] ? esc(P[l[1]].name) : "Bananas (not tracked)"}</span><span>×${l[2]}</span>
+      <span class="conf ${l[4] < .8 ? "lo" : ""}">${l[4] < .8 ? "check" : Math.round(l[4] * 100) + "%"}</span></div>`).join("")}</div>
+    <p class="note">"Wholemeal Sandwich Loaf" was a low-confidence match. Is it right?</p>
+    <div class="btns"><button class="btn pri" type="button" data-act="rc-save">Yes, save receipt</button><button class="btn" type="button" data-act="rc-save">Fix later</button></div>`);
+}
+function scanSheet() {
+  const samples = [["slim", P.slim.ean], ["egg", P.egg.ean], ["tissue", P.tissue.ean], [null, UNKNOWN_EAN]];
+  sheet(`<h3>Scan a barcode</h3><div class="scanner">point at the barcode</div>
+    <p class="note">The demo can't use your camera. Pick a sample barcode:</p>
+    <div class="stack">${samples.map(([k, e]) => `<button type="button" class="card row" style="width:100%;text-align:left" data-ean="${e}"><span class="mono">${e}</span><span class="sub">${k ? esc(P[k].name) : "a pack we have not seen"}</span></button>`).join("")}</div>`);
+}
+function unknownSheet(ean) {
+  sheet(`<h3>New barcode</h3><p class="note"><span class="mono">${ean}</span> isn't in our catalogue yet. Which product is it? Your answer is shown to others after a second shopper agrees.</p>
+    <div class="stack">${["trap", "soy", "bread"].map(k => `<button type="button" class="card" style="width:100%;text-align:left" data-map="${k}" data-ean="${ean}">${esc(P[k].name)} · ${P[k].size}</button>`).join("")}
+    <button type="button" class="card" style="width:100%;text-align:left" data-act="notlisted">Not listed: add it with a shelf price</button></div>`);
+}
+function reportSheet(k) {
+  sheet(`<h3>Report a shelf price</h3><p class="note">${esc(P[k].name)} · ${P[k].size}. Online and shelf prices can differ, and you are standing at the shelf.</p>
+    <div class="field"><label for="rp-store">Branch</label><select id="rp-store">${Object.keys(P[k].prices).map(s => `<option value="${s}">${STORES[s].name} · ${STORES[s].branch}</option>`).join("")}</select></div>
+    <div class="field"><label for="rp-price">Price on the tag (HK$)</label><input id="rp-price" type="number" step="0.1" value="21.9"></div>
+    <div class="field"><label for="rp-photo">Photo of the tag</label><input id="rp-photo" type="file" accept="image/*"></div>
+    <p class="note">Reports need a photo, expire after 7 days, and show once two shoppers agree.</p>
+    <div class="btns"><button class="btn pri" type="button" data-act="rp-send" data-k="${k}">Send report · +5 pts</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+}
+function wrongCatSheet(k) {
+  sheet(`<h3>Wrong category or missing item?</h3><p class="note">${esc(P[k].name)} is listed under <b>${esc(P[k].cat)}</b>.</p>
+    <div class="field"><label for="wc-cat">It belongs in</label><select id="wc-cat"><option>Milk</option><option>Soy milk</option><option>Yoghurt drinks</option><option>Infant formula</option></select></div>
+    <div class="field"><label for="wc-note">Anything else? (optional)</label><input id="wc-note" placeholder="e.g. the 2 L size is missing"></div>
+    <p class="note">Fixes go live after a second report and are sent back to the Consumer Council.</p>
+    <div class="btns"><button class="btn pri" type="button" data-act="wc-send">Send fix</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+}
+function couponSheet() {
+  sheet(`<h3>Add coupons</h3><p class="note">Share a screenshot of the coupon list in your yuu or MoneyBack app. We read the item, value and expiry.</p>
+    <div class="field"><label for="cp-file">Screenshot</label><input id="cp-file" type="file" accept="image/*"></div>
+    <div class="btns"><button class="btn pri" type="button" data-act="cp-sample">Use a sample screenshot</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+}
+
+/* ---------------- tour ---------------- */
+const STEPS = [
+  ["Restock card", "What runs out this week, where it is cheapest on your route, and your trip with opening hours.", () => { TAB = "today"; }],
+  ["The sticker is not the price", "Slimilk's HK$32 shelf price at Wellcome is HK$18.50 with \"2 for $37\". Real Consumer Council data.", () => { TAB = "compare"; CURRENT = "slim"; }],
+  ["Barcode scan", "Scan a pack, or teach the app a barcode it has never seen.", () => { TAB = "compare"; render(); scanSheet(); return true; }],
+  ["Shelf price report", "Online and branch prices differ: shoppers report the tag, with a photo.", () => { TAB = "compare"; CURRENT = "slim"; render(); reportSheet("slim"); return true; }],
+  ["Fix the catalogue", "Report a wrong category or a missing item.", () => { TAB = "compare"; CURRENT = "slim"; render(); wrongCatSheet("slim"); return true; }],
+  ["Brand offer, only on good value", "A new milk gets a cashback offer only if it ends within 5% of the best value.", () => { TAB = "compare"; CURRENT = "slim"; }],
+  ["Watchlist", "Staples tracked like stocks: price, change, chance of a deal, days of stock.", () => { TAB = "watch"; }],
+  ["Coupon wallet", "Your yuu and MoneyBack coupons, read from a screenshot and applied to prices.", () => { TAB = "wallet"; }],
+  ["Points on every receipt", "Log a receipt from any chain: we read it, update your stock and add points.", () => { TAB = "today"; render(); receiptSheet(0); return true; }],
+  ["Family plan (being tested)", "Shared list, waste dashboard, restock cycles, and a sign-up button that measures demand.", () => { TAB = "family"; PLUS_PREVIEW = true; }]
+];
+let STEP = 0;
+function renderSteps() {
+  $("#steps").innerHTML = STEPS.map((s, i) => `<li><button type="button" class="${i === STEP ? "on" : ""}" data-step="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span><b>${s[0]}</b><span class="d">${s[1]}</span></span></button></li>`).join("");
+}
+function goStep(i) { STEP = i; close(); const keep = STEPS[i][2](); if (!keep) render(); else renderSteps();
+  if (window.innerWidth < 900) $("#phone").scrollIntoView({ behavior: "smooth", block: "start" }); }
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, [data-close]"); if (!t) return;
+  if (t.dataset.close && e.target === t) return close();
+  if (t.dataset.close && t.tagName === "BUTTON") return close();
+  if (t.dataset.tab) { TAB = t.dataset.tab; close(); return render(); }
+  if (t.dataset.step) return goStep(+t.dataset.step);
+  if (t.dataset.open) { CURRENT = t.dataset.open; TAB = "compare"; close(); return render(); }
+  if (t.dataset.fam) { FAMILY[+t.dataset.fam].done = !FAMILY[+t.dataset.fam].done; return render(); }
+  if (t.dataset.map) { BARCODE_MAP[t.dataset.ean] = t.dataset.map; close(); CURRENT = t.dataset.map; TAB = "compare"; render(); return toast("Saved. It goes live for others when a second shopper agrees."); }
+  if (t.dataset.ean && !t.dataset.map) { const k = BARCODE_MAP[t.dataset.ean]; if (!k) return unknownSheet(t.dataset.ean); close(); CURRENT = k; TAB = "compare"; render(); return toast("Found: " + P[k].name); }
+  if (t.id === "fab") return receiptSheet(0);
+  const a = t.dataset.act;
+  if (a === "scan") return scanSheet();
+  if (a === "report") return reportSheet(CURRENT);
+  if (a === "wrongcat") return wrongCatSheet(CURRENT);
+  if (a === "coupons") return couponSheet();
+  if (a === "rc-read") return receiptSheet(1);
+  if (a === "rc-save") { HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; close(); addPoints(20, "Receipt · ParknShop"); render(); return toast("Receipt saved: stock updated, +20 points."); }
+  if (a === "rp-send") { const s = $("#rp-store").value, v = parseFloat($("#rp-price").value) || 0;
+    SHELF[t.dataset.k] ||= {}; const prev = SHELF[t.dataset.k][s]; SHELF[t.dataset.k][s] = { price: v, n: prev ? prev.n + 1 : 1, ago: "just now" };
+    close(); addPoints(5, "Shelf price · " + STORES[s].name); render(); return toast(prev ? "Thanks. Your report agrees with " + prev.n + " others." : "Thanks. It shows once a second shopper confirms it."); }
+  if (a === "wc-send") { close(); return toast("Thanks. The fix goes live after a second report."); }
+  if (a === "notlisted") { close(); TAB = "compare"; render(); return toast("Added as a new item. Its price will come from shoppers' shelf reports."); }
+  if (a === "cp-sample") { NEW_COUPONS.forEach(c => { if (!COUPONS.find(x => x.id === c.id)) COUPONS.push(c); }); close(); TAB = "wallet"; render(); return toast("2 coupons read and matched to your list."); }
+  if (a === "claim") { close(); return toast("Offer saved. Log the receipt after you buy to get the cashback."); }
+  if (a === "join") { JOINED = true; return render(); }
+  if (a === "preview") { PLUS_PREVIEW = !PLUS_PREVIEW; return render(); }
+});
+document.addEventListener("change", e => {
+  if (e.target.dataset && e.target.dataset.cyc) { HOME[e.target.dataset.cyc].cycle = Math.max(1, +e.target.value || 1); toast("Restock cycle updated."); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+document.addEventListener("input", e => {
+  if (e.target.id !== "q") return;
+  const q = e.target.value.toLowerCase().trim(); if (q.length < 3) return;
+  const k = Object.keys(P).find(x => (P[x].name + " " + P[x].cat).toLowerCase().includes(q));
+  if (k && k !== CURRENT) { CURRENT = k; render(); const box = $("#q"); box.value = q; box.focus(); }
+});
+
+render();
+</script>
