@@ -1,541 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Basket Radar Demo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: a guided tour on the left, a working phone prototype on the right; on phones the app fills the screen. */
+/* Layout: on a phone the app fills the screen; on a computer it sits in a device frame on a product page with a guided tour. */
 :root {
-  --ground: #f1f3ee;      /* page */
-  --paper: #ffffff;       /* app surfaces */
-  --ink: #17231c;         /* text */
-  --mute: #5f6d64;        /* secondary text */
-  --line: #dfe5dd;        /* hairlines */
-  --leaf: #0f6a43;        /* brand / good value */
-  --leaf-soft: #e3f1e8;
-  --tag: #ffd84a;         /* shelf-tag yellow, used for prices that matter */
-  --tag-ink: #2b2300;
-  --warn: #c2410c;        /* running out */
-  --warn-soft: #fdebe1;
-  --offer: #6d3fc0;       /* brand offers, deliberately separate from ranking */
-  --offer-soft: #efe8fb;
-  --chip: #edf1ec;
-  --shadow: 0 18px 50px rgba(23, 35, 28, .14);
-  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --page: #f5f5f7;  --app: #f2f2f7;  --card: #ffffff;  --ink: #1d1d1f;
+  --ink2: rgba(60, 60, 67, .64);  --sep: rgba(60, 60, 67, .16);  --fill: rgba(120, 120, 128, .12);
+  --tint: #0071e3;  --green: #248a3d;  --green-bg: rgba(52, 199, 89, .14);  --orange: #c93400;  --orange-bg: rgba(255, 149, 0, .16);
+  --purple: #8944ab;  --purple-bg: rgba(175, 82, 222, .12);  --bar: rgba(250, 250, 252, .78);  --scrim: rgba(0, 0, 0, .32);
+  --hero-a: #1d1d1f;  --frame: #1d1d1f;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --round: ui-rounded, "SF Pro Rounded", -apple-system, "Inter", sans-serif;
+  font-synthesis-weight: none;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --ground: #0f1612; --paper: #17201a; --ink: #e8efe9; --mute: #9aa89f; --line: #2a362e;
-  --leaf: #4cc48a; --leaf-soft: #1b3a2a; --tag: #ffd84a; --tag-ink: #2b2300; --warn: #ff8a5c; --warn-soft: #3a2218;
-  --offer: #b896f5; --offer-soft: #2c2240; --chip: #222c25; --shadow: 0 18px 50px rgba(0,0,0,.5); color-scheme: dark } }
+  --page: #000000; --app: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: rgba(235, 235, 245, .62); --sep: rgba(84, 84, 88, .55);
+  --fill: rgba(120, 120, 128, .26); --tint: #2997ff; --green: #30d158; --green-bg: rgba(48, 209, 88, .16); --orange: #ff9f0a; --orange-bg: rgba(255, 159, 10, .16);
+  --purple: #bf5af2; --purple-bg: rgba(191, 90, 242, .16); --bar: rgba(22, 22, 24, .78); --scrim: rgba(0, 0, 0, .55); --hero-a: #f5f5f7; --frame: #2c2c2e; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --ground: #0f1612; --paper: #17201a; --ink: #e8efe9; --mute: #9aa89f; --line: #2a362e;
-  --leaf: #4cc48a; --leaf-soft: #1b3a2a; --tag: #ffd84a; --tag-ink: #2b2300; --warn: #ff8a5c; --warn-soft: #3a2218;
-  --offer: #b896f5; --offer-soft: #2c2240; --chip: #222c25; --shadow: 0 18px 50px rgba(0,0,0,.5); color-scheme: dark }
+  --page: #000000; --app: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: rgba(235, 235, 245, .62); --sep: rgba(84, 84, 88, .55);
+  --fill: rgba(120, 120, 128, .26); --tint: #2997ff; --green: #30d158; --green-bg: rgba(48, 209, 88, .16); --orange: #ff9f0a; --orange-bg: rgba(255, 159, 10, .16);
+  --purple: #bf5af2; --purple-bg: rgba(191, 90, 242, .16); --bar: rgba(22, 22, 24, .78); --scrim: rgba(0, 0, 0, .55); --hero-a: #f5f5f7; --frame: #2c2c2e; color-scheme: dark }
 
-* { box-sizing: border-box; }
-body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; }
-.wrap { max-width: 1120px; margin: 0 auto; padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 40px; align-items: start; }
-h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
-button { font: inherit; color: inherit; cursor: pointer; }
-button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
-.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body { background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.47; letter-spacing: -.022em; transition: background-color .3s ease; }
+button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--tint); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
 
-/* ---------- tour ---------- */
-.tour { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); min-width: 0; }
-.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.brand h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
-.brand .zh { font-family: var(--body); font-size: 20px; color: var(--leaf); font-weight: 700; }
-.lede { color: var(--mute); max-width: 52ch; margin: 8px 0 16px; }
-.sample { display: inline-flex; gap: 8px; align-items: center; font-size: 12.5px; background: var(--tag); color: var(--tag-ink); padding: 4px 10px; border-radius: 4px; font-weight: 600; }
-.steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 6px; }
-.steps button { width: 100%; text-align: left; display: grid; grid-template-columns: 30px 1fr; gap: 10px; background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 10px 12px; }
-.steps button:hover { background: var(--paper); border-color: var(--line); }
-.steps button.on { background: var(--paper); border-color: var(--leaf); }
-.steps .n { font-family: var(--mono); font-size: 12px; color: var(--leaf); padding-top: 3px; }
-.steps b { display: block; font-size: 15px; }
-.steps span.d { color: var(--mute); font-size: 13px; }
-.foot { margin-top: 18px; font-size: 12.5px; color: var(--mute); max-width: 56ch; }
+/* ================= product page (computer) ================= */
+.gnav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: .5px solid var(--sep); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--page); }
+.gnav .in { max-width: 1024px; margin: 0 auto; height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); font-size: 12px; letter-spacing: -.01em; }
+.gnav .logo { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.gnav nav { display: flex; gap: 22px; color: var(--ink2); }
+.gnav nav a { color: inherit; text-decoration: none; } .gnav nav a:hover { color: var(--ink); }
+.seg { display: inline-flex; background: var(--fill); border-radius: 9px; padding: 2px; gap: 2px; }
+.seg button { border: 0; background: transparent; border-radius: 7px; padding: 4px 10px; font-size: 13px; font-weight: 500; color: var(--ink); }
+.seg button.on { background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04); font-weight: 600; }
 
-/* ---------- phone ---------- */
-.phone { background: var(--paper); border-radius: 34px; box-shadow: var(--shadow); border: 10px solid #1b231e; overflow: hidden; height: 800px; display: flex; flex-direction: column; position: relative; }
-.bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px 8px; border-bottom: 1px solid var(--line); }
-.bar .t { font-family: var(--display); font-weight: 800; font-size: 18px; }
-.pts { font-family: var(--mono); font-size: 12px; background: var(--leaf-soft); color: var(--leaf); padding: 3px 8px; border-radius: 99px; font-weight: 600; }
-.screen { flex: 1; overflow-y: auto; padding: 14px 16px 90px; }
-.tabs { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--line); background: var(--paper); }
-.tabs button { background: none; border: 0; padding: 9px 2px 12px; font-size: 11.5px; color: var(--mute); display: grid; justify-items: center; gap: 2px; }
-.tabs button.on { color: var(--leaf); font-weight: 700; }
-.tabs svg { width: 21px; height: 21px; }
-.fab { position: absolute; right: 16px; bottom: 70px; background: var(--leaf); color: var(--paper); border: 0; border-radius: 99px; padding: 11px 16px; font-weight: 700; box-shadow: var(--shadow); display: flex; gap: 6px; align-items: center; }
+.hero { text-align: center; padding-block: 64px 28px; padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); }
+.hero .eyebrow { font-size: 21px; font-weight: 600; color: var(--orange); letter-spacing: .01em; }
+.hero h1 { font-size: clamp(40px, 6.4vw, 80px); line-height: 1.05; letter-spacing: -.035em; font-weight: 700; margin: 6px 0 14px; text-wrap: balance; color: var(--hero-a); }
+.hero p { font-size: clamp(19px, 2vw, 24px); line-height: 1.33; color: var(--ink2); max-width: 680px; margin: 0 auto; letter-spacing: -.01em; text-wrap: balance; }
+.note-pill { display: inline-block; margin-top: 22px; font-size: 13px; color: var(--ink2); background: var(--fill); border-radius: 99px; padding: 6px 14px; letter-spacing: -.01em; }
 
-/* ---------- app pieces ---------- */
-.sec { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); font-weight: 700; margin: 16px 0 8px; }
-.sec:first-child { margin-top: 2px; }
-.card { border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: var(--paper); }
-.stack { display: grid; gap: 10px; }
-.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.row > * { min-width: 0; }
-.name { font-weight: 700; }
-.sub { color: var(--mute); font-size: 12.5px; }
-.price { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
-.tagp { background: var(--tag); color: var(--tag-ink); font-family: var(--mono); font-weight: 600; padding: 1px 7px; border-radius: 4px; white-space: nowrap; }
-.pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--chip); color: var(--mute); white-space: nowrap; }
-.pill.warn { background: var(--warn-soft); color: var(--warn); }
-.pill.good { background: var(--leaf-soft); color: var(--leaf); }
-.pill.offer { background: var(--offer-soft); color: var(--offer); }
-.btn { border: 1px solid var(--line); background: var(--paper); border-radius: 10px; padding: 8px 12px; font-weight: 600; font-size: 13.5px; }
-.btn.pri { background: var(--leaf); color: var(--paper); border-color: var(--leaf); }
-.btn.ghost { background: transparent; }
-.btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-.meter { height: 6px; background: var(--chip); border-radius: 99px; overflow: hidden; }
-.meter i { display: block; height: 100%; background: var(--leaf); }
-.meter.w i { background: var(--warn); }
-.hero { background: var(--leaf); color: var(--paper); border-radius: 16px; padding: 14px; }
-.hero .big { font-family: var(--display); font-size: 26px; font-weight: 800; }
-.hero .sub { color: var(--paper); opacity: .85; }
-table.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-table.cmp td, table.cmp th { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-table.cmp th { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); }
-table.cmp td.r, table.cmp th.r { text-align: right; }
-.best td { background: var(--leaf-soft); }
-.strike { text-decoration: line-through; color: var(--mute); font-size: 12px; }
-.offerbox { border: 1.5px dashed var(--offer); background: var(--offer-soft); border-radius: 12px; padding: 10px 12px; }
-.offerbox .lbl { color: var(--offer); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-.spark { width: 100%; height: 44px; display: block; }
-.search { display: flex; gap: 8px; }
-.search input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 10px; padding: 9px 11px; font: inherit; }
-.list { display: grid; gap: 0; }
-.list .it { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.list .it:last-child { border-bottom: 0; }
-.chk { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; background: var(--paper); }
-.chk.on { background: var(--leaf); border-color: var(--leaf); color: var(--paper); }
-.who { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--chip); color: var(--ink); flex: none; }
-.bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; padding-top: 6px; }
-.bars div { flex: 1; display: grid; justify-items: center; gap: 3px; font-size: 11px; color: var(--mute); align-content: end; height: 100%; }
-.bars i { display: block; width: 100%; background: var(--warn); border-radius: 4px 4px 0 0; opacity: .85; }
-.lock { font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--tag-ink); background: var(--tag); padding: 2px 7px; border-radius: 4px; }
-.note { font-size: 12.5px; color: var(--mute); }
+.stage { max-width: 1024px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 410px; gap: 56px; align-items: start; padding-block: 24px 80px;
+  padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); }
+.tour h2 { font-size: 40px; line-height: 1.1; letter-spacing: -.03em; margin: 0 0 6px; font-weight: 700; }
+.tour .lead { color: var(--ink2); margin: 0 0 22px; font-size: 19px; letter-spacing: -.01em; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.steps button { width: 100%; text-align: left; background: transparent; border: 0; border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 26px 1fr; gap: 10px; transition: background-color .15s ease; }
+.steps button:hover { background: var(--fill); }
+.steps button.on { background: var(--card); box-shadow: 0 2px 14px rgba(0,0,0,.06); }
+.steps .i { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--fill); font-size: 12px; font-weight: 700; color: var(--ink2); }
+.steps button.on .i { background: var(--tint); color: #fff; }
+.steps b { display: block; font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
+.steps span.d { display: block; color: var(--ink2); font-size: 14px; line-height: 1.4; letter-spacing: -.01em; margin-top: 2px; }
+.fine { max-width: 1024px; margin: 0 auto; padding-block: 18px 40px; border-top: .5px solid var(--sep); color: var(--ink2); font-size: 12px; line-height: 1.5; letter-spacing: -.005em;
+  padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); }
 
-/* modal sheet */
-.sheet-bg { position: absolute; inset: 0; background: rgba(10, 16, 12, .45); display: flex; align-items: flex-end; z-index: 5; }
-.sheet { background: var(--paper); width: 100%; max-height: 88%; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 16px 16px 22px; }
-.sheet h3 { font-size: 20px; margin-bottom: 6px; }
-.rcpt { font-family: var(--mono); font-size: 12.5px; background: var(--ground); border-radius: 10px; padding: 10px 12px; }
-.rcpt .ln { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; padding: 3px 0; align-items: center; }
-.conf { font-size: 10.5px; padding: 0 5px; border-radius: 4px; background: var(--leaf-soft); color: var(--leaf); }
-.conf.lo { background: var(--warn-soft); color: var(--warn); }
-.scanner { height: 150px; border-radius: 12px; background: #101712; position: relative; overflow: hidden; display: grid; place-items: center; color: #cfe; font-family: var(--mono); font-size: 13px; }
-.scanner::after { content: ""; position: absolute; left: 10%; right: 10%; height: 2px; background: #ff5a4a; top: 50%; box-shadow: 0 0 12px #ff5a4a; animation: sweep 1.4s ease-in-out infinite alternate; }
-@keyframes sweep { from { top: 25%; } to { top: 75%; } }
-@media (prefers-reduced-motion: reduce) { .scanner::after { animation: none; } }
-.toast { position: absolute; left: 16px; right: 16px; bottom: 120px; background: var(--ink); color: var(--paper); border-radius: 12px; padding: 10px 14px; font-size: 13.5px; z-index: 6; }
-.field { display: grid; gap: 4px; margin: 8px 0; font-size: 13px; }
-.field input, .field select { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; background: var(--paper); color: var(--ink); }
-.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.seg button { border: 0; background: var(--paper); padding: 6px 10px; font-size: 13px; }
-.seg button.on { background: var(--leaf); color: var(--paper); }
+/* device frame */
+.device { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 68px); width: 410px; height: 852px; max-height: calc(100dvh - 90px); min-height: 640px; border-radius: 56px; padding: 11px; background: var(--frame);
+  box-shadow: 0 0 0 1.5px rgba(255,255,255,.08) inset, 0 30px 80px rgba(0,0,0,.22); }
+.device::before { content: ""; position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 112px; height: 32px; border-radius: 20px; background: #000; z-index: 9; }
+.app { position: relative; width: 100%; height: 100%; border-radius: 46px; overflow: hidden; background: var(--app); display: flex; flex-direction: column; isolation: isolate; }
+.status { height: 50px; flex: none; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 30px 6px 34px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.status .r { display: flex; gap: 5px; align-items: center; }
 
-@media (max-width: 900px) {
-  .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-  .tour { position: static; }
-  .steps { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-  .phone { max-width: 420px; width: 100%; margin: 0 auto; }
+/* ================= the app ================= */
+.navbar { flex: none; padding: 4px 16px 6px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.navbar .left { font-size: 17px; color: var(--tint); background: none; border: 0; padding: 4px 0; display: flex; align-items: center; gap: 4px; font-weight: 400; }
+.avatar { width: 34px; height: 34px; border-radius: 99px; border: 0; background: linear-gradient(140deg, #5e5ce6, #bf5af2); color: #fff; font-weight: 600; font-size: 14px; }
+.scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 16px 120px; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.ltitle { font-size: 34px; font-weight: 700; letter-spacing: -.035em; line-height: 1.12; margin: 2px 0 2px; }
+.lsub { color: var(--ink2); font-size: 15px; letter-spacing: -.01em; margin: 0 0 14px; }
+.hdr { font-size: 13px; text-transform: uppercase; letter-spacing: .01em; color: var(--ink2); margin: 22px 16px 7px; font-weight: 400; }
+.hdr.big { text-transform: none; font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -.025em; margin: 24px 0 8px; }
+.group { background: var(--card); border-radius: 12px; overflow: hidden; }
+.cell { display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 48px; position: relative; width: 100%; background: transparent; border: 0; text-align: left; }
+.cell + .cell::before { content: ""; position: absolute; top: 0; right: 0; left: 14px; height: .5px; background: var(--sep); }
+.cell.wa + .cell::before, .cell + .cell.wa::before { left: 72px; }
+button.cell:active, .tap:active { background: var(--fill); }
+.cell .main { flex: 1; min-width: 0; }
+.t1 { font-size: 17px; letter-spacing: -.022em; line-height: 1.3; }
+.t1.b { font-weight: 600; }
+.t2 { font-size: 13px; color: var(--ink2); letter-spacing: -.005em; line-height: 1.35; }
+.chev { color: var(--ink2); opacity: .5; font-size: 18px; }
+.price { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em; white-space: nowrap; }
+.strike { text-decoration: line-through; color: var(--ink2); font-weight: 400; font-size: 13px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--fill); color: var(--ink2); white-space: nowrap; letter-spacing: -.005em; }
+.badge.g { background: var(--green-bg); color: var(--green); } .badge.o { background: var(--orange-bg); color: var(--orange); } .badge.p { background: var(--purple-bg); color: var(--purple); }
+.btn { border: 0; border-radius: 99px; padding: 8px 16px; font-size: 15px; font-weight: 600; background: var(--fill); color: var(--tint); transition: transform .1s ease-out; letter-spacing: -.01em; }
+.btn.fill { background: var(--tint); color: #fff; }
+.btn.lg { width: 100%; padding: 14px; font-size: 17px; border-radius: 14px; }
+.btn:active, .tap:active { transform: scale(.97); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* product art tile */
+.art { width: 46px; height: 46px; border-radius: 11px; flex: none; display: grid; place-items: center; background: var(--fill); overflow: hidden; }
+.art svg { width: 40px; height: 40px; }
+.art.photo { background: #fff; } .art.photo img { width: 100%; height: 100%; object-fit: contain; }
+.art.xl { width: 96px; height: 96px; border-radius: 22px; } .art.xl svg { width: 84px; height: 84px; }
+
+/* AI list */
+.ai-card { border-radius: 20px; padding: 16px; color: #fff; background: linear-gradient(135deg, #1a73e8 0%, #7b4cff 55%, #c04ee0 100%); position: relative; overflow: hidden; }
+.ai-card::after { content: ""; position: absolute; inset: -40% -20% auto auto; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.35), transparent 65%); }
+.ai-card .k { display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 600; opacity: .95; letter-spacing: .01em; }
+.ai-card .h { font-size: 26px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; margin: 6px 0 4px; }
+.ai-card .s { font-size: 15px; opacity: .92; letter-spacing: -.01em; }
+.ai-card .acts { display: flex; gap: 8px; margin-top: 12px; position: relative; z-index: 1; }
+.ai-card .btn { background: rgba(255,255,255,.22); color: #fff; backdrop-filter: blur(10px); }
+.ai-card .btn.fill { background: #fff; color: #4b2fd0; }
+.why { margin-top: 6px; display: flex; gap: 6px; align-items: flex-start; font-size: 13px; color: var(--purple); letter-spacing: -.005em; line-height: 1.35; }
+.why svg { flex: none; margin-top: 2px; }
+.conf { height: 4px; border-radius: 99px; background: var(--fill); margin-top: 6px; overflow: hidden; } .conf i { display: block; height: 100%; background: var(--purple); border-radius: 99px; }
+.xbtn { width: 30px; height: 30px; border-radius: 99px; border: 0; background: var(--fill); color: var(--ink2); display: grid; place-items: center; flex: none; }
+.xbtn.ok { background: var(--green-bg); color: var(--green); }
+
+/* savings */
+.save-hero { text-align: center; background: var(--card); border-radius: 20px; padding: 20px 16px 18px; }
+.ring { width: 200px; height: 200px; margin: 4px auto 6px; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .c { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring .c b { font-size: 30px; font-weight: 700; letter-spacing: -.035em; font-family: var(--round); }
+.ring .c span { font-size: 13px; color: var(--ink2); }
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 120px; padding: 10px 14px 4px; }
+.bars .b { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; font-size: 11px; color: var(--ink2); }
+.bars .b i { width: 100%; max-width: 30px; border-radius: 6px 6px 3px 3px; background: var(--green); opacity: .35; }
+.bars .b.now i { opacity: 1; }
+.bars .b em { font-style: normal; font-weight: 600; color: var(--ink); font-size: 11px; }
+.stack { display: grid; gap: 4px; }
+.mini { height: 6px; border-radius: 99px; background: var(--fill); overflow: hidden; margin-top: 5px; } .mini i { display: block; height: 100%; border-radius: 99px; background: var(--green); }
+
+/* compare */
+.phead { display: flex; gap: 14px; align-items: center; background: var(--card); border-radius: 16px; padding: 14px; }
+.storedot { width: 30px; height: 30px; border-radius: 99px; flex: none; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: #fff; }
+.offer { border-radius: 16px; padding: 14px; background: var(--purple-bg); }
+.offer .lbl { font-size: 12px; font-weight: 700; color: var(--purple); letter-spacing: .02em; text-transform: uppercase; }
+.search { display: flex; align-items: center; gap: 8px; background: var(--fill); border-radius: 11px; padding: 0 10px; height: 38px; color: var(--ink2); }
+.search input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 17px; color: var(--ink); outline: none; letter-spacing: -.02em; }
+.spark { width: 64px; height: 26px; display: block; }
+.spark.wide { width: 100%; height: 56px; }
+
+/* wallet */
+.pcard { border-radius: 18px; padding: 18px; color: #fff; background: linear-gradient(150deg, #0b7a43, #34c759 70%, #a8e063); min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 30px rgba(36, 138, 61, .25); }
+.pcard .big { font-size: 36px; font-weight: 700; letter-spacing: -.035em; font-family: var(--round); }
+
+/* tab bar */
+.tabbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 22px);
+  background: var(--bar); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-top: .5px solid var(--sep); }
+.tabbar button { border: 0; background: none; display: grid; justify-items: center; gap: 2px; font-size: 10.5px; font-weight: 500; color: var(--ink2); letter-spacing: 0; padding: 2px 0; }
+.tabbar button.on { color: var(--tint); }
+.tabbar svg { width: 25px; height: 25px; }
+.fab { position: absolute; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 86px); z-index: 3; border: 0; border-radius: 99px; padding: 12px 18px; font-size: 15px; font-weight: 600; color: #fff; background: var(--tint);
+  box-shadow: 0 8px 24px rgba(0, 113, 227, .35); display: flex; align-items: center; gap: 6px; transition: transform .1s ease-out; }
+.fab:active { transform: scale(.95); }
+
+/* sheets */
+.scrim { position: absolute; inset: 0; z-index: 10; background: var(--scrim); display: flex; align-items: flex-end; animation: fade .25s ease; }
+.sheet { width: 100%; max-height: 90%; overflow-y: auto; background: var(--app); border-radius: 14px 14px 0 0; padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 26px);
+  animation: up .38s cubic-bezier(.2, .9, .25, 1); }
+.sheet .grab { width: 36px; height: 5px; border-radius: 99px; background: var(--sep); margin: 0 auto 10px; }
+.sheet h3 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 4px 0 4px; }
+.sheet .t2 { margin-bottom: 10px; }
+@keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.rcpt { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--card); border-radius: 12px; padding: 12px 14px; letter-spacing: 0; }
+.rcpt .ln { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 3px 0; align-items: center; }
+.scanner { height: 170px; border-radius: 16px; background: #0b0b0c; position: relative; overflow: hidden; display: grid; place-items: center; color: #eee; font-size: 14px; }
+.scanner::before { content: ""; position: absolute; inset: 36px 50px; border: 2px solid rgba(255,255,255,.7); border-radius: 14px; }
+.scanner::after { content: ""; position: absolute; left: 60px; right: 60px; height: 2px; background: #ff453a; box-shadow: 0 0 14px #ff453a; animation: sweep 1.3s ease-in-out infinite alternate; }
+@keyframes sweep { from { top: 48px; } to { top: 120px; } }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 13px; color: var(--ink2); padding-left: 4px; }
+.field input, .field select { border: 0; border-radius: 11px; background: var(--card); padding: 12px 14px; font: inherit; font-size: 17px; color: var(--ink); letter-spacing: -.02em; }
+.toast { position: absolute; left: 50%; top: 58px; transform: translateX(-50%); z-index: 20; background: var(--card); color: var(--ink); border-radius: 99px; padding: 10px 18px; font-size: 14px; font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18); white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; animation: drop .35s cubic-bezier(.2,.9,.25,1); }
+@keyframes drop { from { transform: translate(-50%, -24px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.celebrate { text-align: center; padding: 8px 0 4px; }
+.celebrate .amt { font-size: 52px; font-weight: 700; color: var(--green); letter-spacing: -.04em; font-family: var(--round); line-height: 1.1; }
+.chk { width: 24px; height: 24px; border-radius: 99px; border: 2px solid var(--sep); flex: none; display: grid; place-items: center; background: transparent; color: #fff; font-size: 13px; }
+.chk.on { background: var(--green); border-color: var(--green); }
+.who { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; flex: none; }
+.cyc { width: 64px; border: 0; background: var(--fill); border-radius: 8px; padding: 5px 8px; font: inherit; font-size: 15px; color: var(--ink); text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .scrim, .toast { animation: fade .2s ease; }
+  .scanner::after { animation: none; top: 84px; }
+  .btn:active, .tap:active, .fab:active { transform: none; }
 }
-@media (max-width: 480px) {
-  .phone { border-width: 0; border-radius: 18px; height: 760px; }
-  .brand h1 { font-size: 32px; }
+@media (prefers-reduced-transparency: reduce) { .gnav, .tabbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--card); } }
+
+/* ================= phone: the app is the page ================= */
+@media (max-width: 760px) {
+  .gnav, .hero, .tour, .fine { display: none; }
+  body::before { background: var(--app); }
+  .stage { display: block; padding: 0; max-width: none; }
+  .device { position: fixed; inset: 0; width: auto; height: auto; max-height: none; min-height: 0; border-radius: 0; padding: 0; background: var(--app); box-shadow: none; }
+  .device::before, .status { display: none; }
+  .app { border-radius: 0; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+  .navbar { padding-top: 10px; }
+  .fab { right: max(16px, env(safe-area-inset-right, 0px)); }
 }
+@media (min-width: 761px) { .only-phone { display: none !important; } }
+@media (min-width: 761px) and (max-width: 980px) { .stage { grid-template-columns: minmax(0, 1fr); } .device { position: relative; top: 0; margin: 0 auto; } .tour { order: 2; } }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <section class="tour" aria-label="Feature tour">
-    <div class="brand"><h1>Basket Radar</h1><span class="zh">慳家雷達</span></div>
-    <p class="lede">A restocking assistant for Hong Kong families. It knows what is running out, finds the real price after multi-buy offers and your coupons, and pays you points for every receipt. Pick a step to see each feature in the app.</p>
-    <span class="sample">Sample data for demonstration · not live prices or real offers</span>
+<header class="gnav"><div class="in">
+  <span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.4 11a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Basket Radar</span>
+  <nav><a href="#try">Try it</a><a href="#features">Features</a><a href="#about">About the data</a></nav>
+  <div class="seg" role="group" aria-label="Appearance" data-themeseg></div>
+</div></header>
+
+<section class="hero">
+  <div class="eyebrow">Basket Radar 慳家雷達</div>
+  <h1>Groceries,<br>figured out.</h1>
+  <p>Your AI list knows what's running out. Every price is the real price after offers and your coupons. And you can see how much you've saved.</p>
+  <span class="note-pill">Interactive demo · sample data, not live prices or real offers</span>
+</section>
+
+<div class="stage" id="try">
+  <section class="tour" id="features" aria-label="Feature tour">
+    <h2>Take the tour.</h2>
+    <p class="lead">Tap a feature to see it on the phone, or just use the app.</p>
     <ol class="steps" id="steps"></ol>
-    <p class="foot">Slimilk, Trappist and DQY egg prices and offers are copied from the Consumer Council's Online Price Watch file of 17 Nov 2026. Other prices, coupons, branches, opening hours, the household and its points are invented for this demo. Brand offers use a fictional brand.</p>
   </section>
-
-  <div class="phone" id="phone">
-    <div class="bar"><span class="t" id="title">Today</span><span class="pts" id="ptsTop"></span></div>
-    <main class="screen" id="screen"></main>
-    <button class="fab" id="fab" type="button" aria-label="Log a receipt">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Log receipt</button>
-    <nav class="tabs" id="tabs"></nav>
+  <div class="device"><div class="app" id="app">
+    <div class="status" aria-hidden="true"><span>9:41</span><span class="r">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx=".75" fill="currentColor" opacity=".4"/></svg></span></div>
+    <div class="navbar">
+      <button class="left only-phone" type="button" data-act="tour"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Demo tour</button>
+      <span class="left" style="color:var(--ink2);font-size:15px" id="dateline">Tue 17 Nov</span>
+      <button class="avatar" type="button" data-act="settings" aria-label="Profile and appearance">M</button>
+    </div>
+    <main class="scroll" id="screen"></main>
+    <button class="fab" id="fab" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Log receipt</button>
+    <nav class="tabbar" id="tabs"></nav>
     <div id="overlay"></div>
-  </div>
+  </div></div>
 </div>
 
-<script>
-/* ---------------- sample data ---------------- */
-const STORES = {
-  WELLCOME:  { name: "Wellcome",  branch: "near home",   walk: 4,  close: "22:00" },
-  PARKNSHOP: { name: "ParknShop", branch: "near office", walk: 6,  close: "22:00" },
-  AEON:      { name: "AEON",      branch: "mall",        walk: 12, close: "22:00" },
-  JASONS:    { name: "Jasons",    branch: "MTR exit",    walk: 15, close: "21:00" }
-};
-const ROUTE = ["WELLCOME", "PARKNSHOP"];              // stores on the user's usual route
-// p = shelf price, o = offer text, e = effective price per item, q = quantity needed, d = P(deal next week)
-const P = {
-  slim: { name: "Kowloon Dairy Slimilk Low Fat Hi-Ca", size: "946 mL", ml: 946, cat: "Milk", ean: "4891133000953", real: true,
-    prices: { WELLCOME: { p: 32, o: "2 for $37", e: 18.5, q: 2, d: .03 }, PARKNSHOP: { p: 22, o: "Buy 2 to save $8", e: 18, q: 2, d: .66 },
-              JASONS: { p: 33, o: "2 for $39", e: 19.5, q: 2, d: .03 }, AEON: { p: 23.9, o: "", e: 23.9, q: 1, d: .03 } },
-    hist: [24.5,20,24.5,21,19.5,24.5,19,19,18,18,18,18] },
-  trap: { name: "Trappist Hi-Calcium Low Fat", size: "946 mL", ml: 946, cat: "Milk", ean: "4892214001946", real: true,
-    prices: { WELLCOME: { p: 18.5, o: "", e: 18.5, q: 1, d: .03 }, PARKNSHOP: { p: 23.5, o: "", e: 23.5, q: 1, d: .03 },
-              JASONS: { p: 21, o: "", e: 21, q: 1, d: .03 }, AEON: { p: 21.9, o: "", e: 21.9, q: 1, d: .03 } },
-    hist: [21,21,20,20,19.5,19.5,18.5,18.5,18.5,18.5,18.5,18.5] },
-  egg: { name: "DQY Fresh Eggs Grade AA Large", size: "8 pcs", ml: null, cat: "Eggs", ean: "6970000014425", real: true,
-    prices: { WELLCOME: { p: 29, o: "2 for $45", e: 22.5, q: 2, d: .03 }, PARKNSHOP: { p: 27, o: "", e: 27, q: 1, d: .2 },
-              JASONS: { p: 30, o: "2 for $45", e: 22.5, q: 2, d: .03 } },
-    hist: [27,27,22.5,27,27,22.5,22.5,27,27,22.5,22.5,22.5] },
-  bread: { name: "Wholemeal Sandwich Loaf", size: "450 g", ml: null, cat: "Bread", ean: "4890008100309",
-    prices: { WELLCOME: { p: 16.9, o: "", e: 16.9, q: 1, d: .12 }, PARKNSHOP: { p: 16.9, o: "Buy 2 save $3", e: 15.4, q: 2, d: .3 },
-              AEON: { p: 15.9, o: "", e: 15.9, q: 1, d: .1 } },
-    hist: [16.9,16.9,15.4,16.9,16.9,15.4,16.9,16.9,15.4,15.4,16.9,15.4] },
-  soy: { name: "Calcium Soya Milk", size: "1 L", ml: 1000, cat: "Soy milk", ean: "4891028710119",
-    prices: { WELLCOME: { p: 16.5, o: "", e: 16.5, q: 1, d: .18 }, PARKNSHOP: { p: 15.9, o: "", e: 15.9, q: 1, d: .22 },
-              AEON: { p: 14.9, o: "", e: 14.9, q: 1, d: .1 } },
-    hist: [16.5,16.5,15.9,15.9,16.5,15.9,15.9,15.9,14.9,15.9,15.9,15.9] },
-  tissue: { name: "Bathroom Tissue", size: "10 rolls", ml: null, cat: "Paper", ean: "4892214350105",
-    prices: { WELLCOME: { p: 49.9, o: "2 for $85", e: 42.5, q: 2, d: .25 }, PARKNSHOP: { p: 52, o: "", e: 52, q: 1, d: .41 },
-              AEON: { p: 45.9, o: "", e: 45.9, q: 1, d: .15 } },
-    hist: [52,49.9,45,52,42.5,49.9,52,42.5,49.9,49.9,42.5,42.5] },
-  rice: { name: "Thai Jasmine Rice", size: "5 kg", ml: null, cat: "Rice", ean: "8851234500055",
-    prices: { WELLCOME: { p: 98, o: "", e: 98, q: 1, d: .2 }, PARKNSHOP: { p: 95, o: "Buy 2 save $20", e: 85, q: 2, d: .35 },
-              AEON: { p: 92, o: "", e: 92, q: 1, d: .1 } },
-    hist: [98,98,92,95,95,85,95,95,92,92,95,95] },
-  // fictional brand, used for the brand-offer feature
-  hill: { name: "Hillside Farm A2 Low Fat Milk (new)", size: "946 mL", ml: 946, cat: "Milk", ean: "4890000946002", fictional: true,
-    prices: { WELLCOME: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 }, PARKNSHOP: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 } },
-    hist: [24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9],
-    offer: { back: 6.1, brand: "Hillside Farm" } },
-  hillorg: { name: "Hillside Farm Organic Whole Milk", size: "1 L", ml: 1000, cat: "Milk", ean: "4890000100013", fictional: true,
-    prices: { WELLCOME: { p: 38, o: "", e: 38, q: 1, d: .05 } }, hist: [38,38,38,38,38,38,38,38,38,38,38,38],
-    offer: { back: 5, brand: "Hillside Farm" } }
-};
-const SUBS = { slim: ["trap", "hill", "hillorg"], trap: ["slim", "hill"], egg: [], bread: [], soy: [], tissue: [], rice: [] };
+<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Market Place for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings and points are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Basket Radar is a student concept and is not affiliated with any retailer.</p>
 
-// household: stock in units, use per day, last bought, cycle (days), use-by
+<script>
+/* ======================= sample data ======================= */
+const STORES = {
+  WELLCOME:  { name: "Wellcome",  branch: "near home",   walk: 4,  close: "22:00", c: "#d64545" },
+  PARKNSHOP: { name: "ParknShop", branch: "near office", walk: 6,  close: "22:00", c: "#1f6fd1" },
+  AEON:      { name: "AEON",      branch: "Kornhill mall", walk: 12, close: "22:00", c: "#a14fc4" },
+  JASONS:    { name: "Market Place", branch: "MTR exit", walk: 15, close: "21:00", c: "#2f8f5b" },
+  FUSION:    { name: "Fusion",    branch: "Taikoo Place", walk: 8,  close: "22:00", c: "#e08a1e", crowd: true },
+  CITYSUPER: { name: "city'super", branch: "Times Square", walk: 25, close: "22:00", c: "#3a3a3c", crowd: true },
+  MS:        { name: "M&S Food",  branch: "Cityplaza",   walk: 14, close: "21:00", c: "#1f6b5c", crowd: true },
+  BESTMART:  { name: "Best Mart 360", branch: "near MTR", walk: 5, close: "23:00", c: "#c2185b", crowd: true }
+};
+// photos supplied by the team (Kowloon Dairy, Nestle); every other product uses a drawn illustration
+const PHOTOS = { kd: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAFoAWgDASIAAhEBAxEB/8QAHAABAAEFAQEAAAAAAAAAAAAAAAYBAwQFBwII/8QATBAAAQMDAwEEBgYHBQYDCQAAAQACAwQFEQYSITEHE0FRFCIyYXGBI1JzkaGxFRYzQlNy0QgXYoLBJDRDRVWUNlRjdIOEkpOisuHx/8QAGwEBAAIDAQEAAAAAAAAAAAAAAAMEAQIFBgf/xAA0EQACAQIEAQsEAQQDAAAAAAAAAQIDEQQSITFBBRMiUWFxgZGhsfAGFMHR4RUyUvEjQmL/2gAMAwEAAhEDEQA/APqlERAEREAREQBERAEREAREQBERAEREBZqZHNLWsxud4nwVndN/EH3BXKj9uw/4T+YXlAed038QfcE3TfxB9wXpUQFN031x9wTdNj9p+AWFWXKOneWMHePHl0HzWvfdql3s7G/BuV57G/VHJ+Dm6cp5pLdJX9dvUsQwtSaukb3M38T8AmZv4v4BaBt1qgeSx3xasunu7XODZ2bP8TeQosN9Xcm4iWRycX/6VvVXXmbSwdSKvubTM38U/cEzN/FP3BGuDmhzSCDyCF6XpU01dFU8h0w/4mfkFdp5C8ua8es3HPmvC9U37aT+Vv8AqsgyEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQGpvN2oLZPD+ka2npQ9rtvfSBueR0z8lgfrZp//AK1bf+5Z/Va/W+jY9WXOn7+tfTxQRYLWRhxdl2ep6dFrabsg09G0d9LXzu83Sho+5rQopSqXsloVak8QpWhFNdbZIv1s0/8A9bt3/cN/qvL9S2ipY6KhutFNUvG1jI5mucT7gD5ZWrHZVpYDmkqD8al/9VbPZ7YbJK240ENQypg5ZunLm5PHQ+4lUeUqtWng6s1ZWjLj2M3ovESqRUoq11xf6L5z4qiuMqo2erMwEeaOmoXezLtOM4JXxNYdTjmjJdz0f69T1GZrRotovEtRTRn1pmD4lYFTeqWMHuSJHefhycKGNKcnZI2V3sjfUd5orZH3dzrYKVjjmMzSBmfMDKyP1s09/wBbt3/cs/quNdo9Q+oo7fLIckyv+XqheNLUkD7TSzPoYZgZZWOc6kikJ4JAyXgn4EceGV9c+m8TUXJ9OEtWrr1fseT5RxkqWMlRjHa3sv2doOrNPD/ndu/7hv8AVZ9ku1BdJJzbqynqgwNDzFIHY646LgF6oZmUTnU1upu5jhzM/uY43NBBG4Yec+fnlSjsAm23i70+AA6njk+5xH+q70MQ5TUWipSx8pVo0pRtc7aiIrZ1AiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAh6Ih6IDW1tV6JHcKrYZO5iDtgcG7sAnGTwPmtENYsIaTTx+s7aAKyPOcAgY655HHvUi7llSytjkzskJjdg442gKH1lhuzIYKYyyVEMILWVFM5kc7wcY70OwHOGPaB55OFHNyWxBVc1rE3kd+q5aT0qG0yyQEEhzaiMZA8eTj8fBZtU51daWPDS10jQ8AODsHrjI4PyUbbYa6shq6WpY51HUsdG9la8ODWl271WMJBx4ZIx+ClVnoYqC00tFFE2KKCMRtY05AAGOqhrUViaUqNT+2Safib0JzUlJ/H5EKqv3geD0wo1cgd5aAeXMHxXTrnZYqrLwSyQ/vt8fiFGqzSdW4kxyxO/m3N/qvm1b6UxuFm+aWePWmk/J/i56CljqUl0tGQDJ72MknmSR/4L1C/wCiYwcnaOPgcqWfqNXyu9eWBg9znn/Rbe1aDp4Zd9bO+cD9wDY0/HxKt0Pp7G1mlKOVdrX4uzeeOoxWjuc11NZbxfoqKns1snqmRF0ssrS0NBPAbkkc8E/ctOez7VMY3GyTuPufGT/+S+lKWmipYmxwMaxjegAwFeXtMHyVTwtCNFNu3+2eVxuDhjK0q020386j5XrNK36jbvqbLcGAdT3BcB825Ur7D5jT63lgflr5aSRpa7g5Dmnp9675hWJKaD0mKd0MZnaSGyFg3AEc4PVWY4VQkpJlSlyWqVSNSEtjJREVs6wREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAQoh6IDAp5tpnGM/Su8Ve7/ANw+9RLWtRdKazPfYdxuBr42sa1uQ4F+CD7j4rQ0B1DX1VN6HVXo00pYxk8zY2xthLMSmUEbhOH7sAcDDccZUcqlnlsV54jJPJZs6X358gqOmdnoFzKon1nFaK2ruZlpxDSd7GKVuXGQvYzaQASSGsc//wB77uMoS6rqK2tlt5qz3jKh8RqAxtKWEf7P3QPrB/s7t3jnPgted7Ga/dLbK/I6F35H7o+9O/djO0Lmfpeq6R9N6LFcZ45J391BctgmkaICXhzmDDfXHqE+PuIU30w+om01aZax0jqp9LE6V0gw4v2jJI88raNTM7WN6VdVHazRszUO+r+Kp6S76o+9eXBYV0dOy21bqP8A3hsTjH/MBwpCZuyuZ/pJ+qPvT0l31R965taq3UT7RXd7JXPqMtML3Qua7LmudjB42jAz92CcZoyt1G6y0jm1c7pH1bmumEbfVaR6u47ScDk7Qw5OAXBRc8uor/cq18rOleku+qPvVHVBc+IYAy8LnFxueoqqd89s9NgpiIXtY6Fri0FoDs5HJ3HkY+7Cn4z30Geu9uVtGeYkp1VUbstjbjoiBFuShERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBD0RD0QEO1hSVVXZzHSQVdRi4RvmipZe7kfEH5eA7c3qPeFH7dT6tprhZ5ailqZaehaIZWOqGOdIyRx3E8+uWN7sZ82u65Um1ZZ333TV1oYCWzve50Tg4t9dpy0ZHmePmtR2f6njr9GyNrZTHcLXE6Kpa84e3aDtec/Dk84IKrzS5zV2KNWMefs21pp4fLmmtWnr4K23vr46404jhgqAyqIkwWyNeR62MAuaXePQg8KY6KoK2ktT5LtLUS3GWR3fOmeCQGnawYHA9QNPvLiT1XKGSbPQC90HfekUwke6YcO3Py7dvb4+seTySeM8bCWWgnvlzpny0MENXXFr5qtgkbGB3oLiN4w7c0AF3OOnChhUUdUvUr0asabTS83/Hy5O+0PVn6p2+nkipRU1NS8sYxztrQAMkuI5PUce9ZuiL8/UunoblLTCne972FgduGWnGQT4FaLUDbRXdnNtdXwyVRfDEyiZnbNJOW7WBuD1Pj1GM5Uo0paBY9OW+2gtc6CIB7h0c88uI+JJViLk6m+li3CVSVdu/Rtt88TY4XksV/aqFqmLZjkZ4PK8ndnqc+eVdc1UwsAtAE9T715P7aH7Rv5q6Qrbv2sP2jfzQG1CIEWQEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEPREPRAYVKP2/2r/zUO1Vouomuv6d0xVNoL0B9IHD6KoHk4c8n5g+PPKmVIP232r/zWQtZRUlZkdSlGqrSOeQ6vu1BiLUekK/vW8GWgiE0bveB4feVkHVVXcMssmkLnLK79+uiZTRA+biSSfkp2B8VXAytFCX+RFzNTbPp3K/zwIbb9M3B8z7pequOovQjcymbE3bBRg9RGOuT0LzypHaYaqGjayuk7yUE85zx8Vnphbxgo7EsKUYbHghA1e8IVsSFpwXnar2FQoCy5nCsyNxJD9o381lEKzMPXi/nb+aAzQiDoiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAI7oUQoDEo/+N9q/wDNZAVik6Tfau/NZCAIitz1EFNE6Woljiib1fI4NaPmUBdAVVifpKhNKKkVlMac8iXvW7D884UYuvaVpO21Qp57zDJL4ina6YN95LQQFhyS3ZpKrCCvJpExwqKG1vaZpSmZmO7Mq37dwjpI3TOP/wAo4+ZUXqO3GzRvZttN1dE/lr3NY3cPMAu5C1dSK4kM8ZQh/dJHWUUS092habvVEamK5Q0u1wa+KseInsJ6cE8/EZUqhljnjbJC9skbgHNc05BB8QVsmnsTQqRqK8Xc9FWZ/aj/AJ2/mr5VmfrH/O381k3MkdEQdEQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBD0RD0QGNSdJvtXfmsgDzWPRDib7V35rJQET7Q9XRaRswnEPpNdUP7mkpgeZJPf44Hj8h4rlFnZ+s99ukurqk3aS1Uz6qqhc8tpYHDOIo2NOHEEEOcTjgj1uq2HbXcRau0vSlfWMfJQUrWzbWjOcS+vj3+z+C1unGWSOLtGOl6ioqLebOXNdO0hwcRIXAZAJA8yq823KzOPXrOpXcHsuHhe9uP4LD7Tp/TWmNN1180/QVVZdTvPe1UrY4oy0O3OABA5c3gNwPfhYPaVejR0kumqHS1NYW5bLUugc2Tv2dW4c1oywkZz7sccqX9qFwfQRaTt9BY6K61slEe4dUwmcxgNYDtj6E4GcnOML3qjWdxtuidM6jpo4qhtfRupKiB+WxCRzQQ/aODgseMHjBWLJXRDVhFKdNSy2S2XDS/xEQ7HGzQ2fWVyp4hNNHQCCJhx6z37sDnjwC6BpyJ9PDpKS7Nc+tt1lq6x5mAe4EujA+4E4AK5rpf0ePsc1O6tmkghqq+CAvjhEhGA13s7m55966ZHaJv1loY6C61NthtGnoQZIIWOMjXOdkFrgRj6IHCxHh84mcErU4Ja6e7b/BybTM1nnvFVIaGr1Vd61knc0zqdscXeO9ZzyS8uJHPTGOV0v8As6VNQLRebbVTYNHUt2U7874sg7uD0G4dPMFaLSM9VqiaV1nudq/TlHEKoR1Wn44nMdnAxI09c8Zx8ltP7PdquEtRdtTXF5La7MbS5wJldvLnuIHT1uPvSno0YwkHGrBx438vN8etnalZqOsf87fzWQRlWKgex/O381aO8Xx0RAiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIeiIeiAx6L2ZftX/mshY9F7Mv2r/zUP7SNdHSYt9LR0jay6XCTZBE+TYxvIGXH4uA/wD4sNqKuzSpUjTjmlsbnV+lrXqq3CkvEBkax26ORjtr4z5tP+nQrk1isNJYb/2hWG3yyywNsoLXSkF2Swk5wB4uWdq7tJ1lpkxUt109boqqpa4wSRTOlaccH1RySCRxwuOXGu1DDLX11cbhA66ZZUSvidEJwTuLckDjjoPAeSgnOLehx8ZiqKmpKLclvp2fyd+s1RFc6zQN7imp30zqCShqMytBbI+NmGgE5J3MIwOVFZbXLduxu8WWkY6pr7Fc5Q2Jg3OLWyk8AebHux8FB+zTRD9UNuNwqJ6uloKBue8pYt8skmM7WDzx5c8hWbPovVMtzqKOlhrbRHJG52+ve6lbJHnhpI4c7noM+PgtbvexFz9SpBN09JJrfsS/BlippoexKqo31ELa195Du4Lx3m1rQCdvXHHVdfqaojVOprfSzNiuE2n6cUg3hhc4d97JJHOXNXIoOye7VBmbBd9OyvhYXyiOuyY2DxdhvA69Va7Q7VqWa0Ud5vNVaLnRRbaVtZQPY/JAO0PcAC7x596wrrVoxTnVowblB6Jel7+5P9ET3/S2jdTXfV1TVCWOAMpIKqdr3bsHngk8uc0fJbH+zVNI/R9wikOWR1x2/NjSfxXEdJ6NuepaSvrKE01PRUDS6eoqZNjGeqXeAJ6DK6b2P9o+ldNaRht1ylnpaszySSu7p0jXkkYdlo44wMe5bQequb4St/yQc+jFJ2u9z6AVqo6M/nb+awKC/WuutUdzpa+lkt8ns1HeAM+BJxg+48rMdKyaGGSJ7Xsc5pa5pyCM+BVm53U09jICIEQyEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEKIUBxPtm1TW2u72uzw11TbbdUufLV1NKPpS3vNuGnrwATgdSQtLT22zx22G/22y+mUT5wxt51HcDsa7dt3mJnONwxzhdJ7SrJY7ppO41GoAyNtGJnw1XIdC49MY65O31fHhcr7PKm5fqQbFddOm42i6OfU0zpK1tKwNYWGQlx5Dd20gjrzjIVea6Wpya8ZKu1LVNXXG3vY2tx19SmpjZctdVcjnENcyx2xsTGZOOJZMuI+C1fbZUXKw0sOmZbhNcqCqcK8VNY4vqGkEt7vd025AIwB1wtrQVVDRzmntcumKKcciKx2uS61A+Mp9XPy+9UvOjou0GnuNZBfrxPqG3MEbqW6UjKfaCC5rdgaC0O5weeVrq1YjqRqVKcop3k+3z3bMPStt1VetB2my6fmoLNA4vqZKhteRPVAk+sWMG5oz158B8Ft9H2W4srbXpzUM9vvljuTprgJnOlkc8whrQwh/7oc5runKs9gcVjorderhQVlZU1zKKN9ax8AjbCfXdtY7qTkHnpwFE7Pq7TWla6x6gsja+oqnwzwVNsnqzIYGE5aQ8tABJGcDI593OVaybMwyQhCc368FZbbHQLC6yR6L17XxVMFsoKiqmppBS0mPQ2NAiaA0e0SPW4+v8VAdV6cdQUWlbVW6yczTVax89OKqmLPRgG5DnRg5IO7AJPGSsWg7SrTHS1toqtLRDT1wnM9XCyskfMXFwJcHHA4IHqjHTqsntX7O6Sz2Gn1PpipmqLLI1hdHI8vMTHew5rjztyQMHkEputOBrUnGrTbppO2+643fgTOl09Q2zsefaKDUVARfqwRxV743tZNucBsaBk5wwjyXjVt7ptPdp+mNPWyz01bT01N3ApQGMzLN6odkjGQ1vj4OKzYbcX1/ZJZ42l1PT07rhIQMtJZE0gn/M78VE9HZ1T/aLr6/l8FHNPKPICNoiZ+OCsvgu4nl0VGMFZ3S/LNtbtAaVrdb1VmuNJfKd8UZuLqN1TG6kY1zvrM5HuHBwOqz+wmqE131XDZw9ul4qxnoTHuLgxxcfZz4FoBx7wtHbe0W2u7TtSW+4270qhvdWy2+kskILImjug3A6tJJPBB9bKkGh6X9SO1iu0fRzSSWauphcKeKR24wPBwRnqeARnyDVmNrpo2pZM6lC1rtP8HaB0RAinOkEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEKIUBzbtpt09x7NbuKYFzqecVLmj95jH5d9wyfkuf1E9LqDsY03dqunZVjTldHHWwuG4OhDg1wIHgWlh+S79TsbJFUMka1zHSPBaRkEZ5BXAL/AEknZJeq+N1ILloy/NdE6l7wNew4OWjPiATg+IxyCFDUWtyhioZZc49mrPs6mbjtCorsy7tn0zqm2af03U08cwd6Y2BpeBty1rBuPqhnTjhbrT+q7Xcu0K9XK3V0dVQ0dgj9IqGNLWueyR7ickDPB/FfMd1qaaquE01FSNoqZxxFAHl/dtAwBuPJPGSfEkqSWetqIdEXWislPNJJWOYLlVvLWMZE3JZAzJyS7DnHxOMAeKjz6lGni71HlWm/F7dROf7PVdFPJqm1SSxx1dxpMwMcQC92Hgge8bxwo/oLs+pblWXyn1TcXW0WikbPOyFzXujJDs7jyPV28gZ6gdVD6fTd5lnpI/QpoZKl8rIRK0sc58bN7mgYyHY6Dxzwtpb7FqWwX6gNvdLT105DBIwO2xh4YSJctxj1wCHDHULVSWlyKneUYqpBtR/JFwxz6kRUwfM5z9kQa31pDnjA8zxwvoPtKuMGk+xi06TrJYzeKqlggdFnJjaCHPefIAjA8z8Fzu33TUjHyT6bjsDGAODrrbqCJhB7tzyMlu5hwCOGjnhRG7Wq/wA00lZdKeumq5n7ZXStdJIXYafWPP1gMZ8xgIpWTNoRdCMsqbb020O10F8sPZ32h09nN+uslupbc6GZtTI+WCCpdtc0ho6AtHgMDI8ytToNzdB6B1Lq6pnjlq7k40lskAc3v+T9I0OAO0uJdyBwzPiFzeLUVxjNJDdrNQXSaJrIoHXGjc6XaPYZuBaXjpgOzxwOOFg6s1PeNTVbJb1PkQtMUMDWd3FA0cFrGDgdAPPgcrOZErxCWqW23ZclvYtptty1D+sF2kEFisjvSqipmOGukby1ufE5w4/AeJC6J2XV8ut+12+auEb2UFLE2jptwxw4gNB9+0OcR4b1ymwxaq7RJaXT1vez9H0wDu5jY2Clgbn9o9rQMn3nJJX1To3StFo7TdHareS9rHh8srhh00h9p5+Pl4AALemr9xNg4Zksq6K1v1v+CThEHRFYOqEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEKIUBjUXsy/av8AzXJv7RFodPSafvD6Q1dvttWfTYg0u+hftycDw9XB+IXWaL2ZftX/AJrIc0OGCtZRzKxHUpqpFxZ8h6cprNBI6loLXLqmqbUEh9JTSODoy4Y9dwAaQ0O42kEuBzgEKSQaN17cDWPt2m6W0U9WymaY5qhjRH3Wc4bycO3OyPAHGV9KxQxws2RMaxvk0AD8FcAAHCjVFcWV44NJWvbu0OBVPZhry6VdPVVdx0/RSU7t8Ihje7uyWbCB6vQtxxnwHkrX9y2rXCj3atpmGjDRBsheNm0NDehGcBjeuenxX0EizzMST7aD3v5s4Z/dXrhkRjj1fQd3u3hnoIa0HGMAAYAx4DhWB2Y68pDK6nuOmp+8eZnNdTujHekcycN9o88+8rvSoAnNRM/bx635s+c7jpHtGbLRy1tnpLiyjrI6xraauHtMfK8BrXngbpfuY0LVXetqG0rIdW6ZrbS7ZI10goXPpwXvc6RwIzyd2cnkOHljH1EqbRgrV0VwZj7fqkfOvYbbo6ntSvN2sLHiwx0zm97jDXukLXBmMANI59UZ27epyvoSq4bH9o381dYxrBhgDR5AYVqr9mP7Rn5qSEcqsb0qapxsXwiItyUIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIeiKjuhQFii4bN9q781kKLS193gq6ltPDFLB3zsZbz18wf9Feg1BM0gVlE+P3sd/ocLkrlrCc46Um007ap++xZ+1qNZo2fiSNFhUtypqjAbJtd9V4wVm5XTp1IVFmg7oglFxdmgiItzUIiICPax1LBpy3iaRokmkyI2F2Bx1c484aMjoCSSAOSufQdoV9lmhkjpWyxyxOqBG2nHEQdt3lofvDSeB1JxwCtj2sWp91udtgNQ2GnnaYjK7G1jmu3YIJGS7jA/wAKiuoKerbB6VU0piqW0Do4ZKHlvU5cWnloIAAAzhrTjnGKVWpLM7PRHJxVWsqjtokdj0vfIb9bvSYW929p2SRk52uxng+IIIIPiD8QtlVdI/tG/muV9k9Pc6W1Tmn2sYQyM72E4cC9xA/lD2tPvBHgpu1119JphUVEZiMrdzREBkZUa5RipKDi2+xaHVwkZVqCqSaTJGOiKjeiquiZCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCO6IqP9koDn1wjpDdawyv7pxnfk5c3x81m0cUhaPR7k5zfqvcJG/1XOdY6h1BQ6ouUVC+R1O2oeA0sDx1WNQ6iralwFxtcJ85IXGJ/wAeF5ytySs8qsIZrvhLXydvcqrlqg581JNNaXs16q/sdip4SRiVsTv8UJx/9q2lKCxoEcgcB4HqucWaSpmLTRVsrh/Aqxz8nhTOgc95a2pG2bHQdR/m6FT4WPNuyg16F/nVUjdO/wA6yQMdu6jC9K1B7Iydx81dXai7oiBVmeNzxjJA9xV5WKjlhy/YPFa1NYmU7M1V4ttDV0UlNcYIqinkGHxyDIP+ufeFCxpCig3x05u0tMQW9xLVYYB5Akbh49COq3epbnLbInGmpi4dO95f+AXM7pdL1c3OxcJIYz4F+wfcFxqyqXtBZSGvVoJ3lDPIn0rzb6ZkLW0VHTxjDWFxAaPvAWJbbxTTXuggbcbfJI6doDIy0ud7hyuYTWoSuzXXOSQ/VihLz95W10ZabbDqyzyx/pZ0zKphaXQNbHnnr5BU44afOxk6r3WyRquVKrahGnFLvuz6HZ0VVRnRVXqScIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKjvZKqqO9koDj2oLLLNqKvqI60s3TvOx7Mt6+atPkbbot09N6W4eEIyT8lDtdXerpda3hlPUyxgVL+GuOOvkvNv1NIwD0jbMfF2NrlwputGo3Gz18TkydHNK10/MnlDWtrsBsnozP4I4J+J/opTabhtIgjZmNvHuHzXOaSSO+Ee0xo5Lujh/VZdx1ILTGyjp2umh9l8zerfirNHF36NRW7/wZVTmVzjenX/B1eO5RNY4xu3tby7nkLPiqg9jS0g5GeFyA3aWmhhdDISJHAkg5wFKLXfRPVRNjd6x9tg8vMK5nss0dUW6WKjN5XuTn0lrmboyHNJxkefktJW1xlc+HOyUZxnxWpN5MNTJWU30kQ/3qFv77P4jR9YeI8lc1HC2op21EL3OwzvY3R896zGePeFWnjFFZuG3cWbZ01HdEfrrpNT1Lo3bi7xGOFr6yOgrRuqWRwSfWBwsWW/Q3qnkgB9HqGjAJ9py5nd6uttlbI1+488Ok5ysOnKT6T0OLi8fCik0syfkT2ta+haTRymUdRtasbSmoq2fWVnpJXStY+qY1wLQAeqhtFd7tVM+giqZGZwTDES38At5o2luEuudPzT0lUxraxhc97HAAc9VpHC01JMqwxNWtOLptpXV1Y+nG9FVUb0XmMkufnzXVPSntERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBUd7KqqO6FAfNmv7HRVmr7vLHcTT1T6l5c2aP1M5+sOiicljudNUNYYhUjG8OieHNIzhSPtHy3WN3Lfa9Ikx8craXKxyWy7TQUVytDIIwwOjrLgwPD9jd4c0jj1s8HwwuFKFZTlKLzK+zt6NL3ueZqwhOpJqNrPdflPR+hgaa9Jq619tLpqbu497w2EySAccDHTg9Tws6roBS3NtPTyC4Pla1rY5Hui7t73tDd5YQXfvYHBxyRwtZU2+e3VPpdoms/pU30D4KWsZP3gd5MxwOBk9FlQ094qaehr6ivtNJ3kLhCyeqZA7uy57XYaRwcl3PgVLG1RLPHVcOoznlrF3v162t+/AuVs1AaaWaySwh0JdLI2Sad8jI2y7QQM7CCwtO08kOK21JG6iucFypax1XRNfy9jGuDWDcHk48OG42jj18+wVgTWysgoYWemWKGkmY7uya+HL4w/Ja1+3ds3jkZ6rDsTK43iSgmdNXU7o+5a2hlY9kjWAkta7jIAkcCQQfWI5yVMm4SaX+wnlcbxte3ZZ/o3VLepKO+TVEQeKVz3FzgzLWOBIJ97TjlT23VEbHQ0bSGUtWS6jJP7GYcui+B6hcxn0+595lmrnOgdN7NKwxyVUp8A1jS4MGer3kABTPRzLdXWxlNdvT5ZxFFOWyyhsUgduAezacgZa4c+t96j+3i5tf9Zb30OhgsRVUrNa30+dpAu0a0vtN9bcKM93HUEuIBwWPB9ZuPLx+awPTKS7Uw75zO/aOpIXXY7ZpukcRT2Cgcc+1Kwyk/M5V9s1uiP0dmtrB/wCyNCiVbD4eKhWxEdO1fszHkuq6kqlOFlJ3tq/LRexa7C4mxaRq2tII9Pk6fyMXRVqdNPikoHugp4KdveHLYYwwE4HOB4rbLq0JQnTUqbuuDR0aVOVKChPdBERTG4REQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAQ9EQ9EBxzVlHap9SyGrt0cb4qh9bUVbZT+wicC7c3plx2sHvdx0WjprXT3WOKqrLVT1N3rzVVU3pNfJTDc2fZsbt4zz4+S6RV2+zXS9yyzSCaqhl2S08c+BJtdub3jB7W0kke/zUPpbLHd7xRQtnhgdB+kHs9IgbMxx9L24LXcHrwfAqhKjZvK9+7sOVXoXm20nfu611/NyG3aOloJbTU0FN6EKml72SITulDXiV7OHHr7KzobbDeK/RUVawyUj6XbM0EtyHzTEcjpy1Sa1OdUz0jamlo5onW4Rywdw1kbgKqVow0cNPHgsSwbG1WmGgBv0dJtBPQGSrP8ARQKLUrtWTtrwexWWHTy8U+Hc1wPUdBTzWmyd7QUtNDNSytphTXGYzQgxvnBc08H1h456qt31JTVGlHQMtlPOIaOOSScxRubFM9pDXYcOSXAgkDjIUb0NcgyvpLeyOkduppy95pGd836F7sd77X/64Viy05ht88V0rImxXK3yU/ru2tiIYJIjk/4mgf5lLnyJJ6N/NDWNa8egt9HtZWS38fmhtKuGnpaq+0UUYdTWykfPBuaAd0oiEJLgAXOBe7BPRefTK2kkshpJmQh1opzKXDJ9uXGD96wp7lJU6fvdydGIJZW26h655YNxPT/0wceCsXmhra/9XRQ08s7m2iAuLRw3L5Op6BRT12V+/Xiaqbc04Xv2b7td+xsNSmapaJXXKc+JDXkBQ+fuv/MTuPmXlTQWxwo+7r663Uzh1bJUAkfJuVHai2WhkpD9T29pPg2CVw+8BYzVVs7eSNsVhpyebLr2v9s7F2Ef+DajDnO/22Tlxz+6xdGUA7FIaaDSU7aK4Q18RrHnvYmOaAdrOMO5z/VT9dOi24Js7GFi40Yp9QREUhYCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCO6IqO9koDhGtrEyt1DcqimqjHOKh5OOcHPu5C1sl5hsWm7RJcWVk1d31XA2SmrzEXsEjXFx9U7svOP8q1uuJ5f1/ukdE6QVRq3MY2MkOc4kYAx71udRXav01c6WzRVLm0lNSRAPiZG8yPdl0j8uac5eXfcvO0qdahUqzqSvHgrarX1OPXxFOo3kWVp2vuvLwZk6M1jQuqnOpoY4WR0vowpKiYySPAe+Qv3kAHl56fNZVtj7qOiqxPRRy0NPbXiKqnEQkzHK4tDjnB+k8lFtYvnu2nbPPNO11S1tVUtldE1jnRiQMYDtA+q7C2k0zP7wayhfE10VHQv3OPONlDsIx8VfhVu7b7eqIlNqyfDbxRsIBRUvoE8VM6KcUkzA+uueIoA176cDPd+sOpHRRmjtNTQ1T23mA+jQNxI81Xctfx6rmyYduHiAByt7pvZI/RjZi0ufG8BrsEOJnmHTx5IXuvipbppOy2+ohMlW2ibNTSmaOIRYAaQS9wBBPBAyfFRSzJqSV11LhoiSnCnUjmnwV+q+3Z89taxtljsstxloa+mEjsULXXDvPSZRxvDHMA2NycuPwGVrtQxGpgsDHzTMZ+iIC9sb9of68vXHzWfrCmoaGC3mtrjNXstdPFFT0pDo2kZ+kdIeC084DeT7lptW1jqWn06Yxkvs8GPd68ixWU2nGO5Wcsrs+Bl2qjooWYbTsPvcCVmPipP4FOB72tXP5LhUSH1pHD3AlWHyOdy45+S58sFUqLpTJY4pRVlE+pOydkTNMyiFkbWmqecMAA9lvkpotNo+2Utn07RUFDHsghjaM45cSAS4+8klbleiw1LmaUabd7HbgrRSYREU5sEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEd0RD0KA45etOmTVVferHU0s1ximmaYp3cQykYDwQOHDOQHDHQ54UQ/QlwutuprTNC6G+20ljGzEATUz3Z3B3R3duJJI/dcfJajUZmb2s359NeI7PK2qkIqJHODTjHB2g5+BBCk1JqijqL7FRi+uFc6MMfdREGMzwRFC08MaTy5zuX4xwMLlSi1J5neJwpSoVpONsrvbdWfb2PRdhqKrZdtXW2328u/RwdBb6d/hJCx3rO/zHe75q++sbUN1bfR6oqXS0cBI9p8788fCJhPzWyvFB+jqr0wVEVmrGlztwY70WYlpBdE4BxicQT9G4YGctKhMlFJBLTxPeIYZtpY+VxDGg45djOMDqcKGUsj7W/wAWRDVjOk2mtePZ1G3qLl+iKDQ9b+9BFJIPftqnHHzAIXUbPS0NZQ1VtLIZpbdI5zGvYHbqaQl8Mjcj6rsZH1cLj+s/RmWzT9FT11LWyUlPK2WSmcXMBdM54AJA8CF50Feam33+kmhqIY5G5jeaqYxxvjxy1zucDwHkcKzCpzctVdPR+WpnD4lU6ln2X7NF88Dfaj0/Jd7PDV0uXVVBaqKTuh/xIy1+7A8xgH4ZWi1lC6Wm0ztIwLPBk/5pF1DSzWiR8tPLHUMpaOjgdLC7dG5zGv3tDuhxkfeohqSyipNvikuFDQT0lP6K5ta8xNewPcWSxnBDwQ7kDkEYwoekpuL46r2J69C1CNWG7un33/Xsc+ZSR45cXfA8LfWzTsFXZ6qsfM2IxM3t38DAJHPj1B5HljlYWtLvT1N7cLUQ6lhhip2Sd3t7zYwNL8eGSMrK0/U2ya2U8VfPHBM+bDzI47X7ckF2P3fWaMYHRxyt8rT1OXCadRwvc+q7W0so42nwAH4BZSsUI20sYzuw0Dd58DlX11FsevCIiyAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAqO9kqqIDiWtOxqvvupbhdKS8UsDKqUyiOWBzi3I5GQVpG9g16b/wA7tp/+Hk/qvohFG6UXwKMuTsNJuTjv2s5Rb9B6kisbrVc7laq+n27GukilDg3wBOfDwPULWDspvptzqOW52uRgdmJ5ik3M/HldqRaSw1KW6LUqUJJKSvZW8Oo4HP2K32VoBu9s4OR9FJ/VWY+xG/xyh7b1a+Oo7mTn8V9BIiw9NK1tCsuT8OpZsuvic40zpTU9ls/6OfXWmphZIXwlzJQWA9W/DOT81rNW9nd91Fa4aSWrtMLoZTJFI1shLcjDh8Dx9wXWkW0qEJZU1/bsWXSi6bpNdFnzsewi+n/nVs/+jJ/VU/uIvYHrXi1n4wyf1X0Uh6FZ5qPUU/6Xhf8AD1ZhWeV0tE3fDJEWYZh4wTgDn4LNUU7N7hLcrJUyzRTRFlXJG0S5yQMc8+Cla0ws5TpRlLdnQzQn0obBERTgIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCHkFEQEJ7JrnNddP1s1Rt3MrpYhgY4AbhTZc57CnmTSlwLmBhFznGB8Groygw0I06UYxVkivhJyqUYym7thERTlgIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCHoiICAditNJS6Yr45o5WSfpGYkStLT0b4EKfoi1hHLFRIqFLmqaprgERFsShERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf//Z", nestle: "data:image/jpeg;base64,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yq1OKwtY5sNP5BeXdHZyR+KmL/qlaOqY57hTQDY+occkDoP1nH7OPtVc5NPY2wL1miM80la4Dyz9HBxj3O5+0rdNHCt08bYomMjbhjRho9Arq2Rjyo8SeWERF6MBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAUwPRHNDhyAfmqogMaSjgecmFmfUDCtvt0L8fXGOmHkYWaixhDJgGgcwfQ1MzfgTkKnk10Y92WGT/E3BWwRY5EZyzW+bWM+vSh//hv/AKrwLoxjiJqepix+1ESPvGVtSMqhb8cLzyDJrm3ahl4bVRB37JOD9xXq3QkyPqX/AFpBhg/Zas4tzjPZVAwVlR3yxkqERF7MBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREARFQnlAVRUyiwCuUVFUJkAoDlEWQEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQDCoURYwCoREQBERZAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf//Z" };
+const ROUTE = ["WELLCOME", "PARKNSHOP"];
+// art: [kind, body colour, accent colour]
+const P = {
+  slim: { name: "Kowloon Dairy Low Fat Hi-Calcium Milk", short: "Kowloon Dairy low fat milk", brand: "Kowloon Dairy", zh: "維記", size: "946 mL", ml: 946, cat: "Milk", ean: "4891133000953", real: true, photo: "kd", art: ["carton", "#e9f2ff", "#1f6fd1"],
+    prices: { WELLCOME: { p: 32, o: "2 for $37", e: 18.5, q: 2, d: .03 }, PARKNSHOP: { p: 22, o: "Buy 2 save $8", e: 18, q: 2, d: .66 }, JASONS: { p: 33, o: "2 for $39", e: 19.5, q: 2, d: .03 }, AEON: { p: 23.9, o: "", e: 23.9, q: 1, d: .03 },
+      FUSION: { p: 22, o: "Buy 2 save $8", e: 18, q: 2, d: .6, src: "crowd" }, CITYSUPER: { p: 26.5, o: "", e: 26.5, q: 1, d: .05, src: "crowd" } },
+    hist: [24.5,20,24.5,21,19.5,24.5,19,19,18,18,18,18] },
+  nestle: { name: "Nestlé Dairy Farm Hi-Calcium Low Fat Milk", short: "Nestlé hi-cal low fat milk", brand: "Nestlé Dairy Farm", zh: "牛奶公司", size: "946 mL", ml: 946, cat: "Milk", ean: "4891234009468", real: true, photo: "nestle", art: ["carton", "#e8f6e0", "#3fa535"],
+    prices: { WELLCOME: { p: 24.5, o: "2 for $37", e: 18.5, q: 2, d: .05 }, PARKNSHOP: { p: 18, o: "", e: 18, q: 1, d: .1 }, JASONS: { p: 25.5, o: "2 for $39", e: 19.5, q: 2, d: .05 }, AEON: { p: 17.9, o: "", e: 17.9, q: 1, d: .08 },
+      FUSION: { p: 18, o: "", e: 18, q: 1, d: .1, src: "crowd" }, CITYSUPER: { p: 23.9, o: "", e: 23.9, q: 1, d: .05, src: "crowd" } },
+    hist: [19.5,18.5,18.5,19,18,18,18.5,18,17.9,17.9,18,17.9] },
+  vita: { name: "Vita Hi-Calcium Low Fat Milk Beverage", short: "Vita hi-cal low fat milk", brand: "Vita", zh: "維他", size: "946 mL", ml: 946, cat: "Milk", ean: "4891028100941", real: true, art: ["carton", "#fff6e0", "#e0a21e"],
+    prices: { WELLCOME: { p: 22.5, o: "", e: 22.5, q: 1, d: .1 }, PARKNSHOP: { p: 23.5, o: "Buy 2 save $7", e: 20, q: 2, d: .3 }, JASONS: { p: 22.5, o: "", e: 22.5, q: 1, d: .1 }, AEON: { p: 24.5, o: "Buy 2 at $39.90", e: 19.95, q: 2, d: .2 } },
+    hist: [22.5,22.5,20,22.5,21,20,22.5,20,20,22.5,20,19.95] },
+  meiji: { name: "Meiji Skimmed Milk", short: "Meiji skimmed milk", brand: "Meiji", zh: "明治", size: "946 mL", ml: 946, cat: "Milk", ean: "4891234500941", real: true, art: ["carton", "#eef3ff", "#2d5bd7"],
+    prices: { WELLCOME: { p: 25, o: "", e: 25, q: 1, d: .05 }, PARKNSHOP: { p: 26, o: "", e: 26, q: 1, d: .05 }, CITYSUPER: { p: 27.5, o: "", e: 27.5, q: 1, d: .03, src: "crowd" } },
+    hist: [26,26,25,25,26,25,25,25,25,26,25,25] },
+  meadows: { name: "Meadows High Calcium Low Fat Fresh Milk", short: "Meadows hi-cal low fat milk", brand: "Meadows", size: "1 L", ml: 1000, cat: "Milk", ean: "4892214101004", real: true, art: ["carton", "#f1f7ff", "#5a8fd6"],
+    prices: { WELLCOME: { p: 38, o: "2 for $38", e: 19, q: 2, d: .2 }, JASONS: { p: 38, o: "2 for $38", e: 19, q: 2, d: .2 } },
+    hist: [38,19,38,19,19,38,19,19,38,19,19,19] },
+  msmilk: { name: "M&S Semi-Skimmed Milk", short: "M&S semi-skimmed milk", brand: "M&S Food", size: "1 L", ml: 1000, cat: "Milk", ean: "5000000100010", art: ["carton", "#eef6f2", "#1f6b5c"],
+    prices: { MS: { p: 32, o: "", e: 32, q: 1, d: .05, src: "crowd" } }, hist: Array(12).fill(32) },
+  trap: { name: "Trappist Hi-Calcium Low Fat", short: "Trappist low fat milk", brand: "Trappist", zh: "十字牌", size: "946 mL", ml: 946, cat: "Milk", ean: "4892214001946", real: true, art: ["carton", "#fff1ea", "#d64545"],
+    prices: { WELLCOME: { p: 18.5, o: "", e: 18.5, q: 1, d: .03 }, PARKNSHOP: { p: 23.5, o: "", e: 23.5, q: 1, d: .03 }, JASONS: { p: 21, o: "", e: 21, q: 1, d: .03 }, AEON: { p: 21.9, o: "", e: 21.9, q: 1, d: .03 }, CITYSUPER: { p: 23.9, o: "", e: 23.9, q: 1, d: .03, src: "crowd" } },
+    hist: [21,21,20,20,19.5,19.5,18.5,18.5,18.5,18.5,18.5,18.5] },
+  egg: { name: "DQY Fresh Eggs Grade AA Large", short: "Eggs, 8 large", size: "8 pcs", cat: "Eggs", ean: "6970000014425", real: true, art: ["eggs", "#f4e3c4", "#c98a3b"],
+    prices: { WELLCOME: { p: 29, o: "2 for $45", e: 22.5, q: 2, d: .03 }, PARKNSHOP: { p: 27, o: "", e: 27, q: 1, d: .2 }, JASONS: { p: 30, o: "2 for $45", e: 22.5, q: 2, d: .03 }, FUSION: { p: 27, o: "", e: 27, q: 1, d: .2, src: "crowd" }, CITYSUPER: { p: 34, o: "", e: 34, q: 1, d: .03, src: "crowd" } },
+    hist: [27,27,22.5,27,27,22.5,22.5,27,27,22.5,22.5,22.5] },
+  bread: { name: "Wholemeal Sandwich Loaf", short: "Wholemeal loaf", size: "450 g", cat: "Bread", ean: "4890008100309", art: ["bread", "#c98a4b", "#8a5a2b"],
+    prices: { WELLCOME: { p: 16.9, o: "", e: 16.9, q: 1, d: .12 }, PARKNSHOP: { p: 16.9, o: "Buy 2 save $3", e: 15.4, q: 2, d: .3 }, AEON: { p: 15.9, o: "", e: 15.9, q: 1, d: .1 }, MS: { p: 22, o: "", e: 22, q: 1, d: .05, src: "crowd" } },
+    hist: [16.9,16.9,15.4,16.9,16.9,15.4,16.9,16.9,15.4,15.4,16.9,15.4] },
+  soy: { name: "Calcium Soya Milk", short: "Soya milk", size: "1 L", ml: 1000, cat: "Soy milk", ean: "4891028710119", art: ["carton", "#eef7e6", "#4f9a2e"],
+    prices: { WELLCOME: { p: 16.5, o: "", e: 16.5, q: 1, d: .18 }, PARKNSHOP: { p: 15.9, o: "", e: 15.9, q: 1, d: .22 }, AEON: { p: 14.9, o: "", e: 14.9, q: 1, d: .1 }, BESTMART: { p: 14.5, o: "", e: 14.5, q: 1, d: .15, src: "crowd" } },
+    hist: [16.5,16.5,15.9,15.9,16.5,15.9,15.9,15.9,14.9,15.9,15.9,15.9] },
+  tissue: { name: "Bathroom Tissue", short: "Toilet rolls", size: "10 rolls", cat: "Paper", ean: "4892214350105", art: ["rolls", "#ffffff", "#7fb3e6"],
+    prices: { WELLCOME: { p: 49.9, o: "2 for $85", e: 42.5, q: 2, d: .25 }, PARKNSHOP: { p: 52, o: "", e: 52, q: 1, d: .41 }, AEON: { p: 45.9, o: "", e: 45.9, q: 1, d: .15 }, BESTMART: { p: 44.9, o: "", e: 44.9, q: 1, d: .2, src: "crowd" } },
+    hist: [52,49.9,45,52,42.5,49.9,52,42.5,49.9,49.9,42.5,42.5] },
+  rice: { name: "Thai Jasmine Rice", short: "Jasmine rice", size: "5 kg", cat: "Rice", ean: "8851234500055", art: ["bag", "#f6f1e4", "#2f8f5b"],
+    prices: { WELLCOME: { p: 98, o: "", e: 98, q: 1, d: .2 }, PARKNSHOP: { p: 95, o: "Buy 2 save $20", e: 85, q: 2, d: .35 }, AEON: { p: 92, o: "", e: 92, q: 1, d: .1 }, BESTMART: { p: 89, o: "", e: 89, q: 1, d: .1, src: "crowd" }, FUSION: { p: 95, o: "Buy 2 save $20", e: 85, q: 2, d: .3, src: "crowd" } },
+    hist: [98,98,92,95,95,85,95,95,92,92,95,95] },
+  hill: { name: "Hillside Farm A2 Low Fat Milk", short: "Hillside A2 milk (new)", size: "946 mL", ml: 946, cat: "Milk", ean: "4890000946002", fictional: true, art: ["carton", "#eaf6ee", "#2f8f5b"],
+    prices: { WELLCOME: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 }, PARKNSHOP: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 } },
+    hist: Array(12).fill(24.9), offer: { back: 6.2, brand: "Hillside Farm" } },
+  hillorg: { name: "Hillside Farm Organic Whole Milk", short: "Hillside organic milk", size: "1 L", ml: 1000, cat: "Milk", ean: "4890000100013", fictional: true, art: ["carton", "#f3ece1", "#8a5a2b"],
+    prices: { WELLCOME: { p: 38, o: "", e: 38, q: 1, d: .05 } }, hist: Array(12).fill(38), offer: { back: 5, brand: "Hillside Farm" } }
+};
+const MILK = ["slim", "nestle", "trap", "vita", "meiji", "meadows", "msmilk"];
+const SUBS = Object.fromEntries(MILK.map(k => [k, MILK.filter(x => x !== k).concat(["hill", "hillorg"])]));
 const HOME = {
-  slim:   { stock: 1,   unit: "pack",  rate: .4,   last: "12 Nov", cycle: 5,  useBy: "20 Nov" },
-  egg:    { stock: 3,   unit: "eggs",  rate: 1.5,  last: "10 Nov", cycle: 6,  per: 8 },
-  bread:  { stock: .5,  unit: "loaf",  rate: .25,  last: "13 Nov", cycle: 4,  useBy: "18 Nov" },
-  soy:    { stock: 2,   unit: "cartons", rate: .5, last: "11 Nov", cycle: 6 },
-  tissue: { stock: 6,   unit: "rolls", rate: .3,   last: "2 Nov",  cycle: 30, per: 10 },
-  rice:   { stock: 2,   unit: "kg",    rate: .15,  last: "20 Oct", cycle: 33, per: 5 }
+  slim:   { stock: 1,  unit: "pack",    rate: .4,  last: "12 Nov", every: 5,  useBy: "20 Nov" },
+  egg:    { stock: 3,  unit: "eggs",    rate: 1.5, last: "10 Nov", every: 6 },
+  bread:  { stock: .5, unit: "loaf",    rate: .25, last: "13 Nov", every: 4,  useBy: "18 Nov" },
+  soy:    { stock: 2,  unit: "cartons", rate: .5,  last: "11 Nov", every: 6 },
+  tissue: { stock: 6,  unit: "rolls",   rate: .3,  last: "2 Nov",  every: 30 },
+  rice:   { stock: 2,  unit: "kg",      rate: .15, last: "20 Oct", every: 33 }
 };
 const WATCH = ["slim", "egg", "bread", "soy", "tissue", "rice"];
-
+let REMOVED = new Set(), KEPT = new Set();
 let COUPONS = [
   { id: "c1", src: "yuu", item: "slim", store: "WELLCOME", off: 3, minQty: 2, until: "30 Nov", text: "HK$3 off Slimilk 946 mL, buy 2" },
-  { id: "c2", src: "MoneyBack", item: "tissue", store: "PARKNSHOP", off: 8, minQty: 1, until: "25 Nov", text: "HK$8 off Bathroom Tissue 10 rolls" }
+  { id: "c2", src: "MoneyBack", item: "tissue", store: "PARKNSHOP", off: 8, minQty: 1, until: "25 Nov", text: "HK$8 off toilet rolls, 10 pack" }
 ];
 const NEW_COUPONS = [
   { id: "c3", src: "yuu", item: "egg", store: "WELLCOME", off: 4, minQty: 2, until: "28 Nov", text: "HK$4 off DQY eggs, buy 2" },
-  { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: "15 Dec", text: "HK$10 off Thai Jasmine Rice 5 kg" }
+  { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: "15 Dec", text: "HK$10 off jasmine rice 5 kg" }
 ];
 let POINTS = 1240;
-let LEDGER = [
-  { d: "16 Nov", t: "Receipt · ParknShop", p: 20 },
-  { d: "15 Nov", t: "Shelf price confirmed · Wellcome", p: 5 },
-  { d: "12 Nov", t: "Receipt · Wellcome", p: 20 },
-  { d: "12 Nov", t: "Brand offer · Hillside Farm A2 milk", p: 60 },
-  { d: "9 Nov",  t: "Receipt · AEON", p: 20 }
-];
-let SHELF = { slim: { PARKNSHOP: { price: 21.9, n: 3, ago: "2 h" } } };   // crowd shelf reports
+let LEDGER = [ ["16 Nov", "Receipt · ParknShop", 20], ["15 Nov", "Shelf price confirmed", 5], ["12 Nov", "Receipt · Wellcome", 20], ["12 Nov", "Brand offer · Hillside A2 milk", 60], ["9 Nov", "Receipt · AEON", 20] ];
+let SHELF = { slim: { PARKNSHOP: { price: 21.9, n: 3, ago: "2 h ago" } } };
 let BARCODE_MAP = Object.fromEntries(Object.entries(P).map(([k, v]) => [v.ean, k]));
 const UNKNOWN_EAN = "4895555123456";
-let FAMILY = [
-  { t: "Slimilk 946 mL × 2", who: "M", done: false }, { t: "Eggs, 8 pcs", who: "K", done: false },
-  { t: "Wholemeal loaf", who: "M", done: true },     { t: "Calcium soya milk", who: "D", done: false },
-  { t: "Bananas", who: "K", done: false }
-];
-const WASTE = { months: [["Jun", 92], ["Jul", 75], ["Aug", 81], ["Sep", 58], ["Oct", 49], ["Nov", 46]],
-  items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
-let PLUS_PREVIEW = false, JOINED = false;
+// savings (sample): by month, and this month's breakdown
+let SAVED = { months: [["Jun", 14.2], ["Jul", 17.5], ["Aug", 19.8], ["Sep", 21.4], ["Oct", 23.1], ["Nov", 18.6]], goal: 25,
+  parts: [["Multi-buy offers spotted", 7.4], ["Cheaper store on your route", 4.2], ["Your coupons applied", 3.0], ["Cashback and points", 4.0]],
+  trips: [["16 Nov", "ParknShop", 6.4], ["12 Nov", "Wellcome", 8.2], ["9 Nov", "AEON", 4.0]] };
+let FAMILY = [ ["Slimilk 946 mL × 2", "M", false], ["Eggs, 8 large", "K", false], ["Wholemeal loaf", "M", true], ["Soya milk", "D", false], ["Bananas", "K", false] ];
+const WHO = { M: "#5e5ce6", K: "#ff9f0a", D: "#30b0c7" };
+const WASTE = { months: [["Jun", 92], ["Jul", 75], ["Aug", 81], ["Sep", 58], ["Oct", 49], ["Nov", 46]], items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
+let JOINED = false;
 
-/* ---------------- helpers ---------------- */
+/* ======================= helpers ======================= */
 const $ = s => document.querySelector(s);
 const hk = (x, d = 2) => "HK$" + x.toFixed(d);
-const daysLeft = k => HOME[k].stock / HOME[k].rate;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-function couponFor(k, store) { return COUPONS.find(c => c.item === k && c.store === store); }
+const daysLeft = k => HOME[k].stock / HOME[k].rate;
+const sum = a => a.reduce((x, y) => x + y, 0);
+const couponFor = (k, s) => COUPONS.find(c => c.item === k && c.store === s);
 function rows(k) {
   return Object.entries(P[k].prices).map(([s, r]) => {
-    const c = couponFor(k, s);
-    const withC = c ? r.e - c.off / Math.max(c.minQty, r.q) : null;
-    const shelf = SHELF[k] && SHELF[k][s];
-    return { s, ...r, coupon: c, withC, final: withC ?? r.e, shelf };
+    const c = couponFor(k, s), withC = c ? r.e - c.off / Math.max(c.minQty, r.q) : null;
+    return { s, ...r, coupon: c, final: withC ?? r.e, shelf: SHELF[k] && SHELF[k][s] };
   }).sort((a, b) => a.final - b.final);
 }
-function best(k, routeOnly) {
-  const r = rows(k).filter(x => !routeOnly || ROUTE.includes(x.s));
-  return r[0];
+const best = (k, routeOnly) => rows(k).filter(x => !routeOnly || ROUTE.includes(x.s))[0];
+const per100 = (k, v) => P[k].ml ? v / P[k].ml * 100 : null;
+
+function art(k, cls = "") {
+  if (P[k].photo) return `<span class="art photo ${cls}" aria-hidden="true"><img src="${PHOTOS[P[k].photo]}" alt=""></span>`;
+  const [kind, body, acc] = P[k].art; let g = "";
+  if (kind === "carton") g = `<path d="M22 22 L32 12 L42 22 Z" fill="${acc}" opacity=".85"/><rect x="31" y="9" width="5" height="5" rx="1" fill="${acc}"/>
+    <rect x="20" y="22" width="24" height="34" rx="2.5" fill="${body}" stroke="${acc}" stroke-width="1.5"/><rect x="20" y="30" width="24" height="9" fill="${acc}"/>
+    <circle cx="32" cy="47" r="4.5" fill="${acc}" opacity=".35"/><path d="M22 22h20" stroke="${acc}" stroke-width="1.5"/>`;
+  if (kind === "eggs") g = `<rect x="8" y="34" width="48" height="16" rx="5" fill="${acc}" opacity=".55"/>
+    ${[14, 26, 38, 50].map((x, i) => `<ellipse cx="${x - 2}" cy="${30 + (i % 2)}" rx="6" ry="8" fill="${body}" stroke="#d9b98a" stroke-width="1"/>`).join("")}
+    <rect x="8" y="40" width="48" height="12" rx="4" fill="${acc}"/>`;
+  if (kind === "bread") g = `<path d="M12 30c0-9 9-14 20-14s20 5 20 14c0 3-2 4-4 4v16a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3V34c-2 0-4-1-4-4z" fill="${body}" stroke="${acc}" stroke-width="1.5"/>
+    <path d="M24 26c1-3 4-5 8-5M34 25c1-2 3-3 6-3" stroke="${acc}" stroke-width="1.5" stroke-linecap="round" fill="none"/><rect x="18" y="40" width="28" height="6" rx="2" fill="#f2d7a8" opacity=".9"/>`;
+  if (kind === "rolls") g = [[22, 26], [42, 26], [22, 44], [42, 44]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9.5" fill="${body}" stroke="${acc}" stroke-width="1.6"/><circle cx="${x}" cy="${y}" r="3" fill="${acc}" opacity=".5"/>`).join("") +
+    `<rect x="11" y="49" width="42" height="7" rx="3" fill="${acc}" opacity=".6"/>`;
+  if (kind === "bag") g = `<path d="M18 14h28l4 8-2 32a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3l-2-32z" fill="${body}" stroke="${acc}" stroke-width="1.6"/>
+    <path d="M18 14l-4 8h36l-4-8" fill="${acc}" opacity=".85"/><ellipse cx="32" cy="39" rx="9" ry="6" fill="${acc}" opacity=".25"/>
+    ${[[28, 37], [32, 41], [36, 37], [32, 35]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.6" ry="3" fill="${acc}" transform="rotate(30 ${x} ${y})"/>`).join("")}`;
+  return `<span class="art ${cls}" aria-hidden="true"><svg viewBox="0 0 64 64">${g}</svg></span>`;
 }
-function per100(k, price) { return P[k].ml ? price / P[k].ml * 100 : null; }
-function spark(vals) {
-  const w = 300, h = 44, mn = Math.min(...vals) - 1, mx = Math.max(...vals) + 1;
-  const pts = vals.map((v, i) => [i / (vals.length - 1) * (w - 8) + 4, h - 4 - (v - mn) / (mx - mn) * (h - 8)]);
+function spark(vals, wide) {
+  const w = wide ? 320 : 64, h = wide ? 56 : 26, mn = Math.min(...vals) - .5, mx = Math.max(...vals) + .5;
+  const pts = vals.map((v, i) => [i / (vals.length - 1) * (w - 6) + 3, h - 3 - (v - mn) / (mx - mn || 1) * (h - 6)]);
   const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
-  const last = pts[pts.length - 1];
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
-    <path d="${d} L ${w - 4} ${h} L 4 ${h} Z" fill="var(--leaf-soft)"/>
-    <path d="${d}" fill="none" stroke="var(--leaf)" stroke-width="2" vector-effect="non-scaling-stroke"/>
-    <circle cx="${last[0]}" cy="${last[1]}" r="3.5" fill="var(--leaf)"/></svg>`;
+  const up = vals[vals.length - 1] > vals[vals.length - 2], col = up ? "var(--orange)" : "var(--green)", last = pts[pts.length - 1];
+  return `<svg class="spark ${wide ? "wide" : ""}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    ${wide ? `<path d="${d} L ${w - 3} ${h} L 3 ${h} Z" fill="${col}" opacity=".12"/>` : ""}
+    <path d="${d}" fill="none" stroke="${col}" stroke-width="${wide ? 2.2 : 1.8}" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="${wide ? 3.5 : 2.4}" fill="${col}"/></svg>`;
 }
-function toast(msg) {
-  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
-  $("#phone").appendChild(t); setTimeout(() => t.remove(), 2600);
-}
-function addPoints(p, label) { POINTS += p; LEDGER.unshift({ d: "17 Nov", t: label, p }); $("#ptsTop").textContent = POINTS.toLocaleString() + " pts"; }
+const sparkle = (s = 14, c = "currentColor") => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${c}" aria-hidden="true"><path d="M12 2l1.9 5.7L19.6 9.6l-5.7 1.9L12 17.2l-1.9-5.7L4.4 9.6l5.7-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>`;
+function toast(m) { const t = document.createElement("div"); t.className = "toast"; t.textContent = m; $("#app").appendChild(t); setTimeout(() => t.remove(), 2500); }
+function addPoints(p, l) { POINTS += p; LEDGER.unshift(["17 Nov", l, p]); }
+const savedNow = () => SAVED.months[SAVED.months.length - 1][1];
+const savedYear = () => sum(SAVED.months.map(m => m[1])) + 96.3;   // + Jan–May (sample)
 
-/* ---------------- screens ---------------- */
-const ICONS = {
-  today: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
-  compare: '<path d="M4 6v12M8 6v12M11 6v12M15 6v12M18 6v12M21 6v12"/>',
+/* ======================= screens ======================= */
+const ICON = {
+  list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/>',
+  compare: '<path d="M4 6v12M7.5 6v12M10.5 6v12M14 6v12M17 6v12M20 6v12"/>',
   watch: '<path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/>',
-  wallet: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2M3 9h18"/>',
-  family: '<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M14 20c.3-2.8 1.8-4.5 3.5-4.5S21 17 22 20"/>'
+  savings: '<circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.6 5.8 4.4 0 1.2-1.3 2.1-3 2.1-1.3 0-2.5-.6-3-1.6M12 6v1.7M12 16.3V18"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h2"/>'
 };
-const TABS = [["today", "Today"], ["compare", "Compare"], ["watch", "Watchlist"], ["wallet", "Wallet"], ["family", "Family"]];
-let TAB = "today", CURRENT = "slim";
+const TABS = [["list", "My List"], ["compare", "Compare"], ["watch", "Watchlist"], ["savings", "Savings"], ["wallet", "Wallet"]];
+let TAB = "list", CUR = "slim";
 
-function render() {
-  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button type="button" class="${TAB === k ? "on" : ""}" data-tab="${k}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>${l}</button>`).join("");
-  $("#title").textContent = { today: "Today · Tue 17 Nov", compare: "Compare", watch: "Watchlist", wallet: "Wallet", family: "Family" }[TAB];
-  $("#ptsTop").textContent = POINTS.toLocaleString() + " pts";
-  $("#screen").innerHTML = ({ today, compare, watch, wallet, family })[TAB]();
-  $("#screen").scrollTop = 0;
+function render(keepScroll) {
+  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button type="button" class="${TAB === k ? "on" : ""}" data-tab="${k}" aria-label="${l}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>${l}</button>`).join("");
+  const y = $("#screen").scrollTop;
+  $("#screen").innerHTML = ({ list, compare, watch, savings, wallet })[TAB]();
+  $("#screen").scrollTop = keepScroll ? y : 0;
+  $("#fab").hidden = TAB === "savings";
   renderSteps();
 }
 
-function today() {
-  const low = WATCH.filter(k => daysLeft(k) <= 4).sort((a, b) => daysLeft(a) - daysLeft(b));
-  const trip = {}; let total = 0, usual = 0;
-  low.forEach(k => {
-    const b = best(k, true), q = Math.max(b.q, 1);
-    (trip[b.s] ||= []).push({ k, b, q }); total += b.final * q;
-    usual += P[k].prices.PARKNSHOP ? P[k].prices.PARKNSHOP.p * q : b.p * q;
+function aiItems() {
+  return WATCH.filter(k => daysLeft(k) <= 5 && !REMOVED.has(k)).sort((a, b) => daysLeft(a) - daysLeft(b)).map(k => {
+    const h = HOME[k], d = daysLeft(k), b = best(k, true);
+    const conf = Math.min(.97, .62 + .06 * (12 - h.every) + (d <= 2 ? .1 : 0));
+    const runs = d < 1.5 ? "tomorrow" : d < 2.5 ? "in 2 days" : "in " + Math.round(d) + " days";
+    let alt = null;
+    if (b.q > 1 && MILK.includes(k)) MILK.filter(x => x !== k).forEach(x => rows(x).filter(r => ROUTE.includes(r.s) && r.q === 1).forEach(r => { if (!alt || r.e < alt.r.e) alt = { x, r }; }));
+    if (alt && alt.r.e > b.final + 1.5) alt = null;
+    return { k, d, b, conf, alt, why: `You buy this about every ${h.every} days. Last bought ${h.last}, so it runs out ${runs}.` };
   });
+}
+function list() {
+  const items = aiItems(), total = sum(items.map(i => i.b.final * i.b.q));
+  const shelfTotal = sum(items.map(i => (P[i.k].prices.PARKNSHOP || P[i.k].prices[i.b.s]).p * i.b.q));
+  const trip = {}; items.forEach(i => (trip[i.b.s] ||= []).push(i));
+  const skip = WATCH.filter(k => daysLeft(k) > 5);
   const uses = WATCH.filter(k => HOME[k].useBy);
   return `
-  <div class="hero"><div class="sub">Running low this week</div>
-    <div class="big">${low.length} items · ${hk(total)}</div>
-    <div class="sub">on your route, after offers and your coupons. Shelf prices at your usual store: ${hk(usual)}.</div></div>
-  <div class="sec">Buy before you run out</div>
-  <div class="stack">${low.map(k => {
-    const b = best(k, true), any = best(k, false), d = daysLeft(k), h = HOME[k];
-    return `<div class="card"><div class="row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">${P[k].size} · ${h.stock} ${h.unit} left · lasts ~${d.toFixed(0)} day${d < 1.5 ? "" : "s"}</div></div>
-      <span class="pill ${d <= 2 ? "warn" : ""}">${d <= 2 ? "Runs out soon" : "This week"}</span></div>
-      <div class="meter ${d <= 2 ? "w" : ""}" style="margin:8px 0"><i style="width:${Math.min(100, d / h.cycle * 100)}%"></i></div>
-      <div class="row"><div class="sub">Buy ${b.q} at <b>${STORES[b.s].name}</b>${b.o ? " · " + esc(b.o) : ""}${b.coupon ? " · with your " + b.coupon.src + " coupon" : ""}</div>
-      <span class="tagp">${hk(b.final)}</span></div>
-      ${any.s !== b.s ? `<div class="sub" style="margin-top:4px">${STORES[any.s].name} is ${hk(b.final - any.final)} cheaper but off your route.</div>` : ""}
-      <div class="btns"><button class="btn" type="button" data-open="${k}">See all prices</button></div></div>`; }).join("")}</div>
-  <div class="sec">Use first</div>
-  <div class="stack">${uses.map(k => `<div class="card row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">Bought ${HOME[k].last} · best before ${HOME[k].useBy}</div></div><span class="pill warn">Use by ${HOME[k].useBy}</span></div>`).join("")}</div>
-  <div class="sec">Your trip</div>
-  <div class="stack">${Object.entries(trip).map(([s, items]) => `<div class="card">
-    <div class="row"><div><div class="name">${STORES[s].name} · ${STORES[s].branch}</div><div class="sub">${STORES[s].walk} min walk · open until ${STORES[s].close}</div></div><span class="pill good">Open now</span></div>
-    <div class="sub" style="margin-top:6px">${items.map(i => `${i.q} × ${esc(P[i.k].name)}`).join("<br>")}</div></div>`).join("")}</div>`;
+  <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Basket Radar AI.</p>
+  <div class="ai-card"><div class="k">${sparkle(15)} AI GROCERY LIST · THIS WEEK</div>
+    <div class="h">${items.length} things before you run out</div>
+    <div class="s">${hk(total)} on your route, after offers and coupons. You'd pay ${hk(shelfTotal)} at shelf prices, so you save <b>${hk(shelfTotal - total)}</b>.</div>
+    <div class="acts"><button class="btn fill" type="button" data-act="trip">Plan my trip</button><button class="btn" type="button" data-act="how">How it works</button></div></div>
+  <div class="hdr">Suggested by AI · tap ✓ to keep</div>
+  <div class="group">${items.map(i => `<div class="cell wa" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${art(i.k)}<div class="main">
+      <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="t1 b">${esc(P[i.k].short)}</span><span class="price">${hk(i.b.final * i.b.q)}</span></div>
+      <div class="t2">${i.b.q} × ${P[i.k].size} · ${STORES[i.b.s].name}${i.b.o ? " · " + esc(i.b.o) : ""}${i.b.coupon ? " · " + i.b.coupon.src + " coupon" : ""}</div>
+      <div class="why">${sparkle(12)}<span>${i.why}</span></div>
+      ${i.alt ? `<div class="why" style="color:var(--tint)">${sparkle(12)}<span>Need just one? ${esc(P[i.alt.x].short)} is ${hk(i.alt.r.e)} at ${STORES[i.alt.r.s].name}, no need to buy two.</span></div>` : ""}
+      <div class="conf" title="Confidence"><i style="width:${Math.round(i.conf * 100)}%"></i></div>
+      <div class="row" style="margin-top:8px"><button class="xbtn ${KEPT.has(i.k) ? "ok" : ""}" type="button" data-keep="${i.k}" aria-label="Keep ${esc(P[i.k].short)}">✓</button><button class="xbtn" type="button" data-remove="${i.k}" aria-label="Remove ${esc(P[i.k].short)}">✕</button>
+      <button class="btn" type="button" data-open="${i.k}" style="margin-left:auto;padding:5px 12px;font-size:13px">Compare</button></div>
+    </div></div>`).join("") || `<div class="cell"><div class="main t2">Nothing runs out this week. Nice.</div></div>`}</div>
+  ${REMOVED.size ? `<p class="t2" style="margin:8px 16px">Removed ${REMOVED.size}. The AI will ask less often about ${[...REMOVED].map(k => esc(P[k].short)).join(", ")}. <button class="btn" type="button" data-act="undo" style="padding:2px 10px;font-size:13px">Undo</button></p>` : ""}
+  <div class="hdr">Use first</div>
+  <div class="group">${uses.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Bought ${HOME[k].last} · best before ${HOME[k].useBy}</div></div><span class="badge o">Use by ${HOME[k].useBy}</span></div>`).join("")}</div>
+  <div class="hdr">Your trip</div>
+  <div class="group">${Object.entries(trip).map(([s, its]) => `<div class="cell"><span class="storedot" style="background:${STORES[s].c}">${STORES[s].name[0]}</span><div class="main">
+    <div class="t1 b">${STORES[s].name} · ${STORES[s].branch}</div><div class="t2">${its.map(i => esc(P[i.k].short)).join(", ")}</div></div>
+    <div style="text-align:right"><span class="badge g">Open till ${STORES[s].close}</span><div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
+  <div class="hdr">Not needed this week</div>
+  <div class="group">${skip.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Lasts about ${Math.round(daysLeft(k))} more days</div></div></div>`).join("")}</div>`;
 }
 
 function compare() {
-  const k = CURRENT, prod = P[k], r = rows(k);
-  const cheapestEquiv = Math.min(...[k, ...(SUBS[k] || [])].filter(x => P[x].ml).flatMap(x => rows(x).map(y => per100(x, y.e))));   // best price everyone pays, before personal coupons
-  const subs = (SUBS[k] || []).filter(x => !P[x].offer);
-  const offers = (SUBS[k] || []).concat([k]).filter(x => P[x].offer).map(x => {
-    const shelf = Math.min(...Object.values(P[x].prices).map(v => v.e));
-    const after = shelf - P[x].offer.back, p100 = per100(x, after);
-    return { x, shelf, after, p100, ok: p100 <= cheapestEquiv * 1.05, gap: p100 / cheapestEquiv - 1 };
+  const k = CUR, pr = P[k], r = rows(k), top = r[0];
+  const fam = [k, ...(SUBS[k] || [])].filter(x => P[x].ml && !P[x].offer);
+  const bestPublic = fam.length ? Math.min(...fam.flatMap(x => Object.values(P[x].prices).map(v => per100(x, v.e)))) : null;
+  const offers = [...(SUBS[k] || []), k].filter(x => P[x].offer && bestPublic).map(x => {
+    const shelf = Math.min(...Object.values(P[x].prices).map(v => v.e)), after = shelf - P[x].offer.back, p = per100(x, after);
+    return { x, shelf, after, p, gap: p / bestPublic - 1 };
   });
-  const shown = offers.filter(o => o.ok), hidden = offers.filter(o => !o.ok);
+  const shown = offers.filter(o => o.gap <= .05), hidden = offers.filter(o => o.gap > .05);
+  const subs = (SUBS[k] || []).filter(x => !P[x].offer);
   return `
-  <div class="search"><input id="q" placeholder="Search milk, eggs, rice…" aria-label="Search products"><button class="btn pri" type="button" data-act="scan">Scan barcode</button></div>
-  <div class="sec">${esc(prod.cat)}</div>
-  <div class="card"><div class="name" style="font-size:17px">${esc(prod.name)}</div>
-    <div class="sub">${prod.size} · barcode <span class="mono">${prod.ean}</span>${prod.real ? " · prices from the Consumer Council file" : prod.fictional ? " · fictional brand" : " · sample prices"}</div>
-    <table class="cmp" style="margin-top:8px"><tr><th>Store</th><th>Shelf</th><th class="r">You pay</th></tr>
-    ${r.map((x, i) => `<tr class="${i === 0 ? "best" : ""}"><td><b>${STORES[x.s].name}</b>${ROUTE.includes(x.s) ? "" : ' <span class="sub">off route</span>'}
-      ${x.shelf ? `<div class="sub">Shelf report: ${hk(x.shelf.price)} · ${x.shelf.n} shopper${x.shelf.n > 1 ? "s" : ""} · ${x.shelf.ago === "just now" ? "just now" : x.shelf.ago + " ago"}</div>` : ""}</td>
-      <td><span class="${x.e < x.p ? "strike" : ""}">${hk(x.p)}</span>${x.o ? `<div class="sub">${esc(x.o)}</div>` : ""}</td>
-      <td class="r"><span class="tagp">${hk(x.final)}</span>${x.coupon ? `<div class="sub">with ${x.coupon.src} coupon</div>` : x.q > 1 ? `<div class="sub">each, buy ${x.q}</div>` : ""}</td></tr>`).join("")}
-    </table>
-    <div class="row" style="margin-top:10px"><div class="sub">Sale next week at ${STORES[r[0].s].name}</div><span class="pill">${Math.round(r[0].d * 100)}% likely</span></div>
-    <div class="sec" style="margin-top:10px">12-week best price</div>${spark(prod.hist)}
-    <div class="btns"><button class="btn" type="button" data-act="report">Report shelf price</button><button class="btn ghost" type="button" data-act="wrongcat">Wrong category?</button></div></div>
-  ${subs.length ? `<div class="sec">Same type, compared per 100 mL</div><div class="stack">${subs.map(x => { const b = best(x, false);
-    return `<button type="button" class="card row" style="text-align:left;width:100%" data-open="${x}"><div><div class="name">${esc(P[x].name)}</div><div class="sub">${P[x].size} · ${STORES[b.s].name}</div></div>
-      <div style="text-align:right"><span class="tagp">${hk(b.final)}</span><div class="sub">${per100(x, b.final) ? hk(per100(x, b.final)) + "/100 mL" : ""}</div></div></button>`; }).join("")}</div>` : ""}
-  ${shown.map(o => `<div class="sec">Brand offer</div><div class="offerbox"><div class="lbl">Brand offer · paid by ${esc(P[o.x].offer.brand)}</div>
-    <div class="name" style="margin-top:4px">${esc(P[o.x].name)} · ${P[o.x].size}</div>
-    <div class="sub">${hk(o.shelf)} at the shelf, ${hk(P[o.x].offer.back)} back after you log the receipt → ${hk(o.after)} (${hk(o.p100)}/100 mL), ${(o.gap * 100).toFixed(1)}% above the best value. Shown because it is within 5%.</div>
-    <div class="btns"><button class="btn" type="button" data-act="claim" data-x="${o.x}">Save offer</button></div></div>`).join("")}
-  ${hidden.length ? `<p class="note" style="margin-top:10px">${hidden.length} brand offer hidden: ${hidden.map(o => esc(P[o.x].name) + " would still cost " + (o.gap * 100).toFixed(0) + "% more than the best value").join("; ")}. Offers never change the ranking.</p>` : ""}`;
+  <h1 class="ltitle">Compare</h1>
+  <div class="row" style="margin:8px 0 14px;flex-wrap:nowrap"><label class="search" style="flex:1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" placeholder="Milk, eggs, rice…" aria-label="Search products"></label>
+    <button class="btn fill" type="button" data-act="scan" style="padding:9px 14px">Scan</button></div>
+  <div class="phead">${art(k, "xl")}<div style="min-width:0"><div class="t2">${esc(pr.cat)} · ${pr.size}</div><div class="t1 b" style="font-size:20px;letter-spacing:-.03em">${esc(pr.name)}</div>
+    <div class="t2">${pr.real ? "Prices: Consumer Council file" : pr.fictional ? "Fictional brand" : "Sample prices"}</div>
+    <div class="row" style="margin-top:6px"><span class="badge g">Best ${hk(top.final)}</span><span class="badge">${Math.round(top.d * 100)}% sale chance next week</span></div></div></div>
+  <div class="hdr">What you really pay</div>
+  <div class="group">${r.map((x, i) => `<div class="cell"><span class="storedot" style="background:${STORES[x.s].c}">${STORES[x.s].name[0]}</span><div class="main">
+      <div class="t1 ${i === 0 ? "b" : ""}">${STORES[x.s].name}${ROUTE.includes(x.s) ? "" : ` <span class="t2">· off your route</span>`}</div>
+      <div class="t2">${x.o ? esc(x.o) + (x.q > 1 ? ` · each when you buy ${x.q}` : "") : "No offer"}${x.coupon ? ` · with your ${x.coupon.src} coupon` : ""}</div>
+      ${x.src === "crowd" ? `<div class="t2" style="color:var(--tint)">Not in the Consumer Council file · shelf price from shoppers</div>` : ""}
+      ${x.shelf ? `<div class="t2" style="color:var(--tint)">Shelf tag ${hk(x.shelf.price)} · ${x.shelf.n} shopper${x.shelf.n > 1 ? "s" : ""} · ${x.shelf.ago}</div>` : ""}</div>
+    <div style="text-align:right">${x.final < x.p ? `<div class="strike">${hk(x.p)}</div>` : ""}<div class="price" style="${i === 0 ? "color:var(--green)" : ""}">${hk(x.final)}</div></div></div>`).join("")}</div>
+  <div class="group" style="margin-top:12px;padding:12px 14px"><div class="t2">12-week best price</div>${spark(pr.hist, true)}</div>
+  <div class="row" style="margin-top:12px"><button class="btn" type="button" data-act="report">Report shelf price</button><button class="btn" type="button" data-act="wrongcat">Wrong category?</button></div>
+  ${MILK.includes(k) ? brandList(k) : ""}
+  ${shown.map(o => `<div class="hdr">Brand offer</div><div class="offer"><div class="lbl">Brand offer · paid by ${esc(P[o.x].offer.brand)}</div>
+    <div class="row" style="margin-top:8px;flex-wrap:nowrap">${art(o.x)}<div><div class="t1 b">${esc(P[o.x].short)}</div>
+    <div class="t2">${hk(o.shelf)} on the shelf, ${hk(P[o.x].offer.back)} back after you log the receipt → <b>${hk(o.after)}</b>. Only ${(o.gap * 100).toFixed(1)}% above the best value, so we show it.</div></div></div>
+    <button class="btn" type="button" data-act="claim" style="margin-top:10px">Save offer</button></div>`).join("")}
+  ${hidden.length ? `<p class="t2" style="margin:10px 4px">${hidden.length} brand offer hidden because it would still cost more than 5% above the best value. Offers never change the ranking.</p>` : ""}`;
+}
+
+function brandList(k) {
+  const list = MILK.map(x => { const b = rows(x).sort((a, c) => a.e - c.e)[0]; return { x, b, p: per100(x, b.e) }; }).sort((a, c) => a.p - c.p);
+  return `<div class="hdr" id="brands">Low-fat milk · every brand · per 100 mL</div><div class="group">${list.map((r, i) => `
+    <button class="cell wa" type="button" data-open="${r.x}" style="${r.x === k ? "background:var(--fill)" : ""}">${art(r.x)}<div class="main">
+      <div class="t1 ${i === 0 ? "b" : ""}">${esc(P[r.x].brand)} <span class="t2">${P[r.x].zh || ""}</span></div>
+      <div class="t2">${P[r.x].size} · ${STORES[r.b.s].name}${r.b.q > 1 ? ", buy " + r.b.q : ""}</div>
+      ${i === 0 ? `<span class="badge g" style="margin-top:4px">Best value</span>` : r.x === k ? `<span class="badge" style="margin-top:4px">Viewing</span>` : ""}</div>
+      <div style="text-align:right"><div class="price" style="${i === 0 ? "color:var(--green)" : ""}">${hk(r.p)}</div><div class="t2">${hk(r.b.e)} each</div></div><span class="chev">›</span></button>`).join("")}</div>
+  <p class="t2" style="margin:8px 16px">Prices per 100 mL after multi-buy offers, before your personal coupons. Brands we track as near-identical: low-fat or skimmed, 946 mL to 1 L.</p>`;
 }
 
 function watch() {
-  return `<p class="note" style="margin-top:0">Your staples, tracked like a stock list: best price this week, change on last week, chance of a deal, and how long your stock lasts.</p>
-  <div class="stack">${WATCH.map(k => {
-    const b = best(k, false), prev = P[k].hist[P[k].hist.length - 2], ch = b.e - prev, d = daysLeft(k), h = HOME[k];
-    return `<button type="button" class="card" style="text-align:left;width:100%" data-open="${k}">
-      <div class="row"><div><div class="name">${esc(P[k].name)}</div><div class="sub">${P[k].size} · best at ${STORES[b.s].name}</div></div>
-      <div style="text-align:right"><span class="tagp">${hk(b.final)}</span><div class="sub mono" style="color:${ch > 0 ? "var(--warn)" : ch < 0 ? "var(--leaf)" : "var(--mute)"}">${ch > 0 ? "▲" : ch < 0 ? "▼" : "■"} ${hk(Math.abs(ch))}</div></div></div>
-      ${spark(P[k].hist)}
-      <div class="row"><span class="sub">Stock lasts ~${d.toFixed(0)} days · cycle ${h.cycle} d</span><span class="pill">${Math.round(Math.max(...Object.values(P[k].prices).map(v => v.d)) * 100)}% deal next wk</span></div></button>`; }).join("")}</div>`;
+  return `<h1 class="ltitle">Watchlist</h1><p class="lsub">Your staples, tracked like stocks.</p>
+  <div class="group">${WATCH.map(k => { const b = best(k, false), prev = P[k].hist[P[k].hist.length - 2], ch = b.e - prev, d = daysLeft(k);
+    const p = Math.max(...Object.values(P[k].prices).map(v => v.d));
+    return `<button class="cell wa" type="button" data-open="${k}">${art(k)}<div class="main"><div class="t1 b">${esc(P[k].short)}</div>
+      <div class="t2">${Math.round(p * 100)}% sale chance · stock ~${Math.round(d)} days</div></div>
+      ${spark(P[k].hist)}<div style="text-align:right;min-width:72px"><div class="price">${hk(b.final)}</div>
+      <div class="t2 num" style="color:${ch > 0 ? "var(--orange)" : ch < 0 ? "var(--green)" : "var(--ink2)"};font-weight:600">${ch > 0 ? "▲" : ch < 0 ? "▼" : "–"} ${Math.abs(ch).toFixed(2)}</div></div></button>`; }).join("")}</div>
+  <p class="t2" style="margin:10px 16px">Green line: cheaper than last week. Orange: dearer. Tap an item to compare stores.</p>`;
+}
+
+function savings() {
+  const now = savedNow(), pct = Math.min(1, now / SAVED.goal), C = 2 * Math.PI * 74, max = Math.max(...SAVED.months.map(m => m[1]));
+  return `<h1 class="ltitle">Savings</h1><p class="lsub">Money Basket Radar found for you.</p>
+  <div class="save-hero">
+    <div class="ring"><svg viewBox="0 0 170 170"><circle cx="85" cy="85" r="74" fill="none" stroke="var(--fill)" stroke-width="12"/>
+      <circle cx="85" cy="85" r="74" fill="none" stroke="var(--green)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/></svg>
+      <div class="c"><b>${hk(now)}</b><span>saved in November</span></div></div>
+    <div class="t1 b">${now >= SAVED.goal ? "Monthly goal reached!" : `${hk(SAVED.goal - now)} to your ${hk(SAVED.goal, 0)} goal`}</div>
+    <div class="t2">${hk(savedYear())} saved this year. That's about ${Math.round(savedYear() / 18.5)} packs of milk, free.</div></div>
+  <div class="hdr">By month</div>
+  <div class="group"><div class="bars">${SAVED.months.map((m, i) => `<div class="b ${i === SAVED.months.length - 1 ? "now" : ""}"><em>${m[1].toFixed(0)}</em><i style="height:${m[1] / max * 78}px"></i>${m[0]}</div>`).join("")}</div>
+    <p class="t2" style="padding:0 14px 12px">HK$ saved per month. November isn't over yet.</p></div>
+  <div class="hdr">Where November's savings came from</div>
+  <div class="group">${SAVED.parts.map(p => `<div class="cell"><div class="main"><div class="row" style="justify-content:space-between"><span class="t1">${p[0]}</span><span class="price" style="color:var(--green)">${hk(p[1])}</span></div>
+    <div class="mini"><i style="width:${p[1] / now * 100}%"></i></div></div></div>`).join("")}</div>
+  <div class="hdr">Recent trips</div>
+  <div class="group">${SAVED.trips.map(t => `<div class="cell"><span class="storedot" style="background:${(Object.values(STORES).find(s => s.name === t[1]) || {}).c}">${t[1][0]}</span><div class="main"><div class="t1">${t[1]}</div><div class="t2">${t[0]}</div></div><span class="badge g">Saved ${hk(t[2])}</span></div>`).join("")}</div>
+  <p class="t2" style="margin:10px 16px">Saved = what you'd have paid at shelf prices in your usual store, minus what you paid.</p>`;
 }
 
 function wallet() {
-  const matched = COUPONS.filter(c => WATCH.includes(c.item));
-  return `
-  <div class="hero"><div class="sub">Basket Radar points</div><div class="big">${POINTS.toLocaleString()} pts</div>
-    <div class="sub">≈ ${hk(POINTS / 100)} in cashback. Earned on receipts from any chain, on top of yuu and MoneyBack.</div></div>
-  <div class="sec">Your coupons, matched to your list</div>
-  <div class="stack">${COUPONS.map(c => `<div class="card row"><div><div class="name">${esc(c.text)}</div><div class="sub">${c.src} · ${STORES[c.store].name} · until ${c.until}</div></div>
-    <span class="pill ${matched.includes(c) ? "good" : ""}">${matched.includes(c) ? "On your list" : "Not needed"}</span></div>`).join("")}</div>
-  <div class="btns"><button class="btn pri" type="button" data-act="coupons">Add coupon screenshot</button></div>
-  <p class="note">You share a screenshot of the coupon list in your yuu or MoneyBack app; we read it on your phone. We do not log in to those apps.</p>
-  <div class="sec">How you earn</div>
-  <div class="card sub">Receipt from any chain <b class="price">+20</b> · Confirmed shelf price <b class="price">+5</b> · Brand offer bought <b class="price">+60</b><br>100 points = HK$1 back. Points are paid for by brands, not by your shopping.</div>
-  <div class="sec">Recent points</div>
-  <div class="card list">${LEDGER.slice(0, 7).map(l => `<div class="it"><div style="flex:1"><div>${esc(l.t)}</div><div class="sub">${l.d}</div></div><span class="price" style="color:var(--leaf)">+${l.p}</span></div>`).join("")}</div>`;
+  const used = COUPONS.filter(c => WATCH.includes(c.item));
+  return `<h1 class="ltitle">Wallet</h1><p class="lsub">Points from every chain, and the coupons you already have.</p>
+  <div class="pcard"><div class="row" style="justify-content:space-between"><span style="font-weight:600">Basket Radar Points</span>${sparkle(18, "#fff")}</div>
+    <div><div class="big">${POINTS.toLocaleString()}</div><div style="opacity:.9;font-size:15px">≈ ${hk(POINTS / 100)} cashback · earned on any chain's receipts</div></div></div>
+  <div class="hdr">Coupons matched to your list</div>
+  <div class="group">${COUPONS.map(c => `<div class="cell"><span class="storedot" style="background:${STORES[c.store].c}">${c.src === "yuu" ? "y" : "M"}</span><div class="main"><div class="t1">${esc(c.text)}</div>
+    <div class="t2">${c.src} · ${STORES[c.store].name} · until ${c.until}</div></div><span class="badge ${used.includes(c) ? "g" : ""}">${used.includes(c) ? "Applied" : "Not needed"}</span></div>`).join("")}
+    <button class="cell" type="button" data-act="coupons"><div class="main t1" style="color:var(--tint)">Add coupon screenshot</div><span class="chev">›</span></button></div>
+  <p class="t2" style="margin:8px 16px">Share a screenshot of your yuu or MoneyBack coupon list. We read it on your phone; we never log in to those apps.</p>
+  <div class="hdr">How you earn</div>
+  <div class="group">${[["Log a receipt from any chain", 20], ["Confirmed shelf-price report", 5], ["Buy a brand offer", 60]].map(e => `<div class="cell"><div class="main t1">${e[0]}</div><span class="price" style="color:var(--green)">+${e[1]}</span></div>`).join("")}</div>
+  <div class="hdr">Recent points</div>
+  <div class="group">${LEDGER.slice(0, 6).map(l => `<div class="cell"><div class="main"><div class="t1">${esc(l[1])}</div><div class="t2">${l[0]}</div></div><span class="price" style="color:var(--green)">+${l[2]}</span></div>`).join("")}</div>`;
 }
 
-function family() {
-  const locked = !PLUS_PREVIEW;
-  const max = Math.max(...WASTE.months.map(m => m[1]));
-  const head = `<div class="card"><div class="row"><div><div class="name">Family plan</div><div class="sub">HK$98 a year · shared list, waste dashboard, your own restock cycles</div></div><span class="lock">PLUS</span></div>
-    <div class="btns">${JOINED ? `<span class="pill good">Thanks, you're on the list</span>` : `<button class="btn pri" type="button" data-act="join">Join family plan</button>`}
-    <button class="btn" type="button" data-act="preview">${locked ? "Preview features" : "Hide preview"}</button></div>
-    ${JOINED ? `<p class="note">This button is a demand test: the plan is not built yet. We count how many people tap it before we build it.</p>` : ""}</div>`;
-  if (locked) return head + `<p class="note">Tap "Preview features" to see what the plan would include.</p>`;
-  return head + `
-  <div class="sec">Shared list · 3 members</div>
-  <div class="card list">${FAMILY.map((f, i) => `<div class="it"><button type="button" class="chk ${f.done ? "on" : ""}" data-fam="${i}" aria-label="Mark ${esc(f.t)} bought">${f.done ? "✓" : ""}</button>
-    <span style="flex:1;${f.done ? "text-decoration:line-through;color:var(--mute)" : ""}">${esc(f.t)}</span><span class="who" title="Added by">${f.who}</span></div>`).join("")}</div>
-  <div class="sec">Waste this month</div>
-  <div class="card"><div class="row"><div><div class="big" style="font-family:var(--display);font-size:24px;font-weight:800">${hk(WASTE.months[5][1], 0)}</div><div class="sub">thrown away in November, down from ${hk(WASTE.months[0][1], 0)} in June</div></div></div>
-    <div class="bars">${WASTE.months.map(m => `<div><i style="height:${m[1] / max * 60}px"></i>${m[0]}</div>`).join("")}</div>
-    <div class="list" style="margin-top:6px">${WASTE.items.map(w => `<div class="it"><span style="flex:1">${esc(w[0])}</span><span class="price">${hk(w[1])}</span></div>`).join("")}</div></div>
-  <div class="sec">Restock cycles</div>
-  <div class="card list">${WATCH.map(k => `<div class="it"><span style="flex:1">${esc(P[k].name)}</span>
-    <label class="sub" for="cyc-${k}">every</label><input id="cyc-${k}" data-cyc="${k}" type="number" min="1" max="90" value="${HOME[k].cycle}" style="width:56px;border:1px solid var(--line);border-radius:8px;padding:4px 6px;background:var(--paper);color:var(--ink);font:inherit"><span class="sub">days</span></div>`).join("")}</div>`;
-}
-
-/* ---------------- sheets (modals) ---------------- */
-function sheet(html) {
-  $("#overlay").innerHTML = `<div class="sheet-bg" data-close="1"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
-}
+/* ======================= sheets ======================= */
+function sheet(html) { $("#overlay").innerHTML = `<div class="scrim" data-scrim="1"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`; }
 function close() { $("#overlay").innerHTML = ""; }
 
-function receiptSheet(step = 0) {
-  const lines = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96], ["WHL SANDW LOAF 450G", "bread", 1, 16.9, .71], ["BANANA PHILIPPINE", null, 1, 12.9, .9]];
-  if (step === 0) return sheet(`<h3>Log a receipt</h3><p class="note">Take a photo or forward an e-receipt. For the demo, use a sample receipt.</p>
-    <div class="rcpt">PARKNSHOP · 17/11/2026 19:42<br>${lines.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}
-    TOTAL ${lines.reduce((a, l) => a + l[2] * l[3], 0).toFixed(2)}</div>
-    <div class="btns"><button class="btn pri" type="button" data-act="rc-read">Read this receipt</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
-  sheet(`<h3>Here's what we read</h3><p class="note">Matched to products and your watchlist. Lines we are unsure of are flagged for a one-tap check.</p>
-    <div class="rcpt">${lines.map(l => `<div class="ln"><span>${l[1] ? esc(P[l[1]].name) : "Bananas (not tracked)"}</span><span>×${l[2]}</span>
-      <span class="conf ${l[4] < .8 ? "lo" : ""}">${l[4] < .8 ? "check" : Math.round(l[4] * 100) + "%"}</span></div>`).join("")}</div>
-    <p class="note">"Wholemeal Sandwich Loaf" was a low-confidence match. Is it right?</p>
-    <div class="btns"><button class="btn pri" type="button" data-act="rc-save">Yes, save receipt</button><button class="btn" type="button" data-act="rc-save">Fix later</button></div>`);
+const RECEIPT = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98, 22], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96, 27], ["WHL SANDW LOAF 450G", "bread", 1, 15.4, .71, 16.9], ["BANANA PHILIPPINE", null, 1, 12.9, .9, 12.9]];
+function receiptSheet(step) {
+  if (!step) return sheet(`<h3>Log a receipt</h3><p class="t2">Take a photo or forward an e-receipt. In this demo, use the sample.</p>
+    <div class="rcpt">PARKNSHOP · 17/11/2026 19:42<br><br>${RECEIPT.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}<br>TOTAL ${sum(RECEIPT.map(l => l[2] * l[3])).toFixed(2)}</div>
+    <button class="btn fill lg" type="button" data-act="rc-read" style="margin-top:14px">Read receipt</button>`);
+  if (step === 1) return sheet(`<h3>Here's what we read</h3><p class="t2">Matched to your products. One line needs a quick check.</p>
+    <div class="group">${RECEIPT.map(l => `<div class="cell ${l[1] ? "wa" : ""}">${l[1] ? art(l[1]) : ""}<div class="main"><div class="t1">${l[1] ? esc(P[l[1]].short) : "Bananas"}</div><div class="t2">×${l[2]} · ${hk(l[2] * l[3])}</div></div>
+      <span class="badge ${l[4] < .8 ? "o" : "g"}">${l[4] < .8 ? "Check" : Math.round(l[4] * 100) + "%"}</span></div>`).join("")}</div>
+    <p class="t2" style="margin-top:10px">Is "WHL SANDW LOAF 450G" the wholemeal loaf?</p>
+    <button class="btn fill lg" type="button" data-act="rc-save">Yes, save receipt</button>`);
+  const saved = sum(RECEIPT.map(l => (l[5] - l[3]) * l[2]));
+  SAVED.months[SAVED.months.length - 1][1] += saved; SAVED.parts[0][1] += saved; SAVED.trips.unshift(["17 Nov", "ParknShop", saved]);
+  HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; addPoints(20, "Receipt · ParknShop");
+  sheet(`<div class="celebrate"><div class="t2" style="margin:6px 0 0">You saved on this trip</div><div class="amt">${hk(saved)}</div>
+    <div class="t1">+20 points · stock updated</div><p class="t2">Mostly from "Buy 2 save $8" on Slimilk. That brings November to ${hk(savedNow())}.</p></div>
+    <button class="btn fill lg" type="button" data-act="see-savings">See my savings</button>`);
 }
 function scanSheet() {
-  const samples = [["slim", P.slim.ean], ["egg", P.egg.ean], ["tissue", P.tissue.ean], [null, UNKNOWN_EAN]];
-  sheet(`<h3>Scan a barcode</h3><div class="scanner">point at the barcode</div>
-    <p class="note">The demo can't use your camera. Pick a sample barcode:</p>
-    <div class="stack">${samples.map(([k, e]) => `<button type="button" class="card row" style="width:100%;text-align:left" data-ean="${e}"><span class="mono">${e}</span><span class="sub">${k ? esc(P[k].name) : "a pack we have not seen"}</span></button>`).join("")}</div>`);
+  const s = [["slim", P.slim.ean], ["egg", P.egg.ean], ["tissue", P.tissue.ean], [null, UNKNOWN_EAN]];
+  sheet(`<h3>Scan a barcode</h3><div class="scanner">Point at the barcode</div><p class="t2" style="margin-top:10px">The demo can't use your camera. Pick a sample barcode:</p>
+    <div class="group">${s.map(([k, e]) => `<button class="cell ${k ? "wa" : ""}" type="button" data-ean="${e}">${k ? art(k) : ""}<div class="main"><div class="t1">${k ? esc(P[k].short) : "A pack we haven't seen"}</div><div class="t2 num">${e}</div></div><span class="chev">›</span></button>`).join("")}</div>`);
 }
-function unknownSheet(ean) {
-  sheet(`<h3>New barcode</h3><p class="note"><span class="mono">${ean}</span> isn't in our catalogue yet. Which product is it? Your answer is shown to others after a second shopper agrees.</p>
-    <div class="stack">${["trap", "soy", "bread"].map(k => `<button type="button" class="card" style="width:100%;text-align:left" data-map="${k}" data-ean="${ean}">${esc(P[k].name)} · ${P[k].size}</button>`).join("")}
-    <button type="button" class="card" style="width:100%;text-align:left" data-act="notlisted">Not listed: add it with a shelf price</button></div>`);
+function unknownSheet(e) {
+  sheet(`<h3>New barcode</h3><p class="t2"><span class="num">${e}</span> isn't in our catalogue yet. Which product is it? Others see your answer once a second shopper agrees.</p>
+    <div class="group">${["trap", "soy", "bread"].map(k => `<button class="cell wa" type="button" data-map="${k}" data-ean="${e}">${art(k)}<div class="main t1">${esc(P[k].name)}</div><span class="chev">›</span></button>`).join("")}
+    <button class="cell" type="button" data-act="notlisted"><div class="main t1" style="color:var(--tint)">Not listed: add it with a shelf price</div></button></div>`);
 }
 function reportSheet(k) {
-  sheet(`<h3>Report a shelf price</h3><p class="note">${esc(P[k].name)} · ${P[k].size}. Online and shelf prices can differ, and you are standing at the shelf.</p>
+  sheet(`<h3>Report a shelf price</h3><p class="t2">${esc(P[k].short)} · ${P[k].size}. Online and shelf prices can differ, and you're at the shelf.</p>
     <div class="field"><label for="rp-store">Branch</label><select id="rp-store">${Object.keys(P[k].prices).map(s => `<option value="${s}">${STORES[s].name} · ${STORES[s].branch}</option>`).join("")}</select></div>
-    <div class="field"><label for="rp-price">Price on the tag (HK$)</label><input id="rp-price" type="number" step="0.1" value="21.9"></div>
-    <div class="field"><label for="rp-photo">Photo of the tag</label><input id="rp-photo" type="file" accept="image/*"></div>
-    <p class="note">Reports need a photo, expire after 7 days, and show once two shoppers agree.</p>
-    <div class="btns"><button class="btn pri" type="button" data-act="rp-send" data-k="${k}">Send report · +5 pts</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+    <div class="field" style="margin-top:10px"><label for="rp-price">Price on the tag (HK$)</label><input id="rp-price" type="number" step="0.1" value="21.9" inputmode="decimal"></div>
+    <div class="field" style="margin-top:10px"><label for="rp-photo">Photo of the tag</label><input id="rp-photo" type="file" accept="image/*"></div>
+    <p class="t2" style="margin-top:10px">Reports need a photo, expire after 7 days, and show once two shoppers agree.</p>
+    <button class="btn fill lg" type="button" data-act="rp-send" data-k="${k}">Send report · +5 points</button>`);
 }
 function wrongCatSheet(k) {
-  sheet(`<h3>Wrong category or missing item?</h3><p class="note">${esc(P[k].name)} is listed under <b>${esc(P[k].cat)}</b>.</p>
+  sheet(`<h3>Wrong category or missing item?</h3><p class="t2">${esc(P[k].short)} is listed under <b>${esc(P[k].cat)}</b>.</p>
     <div class="field"><label for="wc-cat">It belongs in</label><select id="wc-cat"><option>Milk</option><option>Soy milk</option><option>Yoghurt drinks</option><option>Infant formula</option></select></div>
-    <div class="field"><label for="wc-note">Anything else? (optional)</label><input id="wc-note" placeholder="e.g. the 2 L size is missing"></div>
-    <p class="note">Fixes go live after a second report and are sent back to the Consumer Council.</p>
-    <div class="btns"><button class="btn pri" type="button" data-act="wc-send">Send fix</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+    <div class="field" style="margin-top:10px"><label for="wc-note">Anything else? (optional)</label><input id="wc-note" placeholder="e.g. the 2 L size is missing"></div>
+    <p class="t2" style="margin-top:10px">Fixes go live after a second report and are sent to the Consumer Council.</p>
+    <button class="btn fill lg" type="button" data-act="wc-send">Send fix</button>`);
 }
 function couponSheet() {
-  sheet(`<h3>Add coupons</h3><p class="note">Share a screenshot of the coupon list in your yuu or MoneyBack app. We read the item, value and expiry.</p>
+  sheet(`<h3>Add coupons</h3><p class="t2">Share a screenshot of your yuu or MoneyBack coupon list. We read the item, value and expiry.</p>
     <div class="field"><label for="cp-file">Screenshot</label><input id="cp-file" type="file" accept="image/*"></div>
-    <div class="btns"><button class="btn pri" type="button" data-act="cp-sample">Use a sample screenshot</button><button class="btn ghost" type="button" data-close="1">Cancel</button></div>`);
+    <button class="btn fill lg" type="button" data-act="cp-sample" style="margin-top:14px">Use a sample screenshot</button>`);
+}
+function howSheet() {
+  sheet(`<h3>${sparkle(18, "var(--purple)")} How your AI list works</h3>
+    <div class="group">${[["Learns your rhythm", "From your receipts it learns how often your family buys each item, e.g. Slimilk every 5 days."],
+      ["Predicts run-out dates", "Stock ÷ daily use. Families like yours fill the gaps until it knows you."],
+      ["Finds the real price", "Every multi-buy offer and your own coupons are turned into the price per item."],
+      ["Keeps you in charge", "Nothing is ordered for you. ✓ and ✕ teach it what you want."]].map(r => `<div class="cell"><div class="main"><div class="t1 b">${r[0]}</div><div class="t2">${r[1]}</div></div></div>`).join("")}</div>
+    <p class="t2" style="margin-top:10px">The bar under each item shows how sure it is.</p>`);
+}
+function tripSheet() {
+  const items = aiItems(), trip = {}; items.forEach(i => (trip[i.b.s] ||= []).push(i));
+  sheet(`<h3>Your trip tonight</h3><p class="t2">Two stops on your way home. Both open till 22:00.</p>
+    ${Object.entries(trip).map(([s, its]) => `<div class="hdr">${STORES[s].name} · ${STORES[s].walk} min walk</div><div class="group">${its.map(i => `<div class="cell wa">${art(i.k)}<div class="main"><div class="t1">${i.b.q} × ${esc(P[i.k].short)}</div><div class="t2">${i.b.o ? esc(i.b.o) : "Shelf price"}${i.b.coupon ? " · show your " + i.b.coupon.src + " coupon" : ""}</div></div><span class="price">${hk(i.b.final * i.b.q)}</span></div>`).join("")}</div>`).join("")}
+    <button class="btn fill lg" type="button" data-close="1" style="margin-top:14px">Done</button>`);
+}
+function settingsSheet() {
+  sheet(`<h3>Profile</h3><div class="group"><div class="cell"><span class="avatar" style="display:grid;place-items:center">M</span><div class="main"><div class="t1 b">The Chan family</div><div class="t2">3 members · sample household</div></div></div></div>
+    <div class="hdr">Appearance</div><div class="group"><div class="cell"><div class="main t1">Theme</div><div class="seg" data-themeseg></div></div></div>
+    <div class="hdr">Family plan · HK$98 a year</div>
+    <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Preview what's included</div></div><span class="chev">›</span></button></div>
+    <button class="btn ${JOINED ? "" : "fill"} lg" type="button" data-act="join" style="margin-top:12px">${JOINED ? "Thanks, you're on the waitlist" : "Join family plan"}</button>
+    ${JOINED ? `<p class="t2" style="margin-top:8px">This button is a demand test. The plan isn't built yet; we count how many people tap it first.</p>` : ""}`);
+  paintTheme();
+}
+function familySheet() {
+  const max = Math.max(...WASTE.months.map(m => m[1]));
+  sheet(`<h3>Family plan preview</h3><p class="t2">What HK$98 a year would add.</p>
+    <div class="hdr">Shared list · 3 members</div>
+    <div class="group">${FAMILY.map((f, i) => `<div class="cell"><button type="button" class="chk ${f[2] ? "on" : ""}" data-fam="${i}" aria-label="Mark ${esc(f[0])} bought">${f[2] ? "✓" : ""}</button>
+      <div class="main t1" style="${f[2] ? "text-decoration:line-through;color:var(--ink2)" : ""}">${esc(f[0])}</div><span class="who" style="background:${WHO[f[1]]}">${f[1]}</span></div>`).join("")}</div>
+    <div class="hdr">Waste dashboard</div>
+    <div class="group"><div class="cell"><div class="main"><div class="t1 b" style="font-size:22px">${hk(WASTE.months[5][1], 0)} thrown away in November</div><div class="t2">Half of June's ${hk(WASTE.months[0][1], 0)}. Keep going.</div></div></div>
+      <div class="bars" style="height:96px">${WASTE.months.map((m, i) => `<div class="b ${i === 5 ? "now" : ""}"><i style="height:${m[1] / max * 60}px;background:var(--orange)"></i>${m[0]}</div>`).join("")}</div>
+      ${WASTE.items.map(w => `<div class="cell"><div class="main t1">${esc(w[0])}</div><span class="price">${hk(w[1])}</span></div>`).join("")}</div>
+    <div class="hdr">Restock cycles</div>
+    <div class="group">${WATCH.map(k => `<div class="cell wa">${art(k)}<div class="main t1">${esc(P[k].short)}</div><label class="t2" for="cyc-${k}">every</label><input class="cyc" id="cyc-${k}" data-cyc="${k}" type="number" min="1" max="90" value="${HOME[k].every}"><span class="t2">days</span></div>`).join("")}</div>`);
+}
+function tourSheet() {
+  sheet(`<h3>Demo tour</h3><p class="t2">Sample data · tap a feature to jump to it.</p><div class="group">${STEPS.map((s, i) => `<button class="cell" type="button" data-step="${i}"><span class="badge">${i + 1}</span><div class="main"><div class="t1 b">${s[0]}</div><div class="t2">${s[1]}</div></div><span class="chev">›</span></button>`).join("")}</div>`);
 }
 
-/* ---------------- tour ---------------- */
+/* ======================= theme ======================= */
+let THEME = "auto";
+try { THEME = localStorage.getItem("br-theme") || "auto"; } catch (e) {}
+function applyTheme() {
+  const r = document.documentElement;
+  if (THEME === "auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", THEME);
+  try { localStorage.setItem("br-theme", THEME); } catch (e) {}
+  paintTheme();
+}
+function paintTheme() {
+  document.querySelectorAll("[data-themeseg]").forEach(el => el.innerHTML = [["light", "Light"], ["dark", "Dark"], ["auto", "Auto"]]
+    .map(([v, l]) => `<button type="button" class="${THEME === v ? "on" : ""}" data-theme-set="${v}" aria-pressed="${THEME === v}">${l}</button>`).join(""));
+}
+
+/* ======================= tour ======================= */
 const STEPS = [
-  ["Restock card", "What runs out this week, where it is cheapest on your route, and your trip with opening hours.", () => { TAB = "today"; }],
-  ["The sticker is not the price", "Slimilk's HK$32 shelf price at Wellcome is HK$18.50 with \"2 for $37\". Real Consumer Council data.", () => { TAB = "compare"; CURRENT = "slim"; }],
-  ["Barcode scan", "Scan a pack, or teach the app a barcode it has never seen.", () => { TAB = "compare"; render(); scanSheet(); return true; }],
-  ["Shelf price report", "Online and branch prices differ: shoppers report the tag, with a photo.", () => { TAB = "compare"; CURRENT = "slim"; render(); reportSheet("slim"); return true; }],
-  ["Fix the catalogue", "Report a wrong category or a missing item.", () => { TAB = "compare"; CURRENT = "slim"; render(); wrongCatSheet("slim"); return true; }],
-  ["Brand offer, only on good value", "A new milk gets a cashback offer only if it ends within 5% of the best value.", () => { TAB = "compare"; CURRENT = "slim"; }],
-  ["Watchlist", "Staples tracked like stocks: price, change, chance of a deal, days of stock.", () => { TAB = "watch"; }],
-  ["Coupon wallet", "Your yuu and MoneyBack coupons, read from a screenshot and applied to prices.", () => { TAB = "wallet"; }],
-  ["Points on every receipt", "Log a receipt from any chain: we read it, update your stock and add points.", () => { TAB = "today"; render(); receiptSheet(0); return true; }],
-  ["Family plan (being tested)", "Shared list, waste dashboard, restock cycles, and a sign-up button that measures demand.", () => { TAB = "family"; PLUS_PREVIEW = true; }]
+  ["Your AI grocery list", "What runs out this week, why the AI thinks so, and the real price on your route.", () => { TAB = "list"; }],
+  ["The shelf price isn't the price", "Slimilk is HK$32 on Wellcome's shelf, HK$18.50 with \"2 for $37\". Real Consumer Council data.", () => { TAB = "compare"; CUR = "slim"; }],
+  ["Every brand, side by side", "Kowloon Dairy, Nestlé, Vita, Trappist, Meiji, Meadows, M&S: ranked by price per 100 mL.", () => { TAB = "compare"; CUR = "slim"; render(); setTimeout(() => { const o = $("#brands"); o && o.scrollIntoView({ block: "start" }); }, 30); return 1; }],
+  ["More supermarkets", "Market Place, Fusion, city'super, M&S Food and Best Mart 360 join Wellcome, ParknShop and AEON.", () => { TAB = "compare"; CUR = "nestle"; }],
+  ["Scan a barcode", "Find any pack in a second, or teach the app a new one.", () => { TAB = "compare"; render(); scanSheet(); return 1; }],
+  ["Report a shelf price", "Branch prices differ from online ones; shoppers report the tag.", () => { TAB = "compare"; CUR = "slim"; render(); reportSheet("slim"); return 1; }],
+  ["Fix the catalogue", "Flag a wrong category or an item that's missing.", () => { TAB = "compare"; CUR = "slim"; render(); wrongCatSheet("slim"); return 1; }],
+  ["Brand offers, only on good value", "A new milk gets cashback only if it ends within 5% of the best value.", () => { TAB = "compare"; CUR = "slim"; render(); setTimeout(() => { const o = $(".offer"); o && o.scrollIntoView({ block: "center" }); }, 30); return 1; }],
+  ["Watchlist", "Staples tracked like stocks: price, change, sale chance, stock left.", () => { TAB = "watch"; }],
+  ["Log a receipt, see your saving", "We read the receipt, update your stock, and show what this trip saved you.", () => { TAB = "list"; render(); receiptSheet(0); return 1; }],
+  ["Savings", "Every dollar Basket Radar found you, by month and by source.", () => { TAB = "savings"; }],
+  ["Coupons and points", "Your yuu and MoneyBack coupons applied for you; points from any chain.", () => { TAB = "wallet"; }],
+  ["Family plan (being tested)", "Shared list, waste dashboard, restock cycles, and a sign-up that measures demand.", () => { TAB = "list"; render(); familySheet(); return 1; }],
+  ["Light or dark", "Pick your look from the profile button.", () => { render(); settingsSheet(); return 1; }]
 ];
 let STEP = 0;
 function renderSteps() {
-  $("#steps").innerHTML = STEPS.map((s, i) => `<li><button type="button" class="${i === STEP ? "on" : ""}" data-step="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span><b>${s[0]}</b><span class="d">${s[1]}</span></span></button></li>`).join("");
+  $("#steps").innerHTML = STEPS.map((s, i) => `<li><button type="button" class="${i === STEP ? "on" : ""}" data-step="${i}"><span class="i">${i + 1}</span><span><b>${s[0]}</b><span class="d">${s[1]}</span></span></button></li>`).join("");
 }
-function goStep(i) { STEP = i; close(); const keep = STEPS[i][2](); if (!keep) render(); else renderSteps();
-  if (window.innerWidth < 900) $("#phone").scrollIntoView({ behavior: "smooth", block: "start" }); }
+function goStep(i) { STEP = i; close(); if (!STEPS[i][2]()) render(); else renderSteps(); }
 
-/* ---------------- events ---------------- */
+/* ======================= events ======================= */
 document.addEventListener("click", e => {
-  const t = e.target.closest("button, [data-close]"); if (!t) return;
-  if (t.dataset.close && e.target === t) return close();
-  if (t.dataset.close && t.tagName === "BUTTON") return close();
-  if (t.dataset.tab) { TAB = t.dataset.tab; close(); return render(); }
-  if (t.dataset.step) return goStep(+t.dataset.step);
-  if (t.dataset.open) { CURRENT = t.dataset.open; TAB = "compare"; close(); return render(); }
-  if (t.dataset.fam) { FAMILY[+t.dataset.fam].done = !FAMILY[+t.dataset.fam].done; return render(); }
-  if (t.dataset.map) { BARCODE_MAP[t.dataset.ean] = t.dataset.map; close(); CURRENT = t.dataset.map; TAB = "compare"; render(); return toast("Saved. It goes live for others when a second shopper agrees."); }
-  if (t.dataset.ean && !t.dataset.map) { const k = BARCODE_MAP[t.dataset.ean]; if (!k) return unknownSheet(t.dataset.ean); close(); CURRENT = k; TAB = "compare"; render(); return toast("Found: " + P[k].name); }
+  const sc = e.target.closest("[data-scrim]"); if (sc && e.target === sc) return close();
+  const t = e.target.closest("button"); if (!t) return;
+  const d = t.dataset;
+  if (d.themeSet) { THEME = d.themeSet; return applyTheme(); }
+  if (d.close) return close();
+  if (d.tab) { TAB = d.tab; close(); return render(); }
+  if (d.step) return goStep(+d.step);
+  if (d.open) { CUR = d.open; TAB = "compare"; close(); return render(); }
+  if (d.keep) { KEPT.has(d.keep) ? KEPT.delete(d.keep) : KEPT.add(d.keep); render(1); return; }
+  if (d.remove) { REMOVED.add(d.remove); render(1); return toast("Removed. The AI will learn from this."); }
+  if (d.fam) { FAMILY[+d.fam][2] = !FAMILY[+d.fam][2]; const y = $(".sheet").scrollTop; familySheet(); $(".sheet").scrollTop = y; return; }
+  if (d.map) { BARCODE_MAP[d.ean] = d.map; close(); CUR = d.map; TAB = "compare"; render(); return toast("Saved. Live once a second shopper agrees."); }
+  if (d.ean) { const k = BARCODE_MAP[d.ean]; if (!k) return unknownSheet(d.ean); close(); CUR = k; TAB = "compare"; render(); return toast("Found: " + P[k].short); }
   if (t.id === "fab") return receiptSheet(0);
-  const a = t.dataset.act;
-  if (a === "scan") return scanSheet();
-  if (a === "report") return reportSheet(CURRENT);
-  if (a === "wrongcat") return wrongCatSheet(CURRENT);
-  if (a === "coupons") return couponSheet();
-  if (a === "rc-read") return receiptSheet(1);
-  if (a === "rc-save") { HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; close(); addPoints(20, "Receipt · ParknShop"); render(); return toast("Receipt saved: stock updated, +20 points."); }
-  if (a === "rp-send") { const s = $("#rp-store").value, v = parseFloat($("#rp-price").value) || 0;
-    SHELF[t.dataset.k] ||= {}; const prev = SHELF[t.dataset.k][s]; SHELF[t.dataset.k][s] = { price: v, n: prev ? prev.n + 1 : 1, ago: "just now" };
-    close(); addPoints(5, "Shelf price · " + STORES[s].name); render(); return toast(prev ? "Thanks. Your report agrees with " + prev.n + " others." : "Thanks. It shows once a second shopper confirms it."); }
-  if (a === "wc-send") { close(); return toast("Thanks. The fix goes live after a second report."); }
-  if (a === "notlisted") { close(); TAB = "compare"; render(); return toast("Added as a new item. Its price will come from shoppers' shelf reports."); }
-  if (a === "cp-sample") { NEW_COUPONS.forEach(c => { if (!COUPONS.find(x => x.id === c.id)) COUPONS.push(c); }); close(); TAB = "wallet"; render(); return toast("2 coupons read and matched to your list."); }
-  if (a === "claim") { close(); return toast("Offer saved. Log the receipt after you buy to get the cashback."); }
-  if (a === "join") { JOINED = true; return render(); }
-  if (a === "preview") { PLUS_PREVIEW = !PLUS_PREVIEW; return render(); }
+  switch (d.act) {
+    case "tour": return tourSheet();
+    case "settings": return settingsSheet();
+    case "family": return familySheet();
+    case "join": JOINED = true; return settingsSheet();
+    case "how": return howSheet();
+    case "trip": return tripSheet();
+    case "undo": REMOVED.clear(); return render(1);
+    case "scan": return scanSheet();
+    case "report": return reportSheet(CUR);
+    case "wrongcat": return wrongCatSheet(CUR);
+    case "coupons": return couponSheet();
+    case "rc-read": return receiptSheet(1);
+    case "rc-save": receiptSheet(2); return render(1);
+    case "see-savings": close(); TAB = "savings"; return render();
+    case "rp-send": { const s = $("#rp-store").value, v = parseFloat($("#rp-price").value) || 0; (SHELF[d.k] ||= {}); const prev = SHELF[d.k][s];
+      SHELF[d.k][s] = { price: v, n: prev ? prev.n + 1 : 1, ago: "just now" }; addPoints(5, "Shelf price · " + STORES[s].name); close(); render(1);
+      return toast(prev ? `Thanks · agrees with ${prev.n} others · +5 points` : "Thanks · shows once confirmed · +5 points"); }
+    case "wc-send": close(); return toast("Thanks · live after a second report");
+    case "notlisted": close(); TAB = "compare"; render(); return toast("Added · its price comes from shelf reports");
+    case "cp-sample": NEW_COUPONS.forEach(c => { if (!COUPONS.find(x => x.id === c.id)) COUPONS.push(c); }); close(); TAB = "wallet"; render(); return toast("2 coupons read and matched");
+    case "claim": close(); return toast("Offer saved · log the receipt to get it");
+  }
 });
-document.addEventListener("change", e => {
-  if (e.target.dataset && e.target.dataset.cyc) { HOME[e.target.dataset.cyc].cycle = Math.max(1, +e.target.value || 1); toast("Restock cycle updated."); }
-});
+document.addEventListener("change", e => { const k = e.target.dataset && e.target.dataset.cyc; if (k) { HOME[k].every = Math.max(1, +e.target.value || 1); toast("Restock cycle updated"); } });
 document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 document.addEventListener("input", e => {
-  if (e.target.id !== "q") return;
-  const q = e.target.value.toLowerCase().trim(); if (q.length < 3) return;
-  const k = Object.keys(P).find(x => (P[x].name + " " + P[x].cat).toLowerCase().includes(q));
-  if (k && k !== CURRENT) { CURRENT = k; render(); const box = $("#q"); box.value = q; box.focus(); }
+  if (e.target.id !== "q") return; const q = e.target.value.toLowerCase().trim(); if (q.length < 3) return;
+  const k = Object.keys(P).find(x => (P[x].name + " " + P[x].short + " " + P[x].cat).toLowerCase().includes(q));
+  if (k && k !== CUR) { CUR = k; render(); const b = $("#q"); b.value = q; b.focus(); }
 });
 
+applyTheme();
 render();
 </script>
+</body>
+</html>
