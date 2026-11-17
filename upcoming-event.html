@@ -107,7 +107,7 @@
         .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.2rem 0.32rem; border-inline-start: 2px solid #c52c38; border-radius: 0.3rem; background: #ffeded; color: #82202a; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
         .calendar-month a:hover { background: #ffdddd; text-decoration: underline; }
 
-        .event-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
+        .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
         .event-card {
             display: flex;
             flex-direction: column;
@@ -141,9 +141,6 @@
         }
         .ticket-btn:hover { background: #005bb8; }
         .ticket-btn:active { background: #004e9c; }
-        @media (max-width: 62rem) {
-            .event-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
         @media (max-width: 42rem) {
             .event-grid { grid-template-columns: minmax(0, 1fr); }
             .calendar-month table { font-size: 0.75rem; }
@@ -191,8 +188,8 @@
                     <tr><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td><span class="calendar-date">1</span></td></tr>
                     <tr><td><span class="calendar-date">2</span></td><td><span class="calendar-date">3</span></td><td><span class="calendar-date">4</span></td><td><span class="calendar-date">5</span></td><td><span class="calendar-date">6</span></td><td><span class="calendar-date">7</span></td><td><span class="calendar-date">8</span></td></tr>
                     <tr><td><span class="calendar-date">9</span></td><td><span class="calendar-date">10</span></td><td><span class="calendar-date">11</span></td><td><span class="calendar-date">12</span></td><td><span class="calendar-date">13</span></td><td><span class="calendar-date">14</span></td><td><span class="calendar-date">15</span></td></tr>
-                    <tr><td><span class="calendar-date">16</span></td><td><span class="calendar-date">17</span></td><td><span class="calendar-date">18</span></td><td><span class="calendar-date">19</span></td><td><span class="calendar-date">20</span><a href="#event-1" aria-label="White Party, November 20">White Party</a></td><td><span class="calendar-date">21</span><a href="#event-2" aria-label="The Big Picnic 2026, November 21">The Big Picnic</a><a href="#event-3" aria-label="Magic Room, November 21">Magic Room</a></td><td><span class="calendar-date">22</span></td></tr>
-                    <tr><td><span class="calendar-date">23</span></td><td><span class="calendar-date">24</span></td><td><span class="calendar-date">25</span><a href="#event-10" aria-label="Drinksgiving, November 25">Drinksgiving</a></td><td><span class="calendar-date">26</span><a href="#event-4" aria-label="TEA RAVE, November 26">TEA RAVE</a></td><td><span class="calendar-date">27</span></td><td><span class="calendar-date">28</span><a href="#event-5" aria-label="Sarabi, November 28">Sarabi</a><a href="#event-6" aria-label="Lantau Live, November 28">Lantau Live</a><a href="#event-7" aria-label="FTD, November 28">FTD</a><a href="#event-11" aria-label="Peel’s Block Party, November 28">Peel’s Block Party</a></td><td><span class="calendar-date">29</span><a href="#event-6" aria-label="Lantau Live, November 29">Lantau Live</a></td></tr>
+                    <tr><td><span class="calendar-date">16</span></td><td><span class="calendar-date">17</span></td><td><span class="calendar-date">18</span></td><td><span class="calendar-date">19</span></td><td><span class="calendar-date">20</span><a href="#event-1" aria-label="White Party, November 20">White Party</a><a href="#event-14" aria-label="Lorenzo Ausilia, November 20">Lorenzo Ausilia</a><a href="#event-15" aria-label="KAAZE, November 20">KAAZE</a></td><td><span class="calendar-date">21</span><a href="#event-2" aria-label="The Big Picnic 2026, November 21">The Big Picnic</a><a href="#event-3" aria-label="Magic Room, November 21">Magic Room</a></td><td><span class="calendar-date">22</span></td></tr>
+                    <tr><td><span class="calendar-date">23</span></td><td><span class="calendar-date">24</span></td><td><span class="calendar-date">25</span><a href="#event-10" aria-label="Drinksgiving, November 25">Drinksgiving</a></td><td><span class="calendar-date">26</span><a href="#event-4" aria-label="TEA RAVE, November 26">TEA RAVE</a></td><td><span class="calendar-date">27</span><a href="#event-12" aria-label="AME × 0159, November 27">AME × 0159</a></td><td><span class="calendar-date">28</span><a href="#event-5" aria-label="Sarabi, November 28">Sarabi</a><a href="#event-6" aria-label="Lantau Live, November 28">Lantau Live</a><a href="#event-7" aria-label="FTD, November 28">FTD</a><a href="#event-11" aria-label="Peel’s Block Party, November 28">Peel’s Block Party</a><a href="#event-13" aria-label="CASS10, November 28">CASS10</a></td><td><span class="calendar-date">29</span><a href="#event-6" aria-label="Lantau Live, November 29">Lantau Live</a></td></tr>
                     <tr><td><span class="calendar-date">30</span></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td></tr>
                 </tbody>
             </table>
@@ -243,6 +240,33 @@
             <p class="ticket-note">Student discount applied automatically. GA and VIP group packs offer five tickets for the price of four.</p>
         </div>
         <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+    </div>
+
+    <!-- Lorenzo Ausilia -->
+    <div class="event-card" id="event-14" tabindex="-1">
+        <h3 class="event-title">Cassio Guest DJ Night with Lorenzo Ausilia</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (Start time unverified)</span><br>
+            <span>📍 <strong>Location:</strong> Cassio Social Club, 2/F, LKF Tower, 33 Wyndham Street, Central, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <p class="ticket-note">Cassio usually offers free entry before 00:30. Free entry for this event is not guaranteed. Ticket prices and fees could not be verified.</p>
+        </div>
+        <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="ticket-btn">View Event Listing</a>
+    </div>
+
+    <!-- KAAZE -->
+    <div class="event-card" id="event-15" tabindex="-1">
+        <h3 class="event-title">FAYY Presents KAAZE</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
+            <span>📍 <strong>Location:</strong> FAYY, 25–26/F, California Tower, 30–32 D’Aguilar Street, Central, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <ul class="ticket-tiers">
+                <li><strong>Early bird</strong> · Ticket HK$380.00 · Includes two drinks</li>
+            </ul>
+            <p class="ticket-note">Checkout fees and total could not be verified.</p>
+        </div>
+        <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
     </div>
 
     <!-- Event 2 -->
@@ -300,6 +324,22 @@
             <strong>🎟️ Tickets:</strong>
             <p class="ticket-note">All tickets sold out.</p>
         </div>
+    </div>
+
+    <!-- AME × 0159 -->
+    <div class="event-card" id="event-12" tabindex="-1">
+        <h3 class="event-title">Asia Music Event × 0159: Joyhauser &amp; Juliet Fox</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 27, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
+            <span>📍 <strong>Location:</strong> Soho House Hong Kong, 33 Des Voeux Road West, Sheung Wan</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <ul class="ticket-tiers">
+                <li><strong>General admission</strong> · Ticket HK$330.00</li>
+                <li><strong>Early bird</strong> · Ticket HK$280.00 · Sold out</li>
+            </ul>
+            <p class="ticket-note">Checkout fees and total could not be verified.</p>
+        </div>
+        <a href="https://www.plvr.io/events/ame-0159-official-party-hk" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
     </div>
 
     <!-- Event 5 -->
@@ -370,6 +410,18 @@
             </ul>
         </div>
         <a href="https://www.eventbrite.hk/e/peels-block-party-tickets-2004279136852" target="_blank" rel="noopener" class="ticket-btn">Get Tickets</a>
+    </div>
+
+    <!-- CASS10 -->
+    <div class="event-card" id="event-13" tabindex="-1">
+        <h3 class="event-title">CASS10: Cassio’s 10th Anniversary with Balzar, Mo-Shi, Ridha Be &amp; Jamie Maddock</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (Start time unverified)</span><br>
+            <span>📍 <strong>Location:</strong> Cassio Social Club, 2/F, LKF Tower, 33 Wyndham Street, Central, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <p class="ticket-note">Cassio usually offers free entry before 00:30. Free entry for this event is not guaranteed. Ticket prices and fees could not be verified.</p>
+        </div>
+        <a href="https://site.fourvenues.com/en/cassio/events/cass10---10-years-anniversary-w-balzar-mo-shi-ridha-be-jamie-maddock-28-11-2026-IVJ0" target="_blank" rel="noopener" class="ticket-btn">View Event Listing</a>
     </div>
 
     <!-- Event 8 -->
