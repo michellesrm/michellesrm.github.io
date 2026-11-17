@@ -5,45 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Schedule</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
-        .schedule-container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; }
-        .event-card { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .event-card:last-child { border-bottom: none; }
-        .event-title { font-size: 1.2em; font-weight: bold; color: #2980b9; margin-bottom: 5px; }
-        .event-details { font-size: 0.95em; margin-bottom: 10px; color: #555; }
-        .event-details span { display: inline-block; margin-right: 15px; }
-        .ticket-tiers { margin: 4px 0 0; padding-inline-start: 24px; }
-        .ticket-tiers ul { padding-inline-start: 20px; }
-        .ticket-tiers li { margin-block: 4px; }
-        .ticket-note { margin: 4px 0 0; }
-        .ticket-btn { display: inline-block; background-color: #27ae60; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 0.9em; }
-        .ticket-btn:hover { background-color: #219653; }
-        .event-calendar { margin: 0 0 24px; }
-        .event-calendar h2 { margin-bottom: 8px; }
-        .calendar-month { border: 1px solid #dce4ec; border-radius: 6px; margin-bottom: 8px; }
-        .calendar-month summary { cursor: pointer; padding: 10px 12px; font-weight: bold; }
-        .calendar-month table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 0.875rem; }
-        .calendar-month th { padding: 6px 0; background: #f4f6fa; }
-        .calendar-month td { border: 1px solid #e6ebf0; height: 36px; padding: 3px; vertical-align: top; }
-        .calendar-month .calendar-empty { background: #f7f8fa; }
-        .calendar-date { display: block; margin-bottom: 3px; }
-        .calendar-month a { display: block; margin-bottom: 3px; padding: 3px; border-radius: 3px; background: #e6f2ff; color: #164778; overflow-wrap: anywhere; }
-        .calendar-month a:focus-visible, .calendar-month summary:focus-visible { outline: 2px solid #164778; outline-offset: 2px; }
-        .event-card:target { background: #eef6ff; }
-        @media (max-width: 520px) {
-            body { padding: 8px; }
-            .schedule-container { padding: 10px; }
+        :root {
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-optical-sizing: auto;
+            color: #1d1d1f;
+            background: #f5f5f7;
+            --blue: #0066cc;
+            --muted: #515154;
+            --line: #dedee3;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; line-height: 1.5; }
+        a { color: var(--blue); }
+        :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+        [id] { scroll-margin-top: 5rem; }
+
+        .site-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #fafafc;
+            box-shadow: 0 1px 0 rgb(0 0 0 / 6%);
+        }
+        @supports (backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px)) {
+            .site-bar {
+                background: rgb(250 250 252 / 88%);
+                -webkit-backdrop-filter: saturate(150%) blur(18px);
+                backdrop-filter: saturate(150%) blur(18px);
+            }
+        }
+        .site-nav {
+            max-width: 66rem;
+            margin: auto;
+            padding: 0.3rem clamp(1rem, 4vw, 2rem);
+            min-height: 3.25rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0 1.25rem;
+        }
+        .site-nav a { color: inherit; text-decoration: none; padding-block: 0.6rem; }
+        .site-nav a:hover { color: var(--blue); }
+        .site-name { margin-inline-end: auto; font-weight: 650; letter-spacing: -0.025em; }
+        .nav-link { font-size: 0.875rem; }
+
+        .hero {
+            text-align: center;
+            padding: clamp(3.25rem, 9vw, 7rem) 1rem clamp(3rem, 8vw, 6rem);
+            background: radial-gradient(ellipse at 50% 100%, #e5edff, transparent 68%), #fff;
+        }
+        h1, h2, h3 { margin: 0; line-height: 1.08; }
+        h1 { font-size: clamp(2.8rem, 8vw, 6.25rem); font-weight: 700; letter-spacing: -0.065em; }
+        .hero p { margin: 0.85rem 0 1.5rem; color: var(--muted); font-size: clamp(1.1rem, 2.5vw, 1.65rem); }
+        .schedule-container { max-width: 66rem; margin: auto; padding: clamp(1rem, 4vw, 2rem); }
+        h2 { font-size: clamp(1.85rem, 4vw, 2.75rem); letter-spacing: -0.05em; margin-bottom: 1rem; }
+        .event-calendar { margin-block: 0.75rem clamp(2.5rem, 6vw, 4.5rem); }
+        .calendar-month { background: #fff; border: 1px solid var(--line); border-radius: 1rem; margin-bottom: 0.65rem; }
+        .calendar-month summary { cursor: pointer; padding: 0.85rem 1rem; font-weight: 650; border-radius: 1rem; }
+        .calendar-month summary::marker { color: var(--blue); }
+        .calendar-month table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 0.875rem; }
+        .calendar-month th { padding: 0.5rem 0; background: #f5f5f7; color: var(--muted); }
+        .calendar-month td { border-top: 1px solid #ececf0; border-inline-start: 1px solid #ececf0; height: 2.8rem; padding: 0.35rem; vertical-align: top; }
+        .calendar-month td:first-child { border-inline-start: 0; }
+        .calendar-empty { background: #fafafa; }
+        .calendar-date { display: block; margin-bottom: 0.2rem; font-variant-numeric: tabular-nums; }
+        .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.25rem 0.35rem; border-radius: 0.4rem; background: #eaf2ff; color: #004b97; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
+        .calendar-month a:hover { background: #d6e7ff; text-decoration: underline; }
+
+        .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+        .event-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+            padding: clamp(1.25rem, 3.5vw, 2rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 1.4rem;
+        }
+        .event-card:target { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue); }
+        .event-title { font-size: clamp(1.35rem, 2.6vw, 1.8rem); letter-spacing: -0.035em; margin-bottom: 0.8rem; overflow-wrap: anywhere; }
+        .event-details { width: 100%; color: var(--muted); font-size: 0.9375rem; margin-bottom: 1.1rem; }
+        .event-details > strong { display: inline-block; margin-top: 0.85rem; color: #1d1d1f; }
+        .ticket-tiers { padding-inline-start: 1.25rem; margin: 0.4rem 0 0; }
+        .ticket-tiers ul { padding-inline-start: 1.15rem; }
+        .ticket-tiers li { margin-block: 0.35rem; }
+        .ticket-note { margin: 0.45rem 0 0; }
+        .ticket-btn {
+            display: inline-flex;
+            align-items: center;
+            min-height: 2.75rem;
+            margin-top: auto;
+            padding: 0.55rem 1.1rem;
+            border-radius: 999px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 550;
+            text-decoration: none;
+        }
+        .ticket-btn:hover { background: #005bb8; }
+        .ticket-btn:active { background: #004e9c; }
+        @media (max-width: 44rem) {
+            .event-grid { grid-template-columns: minmax(0, 1fr); }
             .calendar-month table { font-size: 0.75rem; }
-            .calendar-month td { padding: 2px; }
-            .calendar-month a { padding: 2px; }
+            .calendar-month td, .calendar-month a { padding: 0.15rem; }
+        }
+        @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+            .site-bar { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
         }
     </style>
 </head>
 <body>
 
+<header class="site-bar">
+    <nav class="site-nav" aria-label="On this page">
+        <a class="site-name" href="#top">Upcoming Events</a>
+        <a class="nav-link" href="#calendar-heading">Calendar</a>
+        <a class="nav-link" href="#events-heading">Event details</a>
+    </nav>
+</header>
+
+<main id="top">
+    <div class="hero">
+        <h1>Upcoming Events</h1>
+        <p>Hong Kong · November 2026 to January 2027</p>
+        <a class="ticket-btn" href="#calendar-heading">View calendar</a>
+    </div>
+
 <div class="schedule-container">
-    <h1>Upcoming Events Schedule</h1>
 
     <section class="event-calendar" aria-labelledby="calendar-heading">
         <h2 id="calendar-heading">Event calendar</h2>
@@ -89,9 +179,12 @@
         </details>
     </section>
 
+    <section aria-labelledby="events-heading">
+        <h2 id="events-heading">Event details</h2>
+        <div class="event-grid">
     <!-- Event 1 -->
     <div class="event-card" id="event-1" tabindex="-1">
-        <div class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</div>
+        <h3 class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026</span><br>
             <span>📍 <strong>Location:</strong> Pier 1929, Hong Kong</span><br>
@@ -108,7 +201,7 @@
 
     <!-- Event 2 -->
     <div class="event-card" id="event-2" tabindex="-1">
-        <div class="event-title">Big Picnic</div>
+        <h3 class="event-title">Big Picnic</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026</span><br>
             <span>📍 <strong>Location:</strong> Hong Kong</span><br>
@@ -124,7 +217,7 @@
 
     <!-- Event 3 -->
     <div class="event-card" id="event-3" tabindex="-1">
-        <div class="event-title">Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch</div>
+        <h3 class="event-title">Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026 (15:00 HKT)</span><br>
             <span>📍 <strong>Location:</strong> AIA Vitality Park, Hong Kong</span><br>
@@ -139,7 +232,7 @@
 
     <!-- Event 4 -->
     <div class="event-card" id="event-4" tabindex="-1">
-        <div class="event-title">HE.R x TEA RAVE (Winter '26 Vol. 3)</div>
+        <h3 class="event-title">HE.R x TEA RAVE (Winter '26 Vol. 3)</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 26, 2026 (10:00 PM)</span><br>
             <span>📍 <strong>Location:</strong> Mott 32, Central, Hong Kong</span><br>
@@ -150,7 +243,7 @@
 
     <!-- Event 5 -->
     <div class="event-card" id="event-5" tabindex="-1">
-        <div class="event-title">HE.R - Winter '26 Vol. 4 ft. Sarabi</div>
+        <h3 class="event-title">HE.R - Winter '26 Vol. 4 ft. Sarabi</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM)</span><br>
             <span>📍 <strong>Location:</strong> Mott 32, Central, Hong Kong</span><br>
@@ -172,7 +265,7 @@
 
     <!-- Event 6 -->
     <div class="event-card" id="event-6" tabindex="-1">
-        <div class="event-title">Lantau Live</div>
+        <h3 class="event-title">Lantau Live</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28-29, 2026</span><br>
             <span>📍 <strong>Location:</strong> Lantau, Hong Kong</span><br>
@@ -192,7 +285,7 @@
 
     <!-- Event 7 -->
     <div class="event-card" id="event-7" tabindex="-1">
-        <div class="event-title">FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush</div>
+        <h3 class="event-title">FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (2:00 PM - 7:00 PM)</span><br>
             <span>📍 <strong>Location:</strong> Franks New York Italian, 79 Wyndham Street, Hong Kong</span><br>
@@ -205,7 +298,7 @@
     </div>
     <!-- Event 8 -->
     <div class="event-card" id="event-8" tabindex="-1">
-        <div class="event-title">UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set]</div>
+        <h3 class="event-title">UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set]</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> December 18, 2026 (4:30 PM - 10:30 PM HKT)</span><br>
             <span>📍 <strong>Location:</strong> Aquabeat 03, Kwun Tong, Hong Kong</span><br>
@@ -227,7 +320,7 @@
 
     <!-- Event 9 -->
     <div class="event-card" id="event-9" tabindex="-1">
-        <div class="event-title">KINETRO : ARGY</div>
+        <h3 class="event-title">KINETRO : ARGY</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> January 9, 2027 (3:00 PM - 10:30 PM HKT)</span><br>
             <span>📍 <strong>Location:</strong> Kai Tak Cruise Terminal (Baggage Hall B + Apron), Hong Kong</span><br>
@@ -242,7 +335,10 @@
         <a href="https://rmba.io/events/kinetro-argy-9jan" target="_blank" rel="noopener" class="ticket-btn">View Ticket Listing</a>
     </div>
 
+        </div>
+    </section>
 </div>
+</main>
 
 </body>
 </html>
