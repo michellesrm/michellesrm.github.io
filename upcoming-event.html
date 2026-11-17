@@ -60,19 +60,54 @@
         .schedule-container { max-width: 66rem; margin: auto; padding: clamp(1rem, 4vw, 2rem); }
         h2 { font-size: clamp(1.85rem, 4vw, 2.75rem); letter-spacing: -0.05em; margin-bottom: 1rem; }
         .event-calendar { margin-block: 0.75rem clamp(2.5rem, 6vw, 4.5rem); }
+        .calendar-toolbar[hidden], .calendar-month[hidden] { display: none; }
+        .calendar-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.55rem 1rem;
+            padding: clamp(0.8rem, 3vw, 1.4rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-bottom: 0;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .calendar-heading-month { margin: 0; font-size: clamp(1.25rem, 4vw, 2rem); letter-spacing: -0.045em; }
+        .calendar-controls { display: flex; align-items: center; gap: 0.3rem; }
+        .calendar-controls button {
+            min-width: 2.75rem;
+            min-height: 2.75rem;
+            padding-inline: 0.6rem;
+            border: 1px solid var(--line);
+            border-radius: 0.55rem;
+            background: #fff;
+            color: #aa1d2a;
+            font: inherit;
+            font-weight: 650;
+            cursor: pointer;
+        }
+        .calendar-controls button:hover { background: #fff1f1; }
+        .calendar-controls button:active { background: #ffdddd; }
+        .calendar-controls button[aria-disabled="true"] { color: #68686d; background: #f5f5f7; cursor: default; }
         .calendar-month { background: #fff; border: 1px solid var(--line); border-radius: 1rem; margin-bottom: 0.65rem; }
-        .calendar-month summary { cursor: pointer; padding: 0.85rem 1rem; font-weight: 650; border-radius: 1rem; }
-        .calendar-month summary::marker { color: var(--blue); }
+        .calendar-month summary { cursor: pointer; padding: 0.85rem 1rem; font-weight: 650; }
+        .calendar-month summary::marker { color: #aa1d2a; }
+        .calendar-enhanced .calendar-month { border-radius: 0 0 1rem 1rem; }
+        .calendar-enhanced .calendar-month summary { display: none; }
         .calendar-month table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 0.875rem; }
-        .calendar-month th { padding: 0.5rem 0; background: #f5f5f7; color: var(--muted); }
-        .calendar-month td { border-top: 1px solid #ececf0; border-inline-start: 1px solid #ececf0; height: 2.8rem; padding: 0.35rem; vertical-align: top; }
+        .calendar-month th { padding: 0.5rem 0.55rem; text-align: end; background: #fafafa; color: var(--muted); font-weight: 600; }
+        .calendar-month td { border-top: 1px solid #ececf0; border-inline-start: 1px solid #ececf0; height: clamp(3rem, 6vw, 5rem); padding: 0.35rem; vertical-align: top; }
         .calendar-month td:first-child { border-inline-start: 0; }
         .calendar-empty { background: #fafafa; }
-        .calendar-date { display: block; margin-bottom: 0.2rem; font-variant-numeric: tabular-nums; }
-        .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.25rem 0.35rem; border-radius: 0.4rem; background: #eaf2ff; color: #004b97; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
-        .calendar-month a:hover { background: #d6e7ff; text-decoration: underline; }
+        .calendar-month tr:last-child td:first-child { border-end-start-radius: 1rem; }
+        .calendar-month tr:last-child td:last-child { border-end-end-radius: 1rem; }
+        .calendar-date { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; margin: 0 0 0.2rem auto; font-variant-numeric: tabular-nums; }
+        .calendar-date[aria-current="date"] { background: #c52c38; color: #fff; border-radius: 50%; font-weight: 700; }
+        .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.2rem 0.32rem; border-inline-start: 2px solid #c52c38; border-radius: 0.3rem; background: #ffeded; color: #82202a; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
+        .calendar-month a:hover { background: #ffdddd; text-decoration: underline; }
 
-        .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+        .event-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
         .event-card {
             display: flex;
             flex-direction: column;
@@ -106,10 +141,13 @@
         }
         .ticket-btn:hover { background: #005bb8; }
         .ticket-btn:active { background: #004e9c; }
-        @media (max-width: 44rem) {
+        @media (max-width: 62rem) {
+            .event-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 42rem) {
             .event-grid { grid-template-columns: minmax(0, 1fr); }
             .calendar-month table { font-size: 0.75rem; }
-            .calendar-month td, .calendar-month a { padding: 0.15rem; }
+            .calendar-month td, .calendar-month a, .calendar-month th { padding: 0.15rem; }
         }
         @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
             .site-bar { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -137,6 +175,14 @@
 
     <section class="event-calendar" aria-labelledby="calendar-heading">
         <h2 id="calendar-heading">Event calendar</h2>
+        <div class="calendar-toolbar" hidden>
+            <h3 class="calendar-heading-month" aria-live="polite"></h3>
+            <div class="calendar-controls" role="group" aria-label="Calendar navigation">
+                <button type="button" data-calendar-previous aria-label="Previous month">‹</button>
+                <button type="button" data-calendar-today hidden>Today</button>
+                <button type="button" data-calendar-next aria-label="Next month">›</button>
+            </div>
+        </div>
         <details class="calendar-month" open>
             <summary>November 2026</summary>
             <table aria-label="November 2026 event calendar">
@@ -370,5 +416,45 @@
 </div>
 </main>
 
+<script>
+    const calendar = document.querySelector(".event-calendar");
+    const months = [...calendar.querySelectorAll(".calendar-month")];
+    const monthHeading = calendar.querySelector(".calendar-heading-month");
+    const previous = calendar.querySelector("[data-calendar-previous]");
+    const next = calendar.querySelector("[data-calendar-next]");
+    const todayButton = calendar.querySelector("[data-calendar-today]");
+
+    const today = new Date();
+    const hongKongDate = { timeZone: "Asia/Hong_Kong" };
+    const monthName = new Intl.DateTimeFormat("en-US", { ...hongKongDate, month: "long", year: "numeric" }).format(today);
+    const dayNumber = new Intl.DateTimeFormat("en-US", { ...hongKongDate, day: "numeric" }).format(today);
+    const todayIndex = months.findIndex(month => month.querySelector("summary").textContent === monthName);
+
+    if (todayIndex >= 0) {
+        const date = [...months[todayIndex].querySelectorAll(".calendar-date")].find(day => day.textContent === dayNumber);
+        date?.setAttribute("aria-current", "date");
+        todayButton.hidden = false;
+    }
+
+    let selectedMonth;
+    function showMonth(index) {
+        if (index < 0 || index >= months.length) return;
+        selectedMonth = index;
+        months.forEach((month, position) => {
+            month.hidden = position !== index;
+            month.open = position === index;
+        });
+        monthHeading.textContent = months[index].querySelector("summary").textContent;
+        previous.setAttribute("aria-disabled", String(index === 0));
+        next.setAttribute("aria-disabled", String(index === months.length - 1));
+    }
+
+    previous.addEventListener("click", () => showMonth(selectedMonth - 1));
+    next.addEventListener("click", () => showMonth(selectedMonth + 1));
+    todayButton.addEventListener("click", () => showMonth(todayIndex));
+    showMonth(todayIndex >= 0 ? todayIndex : 0);
+    calendar.classList.add("calendar-enhanced");
+    calendar.querySelector(".calendar-toolbar").hidden = false;
+</script>
 </body>
 </html>
