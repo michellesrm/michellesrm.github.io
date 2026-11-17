@@ -19,6 +19,25 @@
         .ticket-note { margin: 4px 0 0; }
         .ticket-btn { display: inline-block; background-color: #27ae60; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 0.9em; }
         .ticket-btn:hover { background-color: #219653; }
+        .event-calendar { margin: 0 0 24px; }
+        .event-calendar h2 { margin-bottom: 8px; }
+        .calendar-month { border: 1px solid #dce4ec; border-radius: 6px; margin-bottom: 8px; }
+        .calendar-month summary { cursor: pointer; padding: 10px 12px; font-weight: bold; }
+        .calendar-month table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 0.875rem; }
+        .calendar-month th { padding: 6px 0; background: #f4f6fa; }
+        .calendar-month td { border: 1px solid #e6ebf0; height: 36px; padding: 3px; vertical-align: top; }
+        .calendar-month .calendar-empty { background: #f7f8fa; }
+        .calendar-date { display: block; margin-bottom: 3px; }
+        .calendar-month a { display: block; margin-bottom: 3px; padding: 3px; border-radius: 3px; background: #e6f2ff; color: #164778; overflow-wrap: anywhere; }
+        .calendar-month a:focus-visible, .calendar-month summary:focus-visible { outline: 2px solid #164778; outline-offset: 2px; }
+        .event-card:target { background: #eef6ff; }
+        @media (max-width: 520px) {
+            body { padding: 8px; }
+            .schedule-container { padding: 10px; }
+            .calendar-month table { font-size: 0.75rem; }
+            .calendar-month td { padding: 2px; }
+            .calendar-month a { padding: 2px; }
+        }
     </style>
 </head>
 <body>
@@ -26,8 +45,52 @@
 <div class="schedule-container">
     <h1>Upcoming Events Schedule</h1>
 
+    <section class="event-calendar" aria-labelledby="calendar-heading">
+        <h2 id="calendar-heading">Event calendar</h2>
+        <details class="calendar-month" open>
+            <summary>November 2026</summary>
+            <table aria-label="November 2026 event calendar">
+                <thead><tr><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr></thead>
+                <tbody>
+                    <tr><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td><span class="calendar-date">1</span></td></tr>
+                    <tr><td><span class="calendar-date">2</span></td><td><span class="calendar-date">3</span></td><td><span class="calendar-date">4</span></td><td><span class="calendar-date">5</span></td><td><span class="calendar-date">6</span></td><td><span class="calendar-date">7</span></td><td><span class="calendar-date">8</span></td></tr>
+                    <tr><td><span class="calendar-date">9</span></td><td><span class="calendar-date">10</span></td><td><span class="calendar-date">11</span></td><td><span class="calendar-date">12</span></td><td><span class="calendar-date">13</span></td><td><span class="calendar-date">14</span></td><td><span class="calendar-date">15</span></td></tr>
+                    <tr><td><span class="calendar-date">16</span></td><td><span class="calendar-date">17</span></td><td><span class="calendar-date">18</span></td><td><span class="calendar-date">19</span></td><td><span class="calendar-date">20</span><a href="#event-1" aria-label="White Party, November 20">White Party</a></td><td><span class="calendar-date">21</span><a href="#event-2" aria-label="Big Picnic, November 21">Big Picnic</a><a href="#event-3" aria-label="Magic Room, November 21">Magic Room</a></td><td><span class="calendar-date">22</span></td></tr>
+                    <tr><td><span class="calendar-date">23</span></td><td><span class="calendar-date">24</span></td><td><span class="calendar-date">25</span></td><td><span class="calendar-date">26</span><a href="#event-4" aria-label="TEA RAVE, November 26">TEA RAVE</a></td><td><span class="calendar-date">27</span></td><td><span class="calendar-date">28</span><a href="#event-5" aria-label="Sarabi, November 28">Sarabi</a><a href="#event-6" aria-label="Lantau Live, November 28">Lantau Live</a><a href="#event-7" aria-label="FTD, November 28">FTD</a></td><td><span class="calendar-date">29</span><a href="#event-6" aria-label="Lantau Live, November 29">Lantau Live</a></td></tr>
+                    <tr><td><span class="calendar-date">30</span></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td></tr>
+                </tbody>
+            </table>
+        </details>
+        <details class="calendar-month">
+            <summary>December 2026</summary>
+            <table aria-label="December 2026 event calendar">
+                <thead><tr><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr></thead>
+                <tbody>
+                    <tr><td class="calendar-empty"></td><td><span class="calendar-date">1</span></td><td><span class="calendar-date">2</span></td><td><span class="calendar-date">3</span></td><td><span class="calendar-date">4</span></td><td><span class="calendar-date">5</span></td><td><span class="calendar-date">6</span></td></tr>
+                    <tr><td><span class="calendar-date">7</span></td><td><span class="calendar-date">8</span></td><td><span class="calendar-date">9</span></td><td><span class="calendar-date">10</span></td><td><span class="calendar-date">11</span></td><td><span class="calendar-date">12</span></td><td><span class="calendar-date">13</span></td></tr>
+                    <tr><td><span class="calendar-date">14</span></td><td><span class="calendar-date">15</span></td><td><span class="calendar-date">16</span></td><td><span class="calendar-date">17</span></td><td><span class="calendar-date">18</span><a href="#event-8" aria-label="Mau P, December 18">Mau P</a></td><td><span class="calendar-date">19</span></td><td><span class="calendar-date">20</span></td></tr>
+                    <tr><td><span class="calendar-date">21</span></td><td><span class="calendar-date">22</span></td><td><span class="calendar-date">23</span></td><td><span class="calendar-date">24</span></td><td><span class="calendar-date">25</span></td><td><span class="calendar-date">26</span></td><td><span class="calendar-date">27</span></td></tr>
+                    <tr><td><span class="calendar-date">28</span></td><td><span class="calendar-date">29</span></td><td><span class="calendar-date">30</span></td><td><span class="calendar-date">31</span></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td></tr>
+                </tbody>
+            </table>
+        </details>
+        <details class="calendar-month">
+            <summary>January 2027</summary>
+            <table aria-label="January 2027 event calendar">
+                <thead><tr><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr></thead>
+                <tbody>
+                    <tr><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td class="calendar-empty"></td><td><span class="calendar-date">1</span></td><td><span class="calendar-date">2</span></td><td><span class="calendar-date">3</span></td></tr>
+                    <tr><td><span class="calendar-date">4</span></td><td><span class="calendar-date">5</span></td><td><span class="calendar-date">6</span></td><td><span class="calendar-date">7</span></td><td><span class="calendar-date">8</span></td><td><span class="calendar-date">9</span><a href="#event-9" aria-label="ARGY, January 9">ARGY</a></td><td><span class="calendar-date">10</span></td></tr>
+                    <tr><td><span class="calendar-date">11</span></td><td><span class="calendar-date">12</span></td><td><span class="calendar-date">13</span></td><td><span class="calendar-date">14</span></td><td><span class="calendar-date">15</span></td><td><span class="calendar-date">16</span></td><td><span class="calendar-date">17</span></td></tr>
+                    <tr><td><span class="calendar-date">18</span></td><td><span class="calendar-date">19</span></td><td><span class="calendar-date">20</span></td><td><span class="calendar-date">21</span></td><td><span class="calendar-date">22</span></td><td><span class="calendar-date">23</span></td><td><span class="calendar-date">24</span></td></tr>
+                    <tr><td><span class="calendar-date">25</span></td><td><span class="calendar-date">26</span></td><td><span class="calendar-date">27</span></td><td><span class="calendar-date">28</span></td><td><span class="calendar-date">29</span></td><td><span class="calendar-date">30</span></td><td><span class="calendar-date">31</span></td></tr>
+                </tbody>
+            </table>
+        </details>
+    </section>
+
     <!-- Event 1 -->
-    <div class="event-card">
+    <div class="event-card" id="event-1" tabindex="-1">
         <div class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026</span><br>
@@ -44,7 +107,7 @@
     </div>
 
     <!-- Event 2 -->
-    <div class="event-card">
+    <div class="event-card" id="event-2" tabindex="-1">
         <div class="event-title">Big Picnic</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026</span><br>
@@ -60,7 +123,7 @@
     </div>
 
     <!-- Event 3 -->
-    <div class="event-card">
+    <div class="event-card" id="event-3" tabindex="-1">
         <div class="event-title">Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026 (15:00 HKT)</span><br>
@@ -75,7 +138,7 @@
     </div>
 
     <!-- Event 4 -->
-    <div class="event-card">
+    <div class="event-card" id="event-4" tabindex="-1">
         <div class="event-title">HE.R x TEA RAVE (Winter '26 Vol. 3)</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 26, 2026 (10:00 PM)</span><br>
@@ -86,7 +149,7 @@
     </div>
 
     <!-- Event 5 -->
-    <div class="event-card">
+    <div class="event-card" id="event-5" tabindex="-1">
         <div class="event-title">HE.R - Winter '26 Vol. 4 ft. Sarabi</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM)</span><br>
@@ -108,7 +171,7 @@
     </div>
 
     <!-- Event 6 -->
-    <div class="event-card">
+    <div class="event-card" id="event-6" tabindex="-1">
         <div class="event-title">Lantau Live</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28-29, 2026</span><br>
@@ -128,7 +191,7 @@
     </div>
 
     <!-- Event 7 -->
-    <div class="event-card">
+    <div class="event-card" id="event-7" tabindex="-1">
         <div class="event-title">FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (2:00 PM - 7:00 PM)</span><br>
@@ -141,7 +204,7 @@
         <a href="https://www.eventbrite.hk/e/2004700625536" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
     </div>
     <!-- Event 8 -->
-    <div class="event-card">
+    <div class="event-card" id="event-8" tabindex="-1">
         <div class="event-title">UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set]</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> December 18, 2026 (4:30 PM - 10:30 PM HKT)</span><br>
@@ -163,7 +226,7 @@
     </div>
 
     <!-- Event 9 -->
-    <div class="event-card">
+    <div class="event-card" id="event-9" tabindex="-1">
         <div class="event-title">KINETRO : ARGY</div>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> January 9, 2027 (3:00 PM - 10:30 PM HKT)</span><br>
