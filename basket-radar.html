@@ -173,8 +173,16 @@ button.cell:active, .tap:active { background: var(--fill); }
 /* sheets */
 .scrim { position: absolute; inset: 0; z-index: 10; background: var(--scrim); display: flex; align-items: flex-end; animation: fade .25s ease; }
 .sheet { width: 100%; max-height: 90%; overflow-y: auto; background: var(--app); border-radius: 14px 14px 0 0; padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 26px);
-  animation: up .38s cubic-bezier(.2, .9, .25, 1); }
-.sheet .grab { width: 36px; height: 5px; border-radius: 99px; background: var(--sep); margin: 0 auto 10px; }
+  overflow-x: hidden; animation: up .38s cubic-bezier(.2, .9, .25, 1); }
+.sheet .grab { height: 20px; margin: -8px -16px 4px; display: grid; place-items: center; touch-action: none; cursor: grab; }
+.sheet .grab::before { content: ""; width: 36px; height: 5px; border-radius: 99px; background: var(--sep); }
+.sheet.dragging, .sheet.dragging * { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+/* stepper: the next step slides in from the side it's coming from */
+.sheet .pane { animation: stepin .32s cubic-bezier(.2, .9, .25, 1); }
+.sheet .pane.back { --from: -48px; }
+@keyframes stepin { from { transform: translateX(var(--from, 48px)); opacity: 0; } to { transform: none; opacity: 1; } }
+/* theme switch: everything changes in the same frame */
+.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
 .sheet h3 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 4px 0 4px; }
 .sheet .t2 { margin-bottom: 10px; }
 @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -183,8 +191,8 @@ button.cell:active, .tap:active { background: var(--fill); }
 .rcpt .ln { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 3px 0; align-items: center; }
 .scanner { height: 170px; border-radius: 16px; background: #0b0b0c; position: relative; overflow: hidden; display: grid; place-items: center; color: #eee; font-size: 14px; }
 .scanner::before { content: ""; position: absolute; inset: 36px 50px; border: 2px solid rgba(255,255,255,.7); border-radius: 14px; }
-.scanner::after { content: ""; position: absolute; left: 60px; right: 60px; height: 2px; background: #ff453a; box-shadow: 0 0 14px #ff453a; animation: sweep 1.3s ease-in-out infinite alternate; }
-@keyframes sweep { from { top: 48px; } to { top: 120px; } }
+.scanner::after { content: ""; position: absolute; top: 48px; left: 60px; right: 60px; height: 2px; background: #ff453a; box-shadow: 0 0 14px #ff453a; animation: sweep 1.3s ease-in-out infinite alternate; }
+@keyframes sweep { from { transform: translateY(0); } to { transform: translateY(72px); } }
 .field { display: grid; gap: 6px; }
 .field label { font-size: 13px; color: var(--ink2); padding-left: 4px; }
 .field input, .field select { border: 0; border-radius: 11px; background: var(--card); padding: 12px 14px; font: inherit; font-size: 17px; color: var(--ink); letter-spacing: -.02em; }
@@ -201,6 +209,7 @@ button.cell:active, .tap:active { background: var(--fill); }
 @media (prefers-reduced-motion: reduce) {
   .sheet, .scrim, .toast { animation: fade .2s ease; }
   .scanner::after { animation: none; top: 84px; }
+  .sheet .pane { animation: fade .2s ease; }
   .btn:active, .tap:active, .fab:active { transform: none; }
 }
 @media (prefers-reduced-transparency: reduce) { .gnav, .tabbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--card); } }
@@ -242,12 +251,12 @@ button.cell:active, .tap:active { background: var(--fill); }
     <ol class="steps" id="steps"></ol>
   </section>
   <div class="device"><div class="app" id="app">
-    <div class="status" aria-hidden="true"><span>9:41</span><span class="r">
+    <div class="status" aria-hidden="true"><span id="clock">9:41</span><span class="r">
       <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
       <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx=".75" fill="currentColor" opacity=".4"/></svg></span></div>
     <div class="navbar">
       <button class="left only-phone" type="button" data-act="tour"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Demo tour</button>
-      <span class="left" style="color:var(--ink2);font-size:15px" id="dateline">Tue 17 Nov</span>
+      <span class="left" style="color:var(--ink2);font-size:15px" id="dateline"></span>
       <button class="avatar" type="button" data-act="settings" aria-label="Profile and appearance">M</button>
     </div>
     <main class="scroll" id="screen"></main>
@@ -260,6 +269,25 @@ button.cell:active, .tap:active { background: var(--fill); }
 <p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Market Place for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings and points are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Basket Radar is a student concept and is not affiliated with any retailer.</p>
 
 <script>
+/* ======================= real date and time (Hong Kong) ======================= */
+// The sample history was written for 17 Nov; every date below is now that many days before or after today.
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const hkNow = () => new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Hong_Kong" }));
+const TODAY = hkNow();
+const day = n => { const d = new Date(TODAY); d.setDate(d.getDate() + n); return d.getDate() + " " + MON[d.getMonth()]; };
+const monthAgo = (n, long) => (long ? MONTH : MON)[(TODAY.getMonth() - n + 12) % 12];
+const hhmm = (d, pad = true) => (pad ? String(d.getHours()).padStart(2, "0") : d.getHours()) + ":" + String(d.getMinutes()).padStart(2, "0");
+const OPENS = "08:00";   // assumed opening time for the sample stores
+const mins = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+const isOpen = s => { const n = hkNow(), t = n.getHours() * 60 + n.getMinutes(); return t >= mins(OPENS) && t < mins(STORES[s].close); };
+function tickClock() {
+  const n = hkNow();
+  const c = document.getElementById("clock"); if (c) c.textContent = hhmm(n, false);
+  const d = document.getElementById("dateline"); if (d) d.textContent = `${DOW[n.getDay()]} ${n.getDate()} ${MON[n.getMonth()]}`;
+}
+
 /* ======================= sample data ======================= */
 const STORES = {
   WELLCOME:  { name: "Wellcome",  branch: "near home",   walk: 4,  close: "22:00", c: "#d64545" },
@@ -322,35 +350,35 @@ const P = {
 const MILK = ["slim", "nestle", "trap", "vita", "meiji", "meadows", "msmilk"];
 const SUBS = Object.fromEntries(MILK.map(k => [k, MILK.filter(x => x !== k).concat(["hill", "hillorg"])]));
 const HOME = {
-  slim:   { stock: 1,  unit: "pack",    rate: .4,  last: "12 Nov", every: 5,  useBy: "20 Nov" },
-  egg:    { stock: 3,  unit: "eggs",    rate: 1.5, last: "10 Nov", every: 6 },
-  bread:  { stock: .5, unit: "loaf",    rate: .25, last: "13 Nov", every: 4,  useBy: "18 Nov" },
-  soy:    { stock: 2,  unit: "cartons", rate: .5,  last: "11 Nov", every: 6 },
-  tissue: { stock: 6,  unit: "rolls",   rate: .3,  last: "2 Nov",  every: 30 },
-  rice:   { stock: 2,  unit: "kg",      rate: .15, last: "20 Oct", every: 33 }
+  slim:   { stock: 1,  unit: "pack",    rate: .4,  last: day(-5), every: 5,  useBy: day(3) },
+  egg:    { stock: 3,  unit: "eggs",    rate: 1.5, last: day(-7), every: 6 },
+  bread:  { stock: .5, unit: "loaf",    rate: .25, last: day(-4), every: 4,  useBy: day(1) },
+  soy:    { stock: 2,  unit: "cartons", rate: .5,  last: day(-6), every: 6 },
+  tissue: { stock: 6,  unit: "rolls",   rate: .3,  last: day(-15), every: 30 },
+  rice:   { stock: 2,  unit: "kg",      rate: .15, last: day(-28), every: 33 }
 };
 const WATCH = ["slim", "egg", "bread", "soy", "tissue", "rice"];
 let REMOVED = new Set(), KEPT = new Set();
 let COUPONS = [
-  { id: "c1", src: "yuu", item: "slim", store: "WELLCOME", off: 3, minQty: 2, until: "30 Nov", text: "HK$3 off Slimilk 946 mL, buy 2" },
-  { id: "c2", src: "MoneyBack", item: "tissue", store: "PARKNSHOP", off: 8, minQty: 1, until: "25 Nov", text: "HK$8 off toilet rolls, 10 pack" }
+  { id: "c1", src: "yuu", item: "slim", store: "WELLCOME", off: 3, minQty: 2, until: day(13), text: "HK$3 off Slimilk 946 mL, buy 2" },
+  { id: "c2", src: "MoneyBack", item: "tissue", store: "PARKNSHOP", off: 8, minQty: 1, until: day(8), text: "HK$8 off toilet rolls, 10 pack" }
 ];
 const NEW_COUPONS = [
-  { id: "c3", src: "yuu", item: "egg", store: "WELLCOME", off: 4, minQty: 2, until: "28 Nov", text: "HK$4 off DQY eggs, buy 2" },
-  { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: "15 Dec", text: "HK$10 off jasmine rice 5 kg" }
+  { id: "c3", src: "yuu", item: "egg", store: "WELLCOME", off: 4, minQty: 2, until: day(11), text: "HK$4 off DQY eggs, buy 2" },
+  { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: day(28), text: "HK$10 off jasmine rice 5 kg" }
 ];
 let POINTS = 1240;
-let LEDGER = [ ["16 Nov", "Receipt · ParknShop", 20], ["15 Nov", "Shelf price confirmed", 5], ["12 Nov", "Receipt · Wellcome", 20], ["12 Nov", "Brand offer · Hillside A2 milk", 60], ["9 Nov", "Receipt · AEON", 20] ];
+let LEDGER = [ [day(-1), "Receipt · ParknShop", 20], [day(-2), "Shelf price confirmed", 5], [day(-5), "Receipt · Wellcome", 20], [day(-5), "Brand offer · Hillside A2 milk", 60], [day(-8), "Receipt · AEON", 20] ];
 let SHELF = { slim: { PARKNSHOP: { price: 21.9, n: 3, ago: "2 h ago" } } };
 let BARCODE_MAP = Object.fromEntries(Object.entries(P).map(([k, v]) => [v.ean, k]));
 const UNKNOWN_EAN = "4895555123456";
 // savings (sample): by month, and this month's breakdown
-let SAVED = { months: [["Jun", 14.2], ["Jul", 17.5], ["Aug", 19.8], ["Sep", 21.4], ["Oct", 23.1], ["Nov", 18.6]], goal: 25,
+let SAVED = { months: [[monthAgo(5), 14.2], [monthAgo(4), 17.5], [monthAgo(3), 19.8], [monthAgo(2), 21.4], [monthAgo(1), 23.1], [monthAgo(0), 18.6]], goal: 25,
   parts: [["Multi-buy offers spotted", 7.4], ["Cheaper store on your route", 4.2], ["Your coupons applied", 3.0], ["Cashback and points", 4.0]],
-  trips: [["16 Nov", "ParknShop", 6.4], ["12 Nov", "Wellcome", 8.2], ["9 Nov", "AEON", 4.0]] };
+  trips: [[day(-1), "ParknShop", 6.4], [day(-5), "Wellcome", 8.2], [day(-8), "AEON", 4.0]] };
 let FAMILY = [ ["Slimilk 946 mL × 2", "M", false], ["Eggs, 8 large", "K", false], ["Wholemeal loaf", "M", true], ["Soya milk", "D", false], ["Bananas", "K", false] ];
 const WHO = { M: "#5e5ce6", K: "#ff9f0a", D: "#30b0c7" };
-const WASTE = { months: [["Jun", 92], ["Jul", 75], ["Aug", 81], ["Sep", 58], ["Oct", 49], ["Nov", 46]], items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
+const WASTE = { months: [[monthAgo(5), 92], [monthAgo(4), 75], [monthAgo(3), 81], [monthAgo(2), 58], [monthAgo(1), 49], [monthAgo(0), 46]], items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
 let JOINED = false;
 
 /* ======================= helpers ======================= */
@@ -399,9 +427,10 @@ function spark(vals, wide) {
 }
 const sparkle = (s = 14, c = "currentColor") => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${c}" aria-hidden="true"><path d="M12 2l1.9 5.7L19.6 9.6l-5.7 1.9L12 17.2l-1.9-5.7L4.4 9.6l5.7-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>`;
 function toast(m) { const t = document.createElement("div"); t.className = "toast"; t.textContent = m; $("#app").appendChild(t); setTimeout(() => t.remove(), 2500); }
-function addPoints(p, l) { POINTS += p; LEDGER.unshift(["17 Nov", l, p]); }
+function addPoints(p, l) { POINTS += p; LEDGER.unshift([day(0), l, p]); }
 const savedNow = () => SAVED.months[SAVED.months.length - 1][1];
-const savedYear = () => sum(SAVED.months.map(m => m[1])) + 96.3;   // + Jan–May (sample)
+// this calendar year only: the chart months that fall in it, plus HK$19.26 (sample) for each earlier month
+const savedYear = () => sum(SAVED.months.filter((m, i) => TODAY.getMonth() - (5 - i) >= 0).map(m => m[1])) + 19.26 * Math.max(0, TODAY.getMonth() - 5);
 
 /* ======================= screens ======================= */
 const ICON = {
@@ -463,7 +492,7 @@ function list() {
   <div class="hdr">Your trip</div>
   <div class="group">${Object.entries(trip).map(([s, its]) => `<div class="cell"><span class="storedot" style="background:${STORES[s].c}">${STORES[s].name[0]}</span><div class="main">
     <div class="t1 b">${STORES[s].name} · ${STORES[s].branch}</div><div class="t2">${its.map(i => esc(P[i.k].short)).join(", ")}</div></div>
-    <div style="text-align:right"><span class="badge g">Open till ${STORES[s].close}</span><div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
+    <div style="text-align:right">${isOpen(s) ? `<span class="badge g">Open till ${STORES[s].close}</span>` : `<span class="badge o">Closed · opens ${OPENS}</span>`}<div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
   <div class="hdr">Not needed this week</div>
   <div class="group">${skip.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Lasts about ${Math.round(daysLeft(k))} more days</div></div></div>`).join("")}</div>`;
 }
@@ -530,13 +559,13 @@ function savings() {
   <div class="save-hero">
     <div class="ring"><svg viewBox="0 0 170 170"><circle cx="85" cy="85" r="74" fill="none" stroke="var(--fill)" stroke-width="12"/>
       <circle cx="85" cy="85" r="74" fill="none" stroke="var(--green)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/></svg>
-      <div class="c"><b>${hk(now)}</b><span>saved in November</span></div></div>
+      <div class="c"><b>${hk(now)}</b><span>saved in ${monthAgo(0, true)}</span></div></div>
     <div class="t1 b">${now >= SAVED.goal ? "Monthly goal reached!" : `${hk(SAVED.goal - now)} to your ${hk(SAVED.goal, 0)} goal`}</div>
     <div class="t2">${hk(savedYear())} saved this year. That's about ${Math.round(savedYear() / 18.5)} packs of milk, free.</div></div>
   <div class="hdr">By month</div>
   <div class="group"><div class="bars">${SAVED.months.map((m, i) => `<div class="b ${i === SAVED.months.length - 1 ? "now" : ""}"><em>${m[1].toFixed(0)}</em><i style="height:${m[1] / max * 78}px"></i>${m[0]}</div>`).join("")}</div>
-    <p class="t2" style="padding:0 14px 12px">HK$ saved per month. November isn't over yet.</p></div>
-  <div class="hdr">Where November's savings came from</div>
+    <p class="t2" style="padding:0 14px 12px">HK$ saved per month. ${monthAgo(0, true)} isn't over yet.</p></div>
+  <div class="hdr">Where ${monthAgo(0, true)}'s savings came from</div>
   <div class="group">${SAVED.parts.map(p => `<div class="cell"><div class="main"><div class="row" style="justify-content:space-between"><span class="t1">${p[0]}</span><span class="price" style="color:var(--green)">${hk(p[1])}</span></div>
     <div class="mini"><i style="width:${p[1] / now * 100}%"></i></div></div></div>`).join("")}</div>
   <div class="hdr">Recent trips</div>
@@ -561,25 +590,29 @@ function wallet() {
 }
 
 /* ======================= sheets ======================= */
-function sheet(html) { $("#overlay").innerHTML = `<div class="scrim" data-scrim="1"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`; }
+function sheet(html, dir) {
+  const cur = $("#overlay .sheet");
+  if (dir && cur) { cur.innerHTML = `<div class="grab"></div><div class="pane ${dir < 0 ? "back" : ""}">${html}</div>`; cur.scrollTop = 0; return; }
+  $("#overlay").innerHTML = `<div class="scrim" data-scrim="1"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`;
+}
 function close() { $("#overlay").innerHTML = ""; }
 
 const RECEIPT = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98, 22], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96, 27], ["WHL SANDW LOAF 450G", "bread", 1, 15.4, .71, 16.9], ["BANANA PHILIPPINE", null, 1, 12.9, .9, 12.9]];
 function receiptSheet(step) {
   if (!step) return sheet(`<h3>Log a receipt</h3><p class="t2">Take a photo or forward an e-receipt. In this demo, use the sample.</p>
-    <div class="rcpt">PARKNSHOP · 17/11/2026 19:42<br><br>${RECEIPT.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}<br>TOTAL ${sum(RECEIPT.map(l => l[2] * l[3])).toFixed(2)}</div>
+    <div class="rcpt">PARKNSHOP · ${(r => `${String(r.getDate()).padStart(2, "0")}/${String(r.getMonth() + 1).padStart(2, "0")}/${r.getFullYear()} ${hhmm(r)}`)(new Date(hkNow() - 25 * 60000))}<br><br>${RECEIPT.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}<br>TOTAL ${sum(RECEIPT.map(l => l[2] * l[3])).toFixed(2)}</div>
     <button class="btn fill lg" type="button" data-act="rc-read" style="margin-top:14px">Read receipt</button>`);
   if (step === 1) return sheet(`<h3>Here's what we read</h3><p class="t2">Matched to your products. One line needs a quick check.</p>
     <div class="group">${RECEIPT.map(l => `<div class="cell ${l[1] ? "wa" : ""}">${l[1] ? art(l[1]) : ""}<div class="main"><div class="t1">${l[1] ? esc(P[l[1]].short) : "Bananas"}</div><div class="t2">×${l[2]} · ${hk(l[2] * l[3])}</div></div>
       <span class="badge ${l[4] < .8 ? "o" : "g"}">${l[4] < .8 ? "Check" : Math.round(l[4] * 100) + "%"}</span></div>`).join("")}</div>
     <p class="t2" style="margin-top:10px">Is "WHL SANDW LOAF 450G" the wholemeal loaf?</p>
-    <button class="btn fill lg" type="button" data-act="rc-save">Yes, save receipt</button>`);
+    <button class="btn fill lg" type="button" data-act="rc-save">Yes, save receipt</button>`, 1);
   const saved = sum(RECEIPT.map(l => (l[5] - l[3]) * l[2]));
-  SAVED.months[SAVED.months.length - 1][1] += saved; SAVED.parts[0][1] += saved; SAVED.trips.unshift(["17 Nov", "ParknShop", saved]);
+  SAVED.months[SAVED.months.length - 1][1] += saved; SAVED.parts[0][1] += saved; SAVED.trips.unshift([day(0), "ParknShop", saved]);
   HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; addPoints(20, "Receipt · ParknShop");
   sheet(`<div class="celebrate"><div class="t2" style="margin:6px 0 0">You saved on this trip</div><div class="amt">${hk(saved)}</div>
-    <div class="t1">+20 points · stock updated</div><p class="t2">Mostly from "Buy 2 save $8" on Slimilk. That brings November to ${hk(savedNow())}.</p></div>
-    <button class="btn fill lg" type="button" data-act="see-savings">See my savings</button>`);
+    <div class="t1">+20 points · stock updated</div><p class="t2">Mostly from "Buy 2 save $8" on Slimilk. That brings ${monthAgo(0, true)} to ${hk(savedNow())}.</p></div>
+    <button class="btn fill lg" type="button" data-act="see-savings">See my savings</button>`, 1);
 }
 function scanSheet() {
   const s = [["slim", P.slim.ean], ["egg", P.egg.ean], ["tissue", P.tissue.ean], [null, UNKNOWN_EAN]];
@@ -621,7 +654,8 @@ function howSheet() {
 }
 function tripSheet() {
   const items = aiItems(), trip = {}; items.forEach(i => (trip[i.b.s] ||= []).push(i));
-  sheet(`<h3>Your trip tonight</h3><p class="t2">Two stops on your way home. Both open till 22:00.</p>
+  const open = Object.keys(trip).every(isOpen), h = hkNow().getHours();
+  sheet(`<h3>Your trip ${!open ? "tomorrow" : h >= 17 ? "tonight" : "today"}</h3><p class="t2">${Object.keys(trip).length === 2 ? "Two stops" : "Stops"} on your way home. ${open ? `Open till ${Object.keys(trip).map(s => STORES[s].close).sort()[0]}.` : `Closed now; they open at ${OPENS}.`}</p>
     ${Object.entries(trip).map(([s, its]) => `<div class="hdr">${STORES[s].name} · ${STORES[s].walk} min walk</div><div class="group">${its.map(i => `<div class="cell wa">${art(i.k)}<div class="main"><div class="t1">${i.b.q} × ${esc(P[i.k].short)}</div><div class="t2">${i.b.o ? esc(i.b.o) : "Shelf price"}${i.b.coupon ? " · show your " + i.b.coupon.src + " coupon" : ""}</div></div><span class="price">${hk(i.b.final * i.b.q)}</span></div>`).join("")}</div>`).join("")}
     <button class="btn fill lg" type="button" data-close="1" style="margin-top:14px">Done</button>`);
 }
@@ -641,7 +675,7 @@ function familySheet() {
     <div class="group">${FAMILY.map((f, i) => `<div class="cell"><button type="button" class="chk ${f[2] ? "on" : ""}" data-fam="${i}" aria-label="Mark ${esc(f[0])} bought">${f[2] ? "✓" : ""}</button>
       <div class="main t1" style="${f[2] ? "text-decoration:line-through;color:var(--ink2)" : ""}">${esc(f[0])}</div><span class="who" style="background:${WHO[f[1]]}">${f[1]}</span></div>`).join("")}</div>
     <div class="hdr">Waste dashboard</div>
-    <div class="group"><div class="cell"><div class="main"><div class="t1 b" style="font-size:22px">${hk(WASTE.months[5][1], 0)} thrown away in November</div><div class="t2">Half of June's ${hk(WASTE.months[0][1], 0)}. Keep going.</div></div></div>
+    <div class="group"><div class="cell"><div class="main"><div class="t1 b" style="font-size:22px">${hk(WASTE.months[5][1], 0)} thrown away in ${monthAgo(0, true)}</div><div class="t2">Half of ${monthAgo(5, true)}'s ${hk(WASTE.months[0][1], 0)}. Keep going.</div></div></div>
       <div class="bars" style="height:96px">${WASTE.months.map((m, i) => `<div class="b ${i === 5 ? "now" : ""}"><i style="height:${m[1] / max * 60}px;background:var(--orange)"></i>${m[0]}</div>`).join("")}</div>
       ${WASTE.items.map(w => `<div class="cell"><div class="main t1">${esc(w[0])}</div><span class="price">${hk(w[1])}</span></div>`).join("")}</div>
     <div class="hdr">Restock cycles</div>
@@ -656,9 +690,12 @@ let THEME = "auto";
 try { THEME = localStorage.getItem("br-theme") || "auto"; } catch (e) {}
 function applyTheme() {
   const r = document.documentElement;
+  r.classList.add("theme-switching");
   if (THEME === "auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", THEME);
   try { localStorage.setItem("br-theme", THEME); } catch (e) {}
   paintTheme();
+  void getComputedStyle(document.body).backgroundColor; // apply the new colours while transitions are off
+  requestAnimationFrame(() => r.classList.remove("theme-switching"));
 }
 function paintTheme() {
   document.querySelectorAll("[data-themeseg]").forEach(el => el.innerHTML = [["light", "Light"], ["dark", "Dark"], ["auto", "Auto"]]
@@ -736,6 +773,68 @@ document.addEventListener("input", e => {
   if (k && k !== CUR) { CUR = k; render(); const b = $("#q"); b.value = q; b.focus(); }
 });
 
+/* ======================= sheet: swipe down to dismiss ======================= */
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
+let DRAG = null;
+const resist = d => 60 * (1 - 1 / (d / 120 + 1));             // pulling up past the top: harder the further you go, max 60px
+function setSheetY(sh, y) {
+  sh.style.transform = y ? `translateY(${y}px)` : "";
+  const sc = sh.parentElement; if (sc) sc.style.opacity = Math.max(0, 1 - Math.max(0, y) / sh.offsetHeight);
+}
+// Critically damped spring (bounce 0, ~0.5 s) that starts at the release velocity.
+function springSheet(sh, from, to, v0, done) {
+  if (REDUCED.matches) { setSheetY(sh, to); return done && done(); }
+  const w = 16, x0 = from - to, t0 = performance.now();
+  (function tick(now) {
+    if (!sh.isConnected) return;
+    const t = (now - t0) / 1000, x = (x0 + (v0 + w * x0) * t) * Math.exp(-w * t);
+    if (Math.abs(x) < .5 || t > 1.2) { setSheetY(sh, to); return done && done(); }
+    setSheetY(sh, to + x); sh._spring = requestAnimationFrame(tick);
+  })(t0);
+}
+function dragStart(y, target) {
+  const sh = target.closest && target.closest(".sheet");
+  if (!sh || target.closest("input, select, textarea")) return;
+  DRAG = { sh, y0: y, y: 0, on: false, grab: !!target.closest(".grab"), pts: [[performance.now(), y]] };
+}
+function dragMove(y, e, slop) {
+  if (!DRAG) return;
+  const dy = y - DRAG.y0;
+  if (!DRAG.on) {
+    if (Math.abs(dy) < slop) return;
+    if (!DRAG.grab && (dy < 0 || DRAG.sh.scrollTop > 0)) { DRAG = null; return; }   // let the sheet scroll instead
+    DRAG.on = true; cancelAnimationFrame(DRAG.sh._spring);
+    DRAG.sh.style.animation = DRAG.sh.parentElement.style.animation = "none";
+    DRAG.sh.classList.add("dragging");
+  }
+  if (e.cancelable) e.preventDefault();
+  DRAG.y = dy >= 0 ? dy : -resist(-dy);
+  setSheetY(DRAG.sh, DRAG.y);
+  const now = performance.now(); DRAG.pts.push([now, y]);
+  while (DRAG.pts.length > 2 && now - DRAG.pts[0][0] > 100) DRAG.pts.shift();
+}
+function dragEnd() {
+  const d = DRAG; DRAG = null;
+  if (!d || !d.on) return;
+  d.sh.classList.remove("dragging");
+  const [a, b] = [d.pts[0], d.pts[d.pts.length - 1]];
+  const v = b[0] > a[0] ? (b[1] - a[1]) / (b[0] - a[0]) * 1000 : 0;  // px/s, + is down
+  const h = d.sh.offsetHeight;
+  if (d.y > h * .35 || (v > 600 && d.y > 0)) springSheet(d.sh, d.y, h, v, close);
+  else springSheet(d.sh, d.y, 0, v);
+  DRAGGED_AT = performance.now();
+}
+// a drag that started on a button shouldn't also click it
+let DRAGGED_AT = -Infinity;
+document.addEventListener("click", e => { if (performance.now() - DRAGGED_AT < 100) { e.stopPropagation(); e.preventDefault(); } }, true);
+document.addEventListener("touchstart", e => dragStart(e.touches[0].clientY, e.target), { passive: true });
+document.addEventListener("touchmove", e => dragMove(e.touches[0].clientY, e, 1), { passive: false });
+document.addEventListener("touchend", dragEnd); document.addEventListener("touchcancel", dragEnd);
+document.addEventListener("pointerdown", e => { if (e.pointerType === "mouse" && e.button === 0) dragStart(e.clientY, e.target); });
+document.addEventListener("pointermove", e => { if (e.pointerType === "mouse") dragMove(e.clientY, e, 4); });
+document.addEventListener("pointerup", e => { if (e.pointerType === "mouse") dragEnd(); });
+
+tickClock(); setInterval(tickClock, 15000);
 applyTheme();
 render();
 </script>
