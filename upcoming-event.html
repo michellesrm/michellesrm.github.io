@@ -219,6 +219,7 @@
             .event-card { transition: none; }
             .event-card:hover, .event-card:active { transform: none; }
         }
+        .event-grid.masonry { grid-auto-rows: 1px; row-gap: 0; }
     </style>
 </head>
 <body>
@@ -634,5 +635,33 @@
     calendar.classList.add("calendar-enhanced");
     calendar.querySelector(".calendar-toolbar").hidden = false;
 </script>
+
+<script>
+    // Keep chronological DOM and keyboard order while fitting cards into each column.
+    const eventGrid = document.querySelector(".event-grid");
+    const eventCards = [...eventGrid.querySelectorAll(".event-card")];
+    const compactLayout = window.matchMedia("(max-width: 42rem)");
+    let layoutFrame;
+    function arrangeCards() {
+        cancelAnimationFrame(layoutFrame);
+        layoutFrame = requestAnimationFrame(() => {
+            const masonry = !compactLayout.matches;
+            eventGrid.classList.toggle("masonry", masonry);
+            const gap = parseFloat(getComputedStyle(eventGrid).columnGap) || 24;
+            eventCards.forEach(card => {
+                card.style.gridRowEnd = masonry
+                    ? "span " + Math.ceil(card.getBoundingClientRect().height + gap)
+                    : "";
+            });
+        });
+    }
+    if ("ResizeObserver" in window) {
+        const cardSizes = new ResizeObserver(arrangeCards);
+        eventCards.forEach(card => cardSizes.observe(card));
+        compactLayout.addEventListener("change", arrangeCards);
+        arrangeCards();
+    }
+</script>
+
 </body>
 </html>
