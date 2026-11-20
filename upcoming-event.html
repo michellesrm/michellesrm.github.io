@@ -132,8 +132,8 @@
         .calendar-month tr:last-child td:last-child { border-end-end-radius: 1rem; }
         .calendar-date { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; margin: 0 0 0.2rem auto; font-variant-numeric: tabular-nums; }
         .calendar-date[aria-current="date"] { background: #c52c38; color: #fff; border-radius: 50%; font-weight: 700; }
-        .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.2rem 0.32rem; border-inline-start: 2px solid #c52c38; border-radius: 0.3rem; background: #ffeded; color: #82202a; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
-        .calendar-month a:hover { background: #ffdddd; text-decoration: underline; }
+        .calendar-month a { display: block; margin-bottom: 0.22rem; padding: 0.2rem 0.32rem; border-inline-start: 2px solid var(--blue); border-radius: 0.3rem; background: #eaf2ff; color: #004b97; text-decoration: none; font-weight: 600; overflow-wrap: anywhere; }
+        .calendar-month a:hover { background: #d6e7ff; text-decoration: underline; }
 
         .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
         .event-card {
@@ -176,6 +176,21 @@
         }
         @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
             .site-bar { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+        }
+
+        .event-card { position: relative; isolation: isolate; transition: transform 220ms ease, box-shadow 220ms ease; }
+        .event-link { margin-top: auto; color: var(--blue); text-decoration: none; padding-block: 0.65rem; font-weight: 600; }
+        .event-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 1.4rem; }
+        .event-link:focus-visible { outline: none; }
+        .event-card:focus-within { outline: 2px solid var(--blue); outline-offset: 3px; }
+        .event-poster { display: block; width: 100%; height: auto; max-height: 27rem; object-fit: contain; border-radius: 0.7rem; margin: 0.35rem 0 0.65rem; background: #f5f5f7; }
+        @media (hover: hover) and (pointer: fine) {
+            .event-card:hover { transform: scale(1.015); box-shadow: 0 12px 32px rgb(0 0 0 / 9%); z-index: 1; }
+        }
+        .event-card:active { transform: scale(1.005); }
+        @media (prefers-reduced-motion: reduce) {
+            .event-card { transition: none; }
+            .event-card:hover, .event-card:active { transform: none; }
         }
     </style>
 </head>
@@ -254,7 +269,7 @@
         <h2 id="events-heading">Event details</h2>
         <div class="event-grid">
     <!-- Event 1 -->
-    <div class="event-card" id="event-1" tabindex="-1">
+    <div class="event-card" id="event-1">
         <h3 class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026</span><br>
@@ -267,11 +282,12 @@
             </ul>
             <p class="ticket-note">Student discount applied automatically. GA and VIP group packs offer five tickets for the price of four.</p>
         </div>
-        <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://cdn.evbuc.com/images/1196446048/97313584875/1/original.20261023-145149" alt="ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="event-link" aria-label="View ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Lorenzo Ausilia -->
-    <div class="event-card" id="event-14" tabindex="-1">
+    <div class="event-card" id="event-14">
         <h3 class="event-title">Cassio Guest DJ Night with Lorenzo Ausilia</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (6:00 PM – 4:00 AM next day HKT)</span><br>
@@ -284,11 +300,11 @@
             <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
             <p class="ticket-note">Online checkout fees and totals are unverified.</p>
         </div>
-        <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="ticket-btn">View Event Listing</a>
+        <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="event-link" aria-label="View Cassio Guest DJ Night with Lorenzo Ausilia ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- KAAZE -->
-    <div class="event-card" id="event-15" tabindex="-1">
+    <div class="event-card" id="event-15">
         <h3 class="event-title">FAYY Presents KAAZE</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
@@ -299,11 +315,12 @@
             </ul>
             <p class="ticket-note">Checkout fees and total could not be verified.</p>
         </div>
-        <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://event-cf.plvr.io/events/b56bc12b-60c0-4a5a-be92-b87135e635e5.webp" alt="FAYY Presents KAAZE — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="event-link" aria-label="View FAYY Presents KAAZE ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 2 -->
-    <div class="event-card" id="event-2" tabindex="-1">
+    <div class="event-card" id="event-2">
         <h3 class="event-title">The Big Picnic 2026</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026</span><br>
@@ -315,11 +332,12 @@
             </ul>
             <p class="ticket-note">Children under 5 enter free. Online transaction fee and total could not be verified.</p>
         </div>
-        <a href="https://www.ticketflap.com/bigpicnic" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://totalticketing-ets-ttlcom-prod-singapore-web-files.s3.amazonaws.com/media/CACHE/images/event/image/45622/c22dea14151e15ac4b853818e0af4867_gZ1XjjQ/125467c5e6b3acbf91a2d544b748fee6.jpg" alt="The Big Picnic 2026 — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.ticketflap.com/bigpicnic" target="_blank" rel="noopener" class="event-link" aria-label="View The Big Picnic 2026 ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 3 -->
-    <div class="event-card" id="event-3" tabindex="-1">
+    <div class="event-card" id="event-3">
         <h3 class="event-title">Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026 (15:00 HKT)</span><br>
@@ -330,11 +348,12 @@
                 <li><strong>Student (entry before 4:30 PM)</strong> · Ticket HK$464.00 · Transaction fee HK$37.12 · <strong>Total HK$501.12</strong></li>
             </ul>
         </div>
-        <a href="https://www.eventbrite.hk/e/2003117472282" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://cdn.evbuc.com/images/1195852749/1753540979633/1/original.20261015-100753" alt="Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.eventbrite.hk/e/2003117472282" target="_blank" rel="noopener" class="event-link" aria-label="View Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Drinksgiving · Thanksgiving Eve -->
-    <div class="event-card" id="event-10" tabindex="-1">
+    <div class="event-card" id="event-10">
         <h3 class="event-title">Drinksgiving · Thanksgiving Eve</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 25, 2026 (10:00 PM - 4:00 AM next day HKT)</span><br>
@@ -345,11 +364,12 @@
             </ul>
             <p class="ticket-note">The organizer advertises a buy-one-get-two online offer. Checkout fees and ticket tiers could not be verified.</p>
         </div>
-        <a href="https://www.eventbrite.hk/e/drinksgiving-thanksgiving-eve-tickets-2004581263521" target="_blank" rel="noopener" class="ticket-btn">View Ticket Listing</a>
+        <img class="event-poster" src="https://cdn.evbuc.com/images/1197585245/2993445451951/1/original.20261109-120326" alt="Drinksgiving · Thanksgiving Eve — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.eventbrite.hk/e/drinksgiving-thanksgiving-eve-tickets-2004581263521" target="_blank" rel="noopener" class="event-link" aria-label="View Drinksgiving · Thanksgiving Eve ticket listing">View Ticket Listing <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 4 -->
-    <div class="event-card" id="event-4" tabindex="-1">
+    <div class="event-card" id="event-4">
         <h3 class="event-title">HE.R x TEA RAVE (Winter '26 Vol. 3)</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 26, 2026 (10:00 PM)</span><br>
@@ -357,10 +377,12 @@
             <strong>🎟️ Tickets:</strong>
             <p class="ticket-note">All tickets sold out.</p>
         </div>
+        <img class="event-poster" src="https://hovylee.com/assets/hongkong-nov.png" alt="HE.R x TEA RAVE (Winter '26 Vol. 3) — event artwork" loading="lazy" decoding="async">
+        <a href="https://site.fourvenues.com/en/her/events/her--winter-26-vol-3-ft-tea-rave-26-11-2026-ZXKQ" target="_blank" rel="noopener" class="event-link" aria-label="View HE.R x TEA RAVE (Winter '26 Vol. 3) ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- AME × 0159 -->
-    <div class="event-card" id="event-12" tabindex="-1">
+    <div class="event-card" id="event-12">
         <h3 class="event-title">Asia Music Event × 0159: Joyhauser &amp; Juliet Fox</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 27, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
@@ -372,11 +394,12 @@
             </ul>
             <p class="ticket-note">Checkout fees and total could not be verified.</p>
         </div>
-        <a href="https://www.plvr.io/events/ame-0159-official-party-hk" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://event-cf.plvr.io/events/7afa315c-4365-475f-8d1c-ab832b6ba1c6.jpg" alt="Asia Music Event × 0159: Joyhauser &amp; Juliet Fox — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.plvr.io/events/ame-0159-official-party-hk" target="_blank" rel="noopener" class="event-link" aria-label="View Asia Music Event × 0159: Joyhauser &amp; Juliet Fox ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 5 -->
-    <div class="event-card" id="event-5" tabindex="-1">
+    <div class="event-card" id="event-5">
         <h3 class="event-title">HE.R - Winter '26 Vol. 4 ft. Sarabi</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM)</span><br>
@@ -394,11 +417,11 @@
             </ul>
             <p class="ticket-note">All tiers include one standard drink.</p>
         </div>
-        <a href="https://site.fourvenues.com/en/her/events/her--winter-26-vol-4-ft-sarabi-28-11-20261-B21I" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <a href="https://site.fourvenues.com/en/her/events/her--winter-26-vol-4-ft-sarabi-28-11-20261-B21I" target="_blank" rel="noopener" class="event-link" aria-label="View HE.R - Winter '26 Vol. 4 ft. Sarabi ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 6 -->
-    <div class="event-card" id="event-6" tabindex="-1">
+    <div class="event-card" id="event-6">
         <h3 class="event-title">Lantau Live</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28-29, 2026</span><br>
@@ -414,11 +437,12 @@
             </ul>
             <p class="ticket-note">Children under 3 enter free.</p>
         </div>
-        <a href="https://www.ticketflap.com/lantaulive2026" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://lantaulive.com/wp-content/uploads/2026/11/ll2026-poster-logo-asset26.png" alt="Lantau Live — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.ticketflap.com/lantaulive2026" target="_blank" rel="noopener" class="event-link" aria-label="View Lantau Live ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 7 -->
-    <div class="event-card" id="event-7" tabindex="-1">
+    <div class="event-card" id="event-7">
         <h3 class="event-title">FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (2:00 PM - 7:00 PM)</span><br>
@@ -428,10 +452,11 @@
                 <li><strong>Limited advance</strong> · Ticket HK$150.00 · Transaction fee HK$8.99 · <strong>Total HK$158.99</strong></li>
             </ul>
         </div>
-        <a href="https://www.eventbrite.hk/e/2004700625536" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://cdn.evbuc.com/images/1197754977/2009463465/1/original.20261111-101505" alt="FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.eventbrite.hk/e/2004700625536" target="_blank" rel="noopener" class="event-link" aria-label="View FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
     <!-- Peel’s Block Party -->
-    <div class="event-card" id="event-11" tabindex="-1">
+    <div class="event-card" id="event-11">
         <h3 class="event-title">Peel’s Block Party</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (3:00 PM - 11:59 PM HKT)</span><br>
@@ -442,11 +467,12 @@
                 <li><strong>Optional four-drink package</strong> · Ticket HK$200.00 · Transaction fee HK$11.98 · <strong>Total HK$211.98</strong></li>
             </ul>
         </div>
-        <a href="https://www.eventbrite.hk/e/peels-block-party-tickets-2004279136852" target="_blank" rel="noopener" class="ticket-btn">Get Tickets</a>
+        <img class="event-poster" src="https://cdn.evbuc.com/images/1197156313/1665262707293/1/original.20261103-094019" alt="Peel’s Block Party — event artwork" loading="lazy" decoding="async">
+        <a href="https://www.eventbrite.hk/e/peels-block-party-tickets-2004279136852" target="_blank" rel="noopener" class="event-link" aria-label="View Peel’s Block Party ticket listing">Get Tickets <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- CASS10 -->
-    <div class="event-card" id="event-13" tabindex="-1">
+    <div class="event-card" id="event-13">
         <h3 class="event-title">CASS10: Cassio’s 10th Anniversary with Balzar, Mo-Shi, Ridha Be &amp; Jamie Maddock</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM – 4:30 AM next day HKT)</span><br>
@@ -459,11 +485,11 @@
             <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
             <p class="ticket-note">Online checkout fees and totals are unverified.</p>
         </div>
-        <a href="https://site.fourvenues.com/en/cassio/events/cass10---10-years-anniversary-w-balzar-mo-shi-ridha-be-jamie-maddock-28-11-2026-IVJ0" target="_blank" rel="noopener" class="ticket-btn">View Event Listing</a>
+        <a href="https://site.fourvenues.com/en/cassio/events/cass10---10-years-anniversary-w-balzar-mo-shi-ridha-be-jamie-maddock-28-11-2026-IVJ0" target="_blank" rel="noopener" class="event-link" aria-label="View CASS10: Cassio’s 10th Anniversary with Balzar, Mo-Shi, Ridha Be &amp; Jamie Maddock ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 8 -->
-    <div class="event-card" id="event-8" tabindex="-1">
+    <div class="event-card" id="event-8">
         <h3 class="event-title">UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set]</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> December 18, 2026 (4:30 PM - 10:30 PM HKT)</span><br>
@@ -481,11 +507,12 @@
             </ul>
             <p class="ticket-note">Checkout fee and total could not be verified.</p>
         </div>
-        <a href="https://rmba.io/events/maup-ktbridge-18dec" target="_blank" rel="noopener" class="ticket-btn">Purchase Ticket</a>
+        <img class="event-poster" src="https://images.rmba.io/events/019ffa3b-6f15-795f-aa0e-dd8a903150d4/01a03889-3825-7096-83c2-bb36f8af391f.png" alt="UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set] — event artwork" loading="lazy" decoding="async">
+        <a href="https://rmba.io/events/maup-ktbridge-18dec" target="_blank" rel="noopener" class="event-link" aria-label="View UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set] ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
     </div>
 
     <!-- Event 9 -->
-    <div class="event-card" id="event-9" tabindex="-1">
+    <div class="event-card" id="event-9">
         <h3 class="event-title">KINETRO : ARGY</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> January 9, 2027 (3:00 PM - 10:30 PM HKT)</span><br>
@@ -498,7 +525,8 @@
             </ul>
             <p class="ticket-note">All currently listed tiers are sold out.</p>
         </div>
-        <a href="https://rmba.io/events/kinetro-argy-9jan" target="_blank" rel="noopener" class="ticket-btn">View Ticket Listing</a>
+        <img class="event-poster" src="https://images.rmba.io/events/01a1d5f9-d40a-7de9-814c-59567c3f75b1/01a1e3c8-e560-7710-947f-92d44263ee4b.png" alt="KINETRO : ARGY — event artwork" loading="lazy" decoding="async">
+        <a href="https://rmba.io/events/kinetro-argy-9jan" target="_blank" rel="noopener" class="event-link" aria-label="View KINETRO : ARGY ticket listing">View Ticket Listing <span aria-hidden="true">›</span></a>
     </div>
 
         </div>
