@@ -266,7 +266,7 @@ button.cell:active, .tap:active { background: var(--fill); }
   </div></div>
 </div>
 
-<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Market Place for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings and points are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Basket Radar is a student concept and is not affiliated with any retailer.</p>
+<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Basket Radar is a student concept and is not affiliated with any retailer.</p>
 
 <script>
 /* ======================= real date and time (Hong Kong) ======================= */
@@ -293,7 +293,7 @@ const STORES = {
   WELLCOME:  { name: "Wellcome",  branch: "near home",   walk: 4,  close: "22:00", c: "#d64545" },
   PARKNSHOP: { name: "ParknShop", branch: "near office", walk: 6,  close: "22:00", c: "#1f6fd1" },
   AEON:      { name: "AEON",      branch: "Kornhill mall", walk: 12, close: "22:00", c: "#a14fc4" },
-  JASONS:    { name: "Market Place", branch: "MTR exit", walk: 15, close: "21:00", c: "#2f8f5b" },
+  JASONS:    { name: "Jasons", branch: "Market Place, MTR exit", walk: 15, close: "21:00", c: "#2f8f5b" },
   FUSION:    { name: "Fusion",    branch: "Taikoo Place", walk: 8,  close: "22:00", c: "#e08a1e", crowd: true },
   CITYSUPER: { name: "city'super", branch: "Times Square", walk: 25, close: "22:00", c: "#3a3a3c", crowd: true },
   MS:        { name: "M&S Food",  branch: "Cityplaza",   walk: 14, close: "21:00", c: "#1f6b5c", crowd: true },
@@ -343,9 +343,9 @@ const P = {
     hist: [98,98,92,95,95,85,95,95,92,92,95,95] },
   hill: { name: "Hillside Farm A2 Low Fat Milk", short: "Hillside A2 milk (new)", size: "946 mL", ml: 946, cat: "Milk", ean: "4890000946002", fictional: true, art: ["carton", "#eaf6ee", "#2f8f5b"],
     prices: { WELLCOME: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 }, PARKNSHOP: { p: 24.9, o: "", e: 24.9, q: 1, d: .05 } },
-    hist: Array(12).fill(24.9), offer: { back: 6.2, brand: "Hillside Farm" } },
+    hist: Array(12).fill(24.9), offer: { pct: 25, brand: "Hillside Farm" } },
   hillorg: { name: "Hillside Farm Organic Whole Milk", short: "Hillside organic milk", size: "1 L", ml: 1000, cat: "Milk", ean: "4890000100013", fictional: true, art: ["carton", "#f3ece1", "#8a5a2b"],
-    prices: { WELLCOME: { p: 38, o: "", e: 38, q: 1, d: .05 } }, hist: Array(12).fill(38), offer: { back: 5, brand: "Hillside Farm" } }
+    prices: { WELLCOME: { p: 38, o: "", e: 38, q: 1, d: .05 } }, hist: Array(12).fill(38), offer: { pct: 15, brand: "Hillside Farm" } }
 };
 const MILK = ["slim", "nestle", "trap", "vita", "meiji", "meadows", "msmilk"];
 const SUBS = Object.fromEntries(MILK.map(k => [k, MILK.filter(x => x !== k).concat(["hill", "hillorg"])]));
@@ -354,8 +354,8 @@ const HOME = {
   egg:    { stock: 3,  unit: "eggs",    rate: 1.5, last: day(-7), every: 6 },
   bread:  { stock: .5, unit: "loaf",    rate: .25, last: day(-4), every: 4,  useBy: day(1) },
   soy:    { stock: 2,  unit: "cartons", rate: .5,  last: day(-6), every: 6 },
-  tissue: { stock: 6,  unit: "rolls",   rate: .3,  last: day(-15), every: 30 },
-  rice:   { stock: 2,  unit: "kg",      rate: .15, last: day(-28), every: 33 }
+  tissue: { stock: 3,  unit: "rolls",   rate: .3,  last: day(-15), every: 30, keeps: true },
+  rice:   { stock: 2,  unit: "kg",      rate: .15, last: day(-28), every: 33, keeps: true }
 };
 const WATCH = ["slim", "egg", "bread", "soy", "tissue", "rice"];
 let REMOVED = new Set(), KEPT = new Set();
@@ -367,19 +367,20 @@ const NEW_COUPONS = [
   { id: "c3", src: "yuu", item: "egg", store: "WELLCOME", off: 4, minQty: 2, until: day(11), text: "HK$4 off DQY eggs, buy 2" },
   { id: "c4", src: "MoneyBack", item: "rice", store: "PARKNSHOP", off: 10, minQty: 1, until: day(28), text: "HK$10 off jasmine rice 5 kg" }
 ];
-let POINTS = 1240;
-let LEDGER = [ [day(-1), "Receipt · ParknShop", 20], [day(-2), "Shelf price confirmed", 5], [day(-5), "Receipt · Wellcome", 20], [day(-5), "Brand offer · Hillside A2 milk", 60], [day(-8), "Receipt · AEON", 20] ];
+let POINTS = 312;          // 1 point = HK$0.02; 500 points = a HK$10 e-voucher, never cash
+const PT = .02, VOUCHER = 500;
+let LEDGER = [ [day(-1), "Receipt · ParknShop", 5], [day(-2), "Shelf price confirmed", 10], [day(-5), "Receipt · Wellcome", 5], [day(-5), "Brand offer · Hillside A2 milk, 25% back", 311], [day(-8), "Receipt · AEON", 5] ];
+let SURVEYED = false;
 let SHELF = { slim: { PARKNSHOP: { price: 21.9, n: 3, ago: "2 h ago" } } };
 let BARCODE_MAP = Object.fromEntries(Object.entries(P).map(([k, v]) => [v.ean, k]));
 const UNKNOWN_EAN = "4895555123456";
 // savings (sample): by month, and this month's breakdown
-let SAVED = { months: [[monthAgo(5), 14.2], [monthAgo(4), 17.5], [monthAgo(3), 19.8], [monthAgo(2), 21.4], [monthAgo(1), 23.1], [monthAgo(0), 18.6]], goal: 25,
-  parts: [["Multi-buy offers spotted", 7.4], ["Cheaper store on your route", 4.2], ["Your coupons applied", 3.0], ["Cashback and points", 4.0]],
+let SAVED = { months: [[monthAgo(5), 14.2], [monthAgo(4), 17.5], [monthAgo(3), 19.8], [monthAgo(2), 21.4], [monthAgo(1), 23.1], [monthAgo(0), 18.6]], goal: 20,
+  parts: [["Multi-buy offers spotted", 7.4], ["Cheaper store on your route", 4.2], ["Your coupons applied", 3.0], ["Brand offer points", 4.0]],
   trips: [[day(-1), "ParknShop", 6.4], [day(-5), "Wellcome", 8.2], [day(-8), "AEON", 4.0]] };
 let FAMILY = [ ["Slimilk 946 mL × 2", "M", false], ["Eggs, 8 large", "K", false], ["Wholemeal loaf", "M", true], ["Soya milk", "D", false], ["Bananas", "K", false] ];
 const WHO = { M: "#5e5ce6", K: "#ff9f0a", D: "#30b0c7" };
 const WASTE = { months: [[monthAgo(5), 92], [monthAgo(4), 75], [monthAgo(3), 81], [monthAgo(2), 58], [monthAgo(1), 49], [monthAgo(0), 46]], items: [["Slimilk 946 mL, past use-by", 18.5], ["Half a wholemeal loaf", 8.5], ["Lettuce", 19]] };
-let JOINED = false;
 
 /* ======================= helpers ======================= */
 const $ = s => document.querySelector(s);
@@ -396,6 +397,14 @@ function rows(k) {
 }
 const best = (k, routeOnly) => rows(k).filter(x => !routeOnly || ROUTE.includes(x.s))[0];
 const per100 = (k, v) => P[k].ml ? v / P[k].ml * 100 : null;
+// usual price = median of the 12-week best price; a real deal is 10%+ below it (plan v6, appendix)
+const usual = k => { const h = [...P[k].hist].sort((a, b) => a - b), m = h.length >> 1; return h.length % 2 ? h[m] : (h[m - 1] + h[m]) / 2; };
+const dealPct = k => 1 - Math.min(...rows(k).map(r => r.e)) / usual(k);   // after offers, before personal coupons
+const realDeal = k => dealPct(k) >= .1;
+const stockUp = () => WATCH.filter(k => HOME[k].keeps && realDeal(k) && daysLeft(k) <= 14 && !REMOVED.has(k));
+const offerPts = (x, shelf) => Math.round(shelf * P[x].offer.pct / 100 / PT);
+const OFFICIAL = ["WELLCOME", "PARKNSHOP", "AEON", "JASONS"];
+const lowestSticker = k => Math.min(...Object.entries(P[k].prices).filter(([s]) => OFFICIAL.includes(s)).map(([, r]) => r.p));
 
 function art(k, cls = "") {
   if (P[k].photo) return `<span class="art photo ${cls}" aria-hidden="true"><img src="${PHOTOS[P[k].photo]}" alt=""></span>`;
@@ -466,15 +475,16 @@ function aiItems() {
 }
 function list() {
   const items = aiItems(), total = sum(items.map(i => i.b.final * i.b.q));
-  const shelfTotal = sum(items.map(i => (P[i.k].prices.PARKNSHOP || P[i.k].prices[i.b.s]).p * i.b.q));
+  const shelfTotal = sum(items.map(i => lowestSticker(i.k) * i.b.q));
   const trip = {}; items.forEach(i => (trip[i.b.s] ||= []).push(i));
-  const skip = WATCH.filter(k => daysLeft(k) > 5);
+  const ups = stockUp();
+  const skip = WATCH.filter(k => daysLeft(k) > 5 && !ups.includes(k));
   const uses = WATCH.filter(k => HOME[k].useBy);
   return `
   <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Basket Radar AI.</p>
   <div class="ai-card"><div class="k">${sparkle(15)} AI GROCERY LIST · THIS WEEK</div>
     <div class="h">${items.length} things before you run out</div>
-    <div class="s">${hk(total)} on your route, after offers and coupons. You'd pay ${hk(shelfTotal)} at shelf prices, so you save <b>${hk(shelfTotal - total)}</b>.</div>
+    <div class="s">${hk(total)} at the stores we picked, after offers and coupons. Buying where the sticker is lowest: ${hk(shelfTotal)}. You save <b>${hk(shelfTotal - total)}</b>.</div>
     <div class="acts"><button class="btn fill" type="button" data-act="trip">Plan my trip</button><button class="btn" type="button" data-act="how">How it works</button></div></div>
   <div class="hdr">Suggested by AI · tap ✓ to keep</div>
   <div class="group">${items.map(i => `<div class="cell wa" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${art(i.k)}<div class="main">
@@ -484,9 +494,17 @@ function list() {
       ${i.alt ? `<div class="why" style="color:var(--tint)">${sparkle(12)}<span>Need just one? ${esc(P[i.alt.x].short)} is ${hk(i.alt.r.e)} at ${STORES[i.alt.r.s].name}, no need to buy two.</span></div>` : ""}
       <div class="conf" title="Confidence"><i style="width:${Math.round(i.conf * 100)}%"></i></div>
       <div class="row" style="margin-top:8px"><button class="xbtn ${KEPT.has(i.k) ? "ok" : ""}" type="button" data-keep="${i.k}" aria-label="Keep ${esc(P[i.k].short)}">✓</button><button class="xbtn" type="button" data-remove="${i.k}" aria-label="Remove ${esc(P[i.k].short)}">✕</button>
+      <button class="btn" type="button" data-still="${i.k}" style="padding:5px 12px;font-size:13px">Still have it</button>
       <button class="btn" type="button" data-open="${i.k}" style="margin-left:auto;padding:5px 12px;font-size:13px">Compare</button></div>
     </div></div>`).join("") || `<div class="cell"><div class="main t2">Nothing runs out this week. Nice.</div></div>`}</div>
   ${REMOVED.size ? `<p class="t2" style="margin:8px 16px">Removed ${REMOVED.size}. The AI will ask less often about ${[...REMOVED].map(k => esc(P[k].short)).join(", ")}. <button class="btn" type="button" data-act="undo" style="padding:2px 10px;font-size:13px">Undo</button></p>` : ""}
+  ${ups.length ? `<div class="hdr" id="stockup">Stock up now</div>
+  <div class="group">${ups.map(k => { const b = best(k, false); return `<div class="cell wa" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${art(k)}<div class="main">
+      <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="t1 b">${esc(P[k].short)} <span class="badge g">Real deal</span></span><span class="price">${hk(b.final * b.q)}</span></div>
+      <div class="t2">${b.q} × ${P[k].size} · ${STORES[b.s].name}${b.o ? " · " + esc(b.o) : ""}</div>
+      <div class="why">${sparkle(12)}<span>${Math.round(dealPct(k) * 100)}% below its usual price this week. You'll need more in about ${Math.round(daysLeft(k))} days, and it keeps.</span></div>
+      <div class="row" style="margin-top:8px"><button class="btn" type="button" data-open="${k}" style="margin-left:auto;padding:5px 12px;font-size:13px">Compare</button></div></div></div>`; }).join("")}</div>
+  <p class="t2" style="margin:8px 16px">We only say "stock up now", never "wait for a sale": waiting guesses wrong too often.</p>` : ""}
   <div class="hdr">Use first</div>
   <div class="group">${uses.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Bought ${HOME[k].last} · best before ${HOME[k].useBy}</div></div><span class="badge o">Use by ${HOME[k].useBy}</span></div>`).join("")}</div>
   <div class="hdr">Your trip</div>
@@ -502,8 +520,8 @@ function compare() {
   const fam = [k, ...(SUBS[k] || [])].filter(x => P[x].ml && !P[x].offer);
   const bestPublic = fam.length ? Math.min(...fam.flatMap(x => Object.values(P[x].prices).map(v => per100(x, v.e)))) : null;
   const offers = [...(SUBS[k] || []), k].filter(x => P[x].offer && bestPublic).map(x => {
-    const shelf = Math.min(...Object.values(P[x].prices).map(v => v.e)), after = shelf - P[x].offer.back, p = per100(x, after);
-    return { x, shelf, after, p, gap: p / bestPublic - 1 };
+    const shelf = Math.min(...Object.values(P[x].prices).map(v => v.e)), pts = offerPts(x, shelf), after = shelf - pts * PT, p = per100(x, after);
+    return { x, shelf, pts, after, p, gap: p / bestPublic - 1 };
   });
   const shown = offers.filter(o => o.gap <= .05), hidden = offers.filter(o => o.gap > .05);
   const subs = (SUBS[k] || []).filter(x => !P[x].offer);
@@ -513,7 +531,7 @@ function compare() {
     <button class="btn fill" type="button" data-act="scan" style="padding:9px 14px">Scan</button></div>
   <div class="phead">${art(k, "xl")}<div style="min-width:0"><div class="t2">${esc(pr.cat)} · ${pr.size}</div><div class="t1 b" style="font-size:20px;letter-spacing:-.03em">${esc(pr.name)}</div>
     <div class="t2">${pr.real ? "Prices: Consumer Council file" : pr.fictional ? "Fictional brand" : "Sample prices"}</div>
-    <div class="row" style="margin-top:6px"><span class="badge g">Best ${hk(top.final)}</span><span class="badge">${Math.round(top.d * 100)}% sale chance next week</span></div></div></div>
+    <div class="row" style="margin-top:6px"><span class="badge g">Best ${hk(top.final)}</span>${realDeal(k) ? `<span class="badge g">Real deal · ${Math.round(dealPct(k) * 100)}% below usual</span>` : `<span class="badge">Usual price ${hk(usual(k))}</span>`}</div></div></div>
   <div class="hdr">What you really pay</div>
   <div class="group">${r.map((x, i) => `<div class="cell"><span class="storedot" style="background:${STORES[x.s].c}">${STORES[x.s].name[0]}</span><div class="main">
       <div class="t1 ${i === 0 ? "b" : ""}">${STORES[x.s].name}${ROUTE.includes(x.s) ? "" : ` <span class="t2">· off your route</span>`}</div>
@@ -524,11 +542,11 @@ function compare() {
   <div class="group" style="margin-top:12px;padding:12px 14px"><div class="t2">12-week best price</div>${spark(pr.hist, true)}</div>
   <div class="row" style="margin-top:12px"><button class="btn" type="button" data-act="report">Report shelf price</button><button class="btn" type="button" data-act="wrongcat">Wrong category?</button></div>
   ${MILK.includes(k) ? brandList(k) : ""}
-  ${shown.map(o => `<div class="hdr">Brand offer</div><div class="offer"><div class="lbl">Brand offer · paid by ${esc(P[o.x].offer.brand)}</div>
+  ${shown.map(o => `<div class="hdr">Brand offer</div><div class="offer"><div class="lbl">Brand offer · paid by ${esc(P[o.x].offer.brand)} · for families who buy ${esc(P[o.x].cat.toLowerCase())}</div>
     <div class="row" style="margin-top:8px;flex-wrap:nowrap">${art(o.x)}<div><div class="t1 b">${esc(P[o.x].short)}</div>
-    <div class="t2">${hk(o.shelf)} on the shelf, ${hk(P[o.x].offer.back)} back after you log the receipt → <b>${hk(o.after)}</b>. Only ${(o.gap * 100).toFixed(1)}% above the best value, so we show it.</div></div></div>
-    <button class="btn" type="button" data-act="claim" style="margin-top:10px">Save offer</button></div>`).join("")}
-  ${hidden.length ? `<p class="t2" style="margin:10px 4px">${hidden.length} brand offer hidden because it would still cost more than 5% above the best value. Offers never change the ranking.</p>` : ""}`;
+    <div class="t2">${hk(o.shelf)} at any chain, ${P[o.x].offer.pct}% back in points (${o.pts} points ≈ ${hk(o.pts * PT)}) after you log the receipt → <b>${hk(o.after)}</b>. Only ${(o.gap * 100).toFixed(1)}% above the best value after points, so we show it.</div></div></div>
+    <button class="btn" type="button" data-act="claim" style="margin-top:10px">Add offer</button></div>`).join("")}
+  ${hidden.length ? `<p class="t2" style="margin:10px 4px">${hidden.length} brand offer hidden because, even after points, it would cost more than 5% above the best value. Offers never change the ranking.</p>` : ""}`;
 }
 
 function brandList(k) {
@@ -545,12 +563,11 @@ function brandList(k) {
 function watch() {
   return `<h1 class="ltitle">Watchlist</h1><p class="lsub">Your staples, tracked like stocks.</p>
   <div class="group">${WATCH.map(k => { const b = best(k, false), prev = P[k].hist[P[k].hist.length - 2], ch = b.e - prev, d = daysLeft(k);
-    const p = Math.max(...Object.values(P[k].prices).map(v => v.d));
     return `<button class="cell wa" type="button" data-open="${k}">${art(k)}<div class="main"><div class="t1 b">${esc(P[k].short)}</div>
-      <div class="t2">${Math.round(p * 100)}% sale chance · stock ~${Math.round(d)} days</div></div>
+      <div class="t2">${realDeal(k) ? `<span style="color:var(--green);font-weight:600">Real deal</span> · ` : ""}stock ~${Math.round(d)} days</div></div>
       ${spark(P[k].hist)}<div style="text-align:right;min-width:72px"><div class="price">${hk(b.final)}</div>
       <div class="t2 num" style="color:${ch > 0 ? "var(--orange)" : ch < 0 ? "var(--green)" : "var(--ink2)"};font-weight:600">${ch > 0 ? "▲" : ch < 0 ? "▼" : "–"} ${Math.abs(ch).toFixed(2)}</div></div></button>`; }).join("")}</div>
-  <p class="t2" style="margin:10px 16px">Green line: cheaper than last week. Orange: dearer. Tap an item to compare stores.</p>`;
+  <p class="t2" style="margin:10px 16px">Green line: cheaper than last week. Orange: dearer. "Real deal" = 10%+ below the usual price. Tap an item to compare stores.</p>`;
 }
 
 function savings() {
@@ -570,21 +587,25 @@ function savings() {
     <div class="mini"><i style="width:${p[1] / now * 100}%"></i></div></div></div>`).join("")}</div>
   <div class="hdr">Recent trips</div>
   <div class="group">${SAVED.trips.map(t => `<div class="cell"><span class="storedot" style="background:${(Object.values(STORES).find(s => s.name === t[1]) || {}).c}">${t[1][0]}</span><div class="main"><div class="t1">${t[1]}</div><div class="t2">${t[0]}</div></div><span class="badge g">Saved ${hk(t[2])}</span></div>`).join("")}</div>
-  <p class="t2" style="margin:10px 16px">Saved = what you'd have paid at shelf prices in your usual store, minus what you paid.</p>`;
+  <p class="t2" style="margin:10px 16px">Saved = what you'd have paid buying where the sticker is lowest, minus what you paid.</p>`;
 }
 
 function wallet() {
   const used = COUPONS.filter(c => WATCH.includes(c.item));
   return `<h1 class="ltitle">Wallet</h1><p class="lsub">Points from every chain, and the coupons you already have.</p>
   <div class="pcard"><div class="row" style="justify-content:space-between"><span style="font-weight:600">Basket Radar Points</span>${sparkle(18, "#fff")}</div>
-    <div><div class="big">${POINTS.toLocaleString()}</div><div style="opacity:.9;font-size:15px">≈ ${hk(POINTS / 100)} cashback · earned on any chain's receipts</div></div></div>
+    <div><div class="big">${POINTS.toLocaleString()} <span style="font-size:17px;font-weight:600">points</span></div><div style="opacity:.9;font-size:15px">Worth ${hk(POINTS * PT)} · ${POINTS >= VOUCHER ? `${Math.floor(POINTS / VOUCHER)} × HK$10 e-voucher ready` : `${VOUCHER - POINTS} more for a HK$10 e-voucher`}</div></div></div>
+  <p class="t2" style="margin:8px 16px">500 points = a HK$10 e-voucher at any chain. Points are never paid out as cash.</p>
+  ${SURVEYED ? "" : `<div class="hdr">Brand survey · for verified buyers</div><div class="offer"><div class="lbl">Survey · paid by Hillside Farm</div>
+    <div class="t1 b" style="margin-top:6px">3 questions about how your family buys milk</div><div class="t2">You qualify because your receipts show you buy milk. Answers are grouped; the brand never sees who you are.</div>
+    <button class="btn" type="button" data-act="survey" style="margin-top:10px">Answer · +250 points</button></div>`}
   <div class="hdr">Coupons matched to your list</div>
   <div class="group">${COUPONS.map(c => `<div class="cell"><span class="storedot" style="background:${STORES[c.store].c}">${c.src === "yuu" ? "y" : "M"}</span><div class="main"><div class="t1">${esc(c.text)}</div>
     <div class="t2">${c.src} · ${STORES[c.store].name} · until ${c.until}</div></div><span class="badge ${used.includes(c) ? "g" : ""}">${used.includes(c) ? "Applied" : "Not needed"}</span></div>`).join("")}
     <button class="cell" type="button" data-act="coupons"><div class="main t1" style="color:var(--tint)">Add coupon screenshot</div><span class="chev">›</span></button></div>
   <p class="t2" style="margin:8px 16px">Share a screenshot of your yuu or MoneyBack coupon list. We read it on your phone; we never log in to those apps.</p>
   <div class="hdr">How you earn</div>
-  <div class="group">${[["Log a receipt from any chain", 20], ["Confirmed shelf-price report", 5], ["Buy a brand offer", 60]].map(e => `<div class="cell"><div class="main t1">${e[0]}</div><span class="price" style="color:var(--green)">+${e[1]}</span></div>`).join("")}</div>
+  <div class="group">${[["Log a receipt from any chain", "+5"], ["Confirm a shelf price", "+10"], ["Answer a brand survey", "+250"], ["Use a brand offer", "% back"]].map(e => `<div class="cell"><div class="main t1">${e[0]}</div><span class="price" style="color:var(--green)">${e[1]}</span></div>`).join("")}</div>
   <div class="hdr">Recent points</div>
   <div class="group">${LEDGER.slice(0, 6).map(l => `<div class="cell"><div class="main"><div class="t1">${esc(l[1])}</div><div class="t2">${l[0]}</div></div><span class="price" style="color:var(--green)">+${l[2]}</span></div>`).join("")}</div>`;
 }
@@ -597,9 +618,12 @@ function sheet(html, dir) {
 }
 function close() { $("#overlay").innerHTML = ""; }
 
-const RECEIPT = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98, 22], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96, 27], ["WHL SANDW LOAF 450G", "bread", 1, 15.4, .71, 16.9], ["BANANA PHILIPPINE", null, 1, 12.9, .9, 12.9]];
+const RECEIPT = [["SLIMILK LF HI-CA 946ML", "slim", 2, 18.0, .98, 22], ["DQY EGG AA L 8PC", "egg", 1, 27.0, .96, 27], ["WHL SANDW LOAF 450G", "bread", 1, 15.4, .71, 15.9], ["BANANA PHILIPPINE", null, 1, 12.9, .9, 12.9]];
 function receiptSheet(step) {
-  if (!step) return sheet(`<h3>Log a receipt</h3><p class="t2">Take a photo or forward an e-receipt. In this demo, use the sample.</p>
+  if (!step) return sheet(`<h3>Log your shop</h3><p class="t2">Four ways in. Each logged receipt earns 5 points.</p>
+    <div class="group">${[["Paid cash", "Snap the paper receipt"], ["Card or e-wallet", "Share the chain's e-receipt from your phone's share menu"], ["Ordered online", "A one-time mail rule forwards grocers' order emails; other mail is rejected unread"]].map(r => `<div class="cell"><div class="main"><div class="t1 b">${r[0]}</div><div class="t2">${r[1]}</div></div></div>`).join("")}
+      <button class="cell" type="button" data-act="tick"><div class="main"><div class="t1 b">No receipt?</div><div class="t2">Tick what you bought. Updates run-out dates, but brand points need a receipt.</div></div><span class="chev">›</span></button></div>
+    <div class="hdr">In this demo, use this sample receipt</div>
     <div class="rcpt">PARKNSHOP · ${(r => `${String(r.getDate()).padStart(2, "0")}/${String(r.getMonth() + 1).padStart(2, "0")}/${r.getFullYear()} ${hhmm(r)}`)(new Date(hkNow() - 25 * 60000))}<br><br>${RECEIPT.map(l => `<div class="ln"><span>${l[0]}</span><span>×${l[2]}</span><span>${(l[2] * l[3]).toFixed(2)}</span></div>`).join("")}<br>TOTAL ${sum(RECEIPT.map(l => l[2] * l[3])).toFixed(2)}</div>
     <button class="btn fill lg" type="button" data-act="rc-read" style="margin-top:14px">Read receipt</button>`);
   if (step === 1) return sheet(`<h3>Here's what we read</h3><p class="t2">Matched to your products. One line needs a quick check.</p>
@@ -609,10 +633,16 @@ function receiptSheet(step) {
     <button class="btn fill lg" type="button" data-act="rc-save">Yes, save receipt</button>`, 1);
   const saved = sum(RECEIPT.map(l => (l[5] - l[3]) * l[2]));
   SAVED.months[SAVED.months.length - 1][1] += saved; SAVED.parts[0][1] += saved; SAVED.trips.unshift([day(0), "ParknShop", saved]);
-  HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; addPoints(20, "Receipt · ParknShop");
+  HOME.slim.stock += 2; HOME.egg.stock += 8; HOME.bread.stock += 1; addPoints(5, "Receipt · ParknShop");
   sheet(`<div class="celebrate"><div class="t2" style="margin:6px 0 0">You saved on this trip</div><div class="amt">${hk(saved)}</div>
-    <div class="t1">+20 points · stock updated</div><p class="t2">Mostly from "Buy 2 save $8" on Slimilk. That brings ${monthAgo(0, true)} to ${hk(savedNow())}.</p></div>
+    <div class="t1">+5 points · stock updated</div><p class="t2">Mostly from "Buy 2 save $8" on Slimilk. That brings ${monthAgo(0, true)} to ${hk(savedNow())}.</p></div>
     <button class="btn fill lg" type="button" data-act="see-savings">See my savings</button>`, 1);
+}
+const TICKED = new Set();
+function tickSheet() {
+  sheet(`<h3>Tick what you bought</h3><p class="t2">From your usual items. This moves run-out dates; brand points need a receipt as proof.</p>
+    <div class="group">${WATCH.map(k => `<div class="cell wa"><button type="button" class="chk ${TICKED.has(k) ? "on" : ""}" data-tickk="${k}" aria-label="Bought ${esc(P[k].short)}">${TICKED.has(k) ? "✓" : ""}</button>${art(k)}<div class="main t1">${esc(P[k].short)}</div></div>`).join("")}</div>
+    <button class="btn fill lg" type="button" data-act="tick-save" style="margin-top:14px">Update my list</button>`, $("#overlay .sheet") ? 1 : 0);
 }
 function scanSheet() {
   const s = [["slim", P.slim.ean], ["egg", P.egg.ean], ["tissue", P.tissue.ean], [null, UNKNOWN_EAN]];
@@ -629,8 +659,8 @@ function reportSheet(k) {
     <div class="field"><label for="rp-store">Branch</label><select id="rp-store">${Object.keys(P[k].prices).map(s => `<option value="${s}">${STORES[s].name} · ${STORES[s].branch}</option>`).join("")}</select></div>
     <div class="field" style="margin-top:10px"><label for="rp-price">Price on the tag (HK$)</label><input id="rp-price" type="number" step="0.1" value="21.9" inputmode="decimal"></div>
     <div class="field" style="margin-top:10px"><label for="rp-photo">Photo of the tag</label><input id="rp-photo" type="file" accept="image/*"></div>
-    <p class="t2" style="margin-top:10px">Reports need a photo, expire after 7 days, and show once two shoppers agree.</p>
-    <button class="btn fill lg" type="button" data-act="rp-send" data-k="${k}">Send report · +5 points</button>`);
+    <p class="t2" style="margin-top:10px">Reports need a photo, expire after 7 days, and show once two shoppers agree. You get 10 points when yours is confirmed.</p>
+    <button class="btn fill lg" type="button" data-act="rp-send" data-k="${k}">Send report</button>`);
 }
 function wrongCatSheet(k) {
   sheet(`<h3>Wrong category or missing item?</h3><p class="t2">${esc(P[k].short)} is listed under <b>${esc(P[k].cat)}</b>.</p>
@@ -649,7 +679,8 @@ function howSheet() {
     <div class="group">${[["Learns your rhythm", "From your receipts it learns how often your family buys each item, e.g. Slimilk every 5 days."],
       ["Predicts run-out dates", "Stock ÷ daily use. Families like yours fill the gaps until it knows you."],
       ["Finds the real price", "Every multi-buy offer and your own coupons are turned into the price per item."],
-      ["Keeps you in charge", "Nothing is ordered for you. ✓ and ✕ teach it what you want."]].map(r => `<div class="cell"><div class="main"><div class="t1 b">${r[0]}</div><div class="t2">${r[1]}</div></div></div>`).join("")}</div>
+      ["Keeps you in charge", "Nothing is ordered for you. ✓, ✕ and \"Still have it\" teach it what you want."],
+      ["Says \"stock up\", never \"wait\"", "For things that keep, it flags a real deal (10%+ below usual) when you'll need more soon."]].map(r => `<div class="cell"><div class="main"><div class="t1 b">${r[0]}</div><div class="t2">${r[1]}</div></div></div>`).join("")}</div>
     <p class="t2" style="margin-top:10px">The bar under each item shows how sure it is.</p>`);
 }
 function tripSheet() {
@@ -662,15 +693,15 @@ function tripSheet() {
 function settingsSheet() {
   sheet(`<h3>Profile</h3><div class="group"><div class="cell"><span class="avatar" style="display:grid;place-items:center">M</span><div class="main"><div class="t1 b">The Chan family</div><div class="t2">3 members · sample household</div></div></div></div>
     <div class="hdr">Appearance</div><div class="group"><div class="cell"><div class="main t1">Theme</div><div class="seg" data-themeseg></div></div></div>
-    <div class="hdr">Family plan · HK$98 a year</div>
-    <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Preview what's included</div></div><span class="chev">›</span></button></div>
-    <button class="btn ${JOINED ? "" : "fill"} lg" type="button" data-act="join" style="margin-top:12px">${JOINED ? "Thanks, you're on the waitlist" : "Join family plan"}</button>
-    ${JOINED ? `<p class="t2" style="margin-top:8px">This button is a demand test. The plan isn't built yet; we count how many people tap it first.</p>` : ""}`);
+    <div class="hdr">Family sharing · free</div>
+    <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Included for every family</div></div><span class="chev">›</span></button></div>
+    <button class="btn fill lg" type="button" data-act="invite" style="margin-top:12px">Invite a family member</button>
+    <p class="t2" style="margin-top:8px">Basket Radar is free for families. Brands pay us only when a receipt proves a sale.</p>`);
   paintTheme();
 }
 function familySheet() {
   const max = Math.max(...WASTE.months.map(m => m[1]));
-  sheet(`<h3>Family plan preview</h3><p class="t2">What HK$98 a year would add.</p>
+  sheet(`<h3>Family sharing</h3><p class="t2">Included free. Everyone in the family sees the same list.</p>
     <div class="hdr">Shared list · 3 members</div>
     <div class="group">${FAMILY.map((f, i) => `<div class="cell"><button type="button" class="chk ${f[2] ? "on" : ""}" data-fam="${i}" aria-label="Mark ${esc(f[0])} bought">${f[2] ? "✓" : ""}</button>
       <div class="main t1" style="${f[2] ? "text-decoration:line-through;color:var(--ink2)" : ""}">${esc(f[0])}</div><span class="who" style="background:${WHO[f[1]]}">${f[1]}</span></div>`).join("")}</div>
@@ -707,16 +738,17 @@ const STEPS = [
   ["Your AI grocery list", "What runs out this week, why the AI thinks so, and the real price on your route.", () => { TAB = "list"; }],
   ["The shelf price isn't the price", "Slimilk is HK$32 on Wellcome's shelf, HK$18.50 with \"2 for $37\". Real Consumer Council data.", () => { TAB = "compare"; CUR = "slim"; }],
   ["Every brand, side by side", "Kowloon Dairy, Nestlé, Vita, Trappist, Meiji, Meadows, M&S: ranked by price per 100 mL.", () => { TAB = "compare"; CUR = "slim"; render(); setTimeout(() => { const o = $("#brands"); o && o.scrollIntoView({ block: "start" }); }, 30); return 1; }],
-  ["More supermarkets", "Market Place, Fusion, city'super, M&S Food and Best Mart 360 join Wellcome, ParknShop and AEON.", () => { TAB = "compare"; CUR = "nestle"; }],
+  ["Four chains, then more", "Wellcome, ParknShop, AEON and Jasons from open data; other shops from shoppers' shelf reports.", () => { TAB = "compare"; CUR = "nestle"; }],
   ["Scan a barcode", "Find any pack in a second, or teach the app a new one.", () => { TAB = "compare"; render(); scanSheet(); return 1; }],
   ["Report a shelf price", "Branch prices differ from online ones; shoppers report the tag.", () => { TAB = "compare"; CUR = "slim"; render(); reportSheet("slim"); return 1; }],
   ["Fix the catalogue", "Flag a wrong category or an item that's missing.", () => { TAB = "compare"; CUR = "slim"; render(); wrongCatSheet("slim"); return 1; }],
-  ["Brand offers, only on good value", "A new milk gets cashback only if it ends within 5% of the best value.", () => { TAB = "compare"; CUR = "slim"; render(); setTimeout(() => { const o = $(".offer"); o && o.scrollIntoView({ block: "center" }); }, 30); return 1; }],
-  ["Watchlist", "Staples tracked like stocks: price, change, sale chance, stock left.", () => { TAB = "watch"; }],
-  ["Log a receipt, see your saving", "We read the receipt, update your stock, and show what this trip saved you.", () => { TAB = "list"; render(); receiptSheet(0); return 1; }],
+  ["Brand offers, only on good value", "A new milk gives 25% back in points, shown only if it ends within 5% of the best value.", () => { TAB = "compare"; CUR = "slim"; render(); setTimeout(() => { const o = $(".offer"); o && o.scrollIntoView({ block: "center" }); }, 30); return 1; }],
+  ["Watchlist", "Staples tracked like stocks: price, change, real deals, stock left.", () => { TAB = "watch"; }],
+  ["Stock up now, never \"wait\"", "For things that keep: a real deal, 10%+ below usual, when you'll need more soon.", () => { TAB = "list"; render(); setTimeout(() => { const o = $("#stockup"); o && o.scrollIntoView({ block: "start" }); }, 30); return 1; }],
+  ["Log a shop, see your saving", "Snap a receipt, share an e-receipt, forward an order email, or just tick what you bought.", () => { TAB = "list"; render(); receiptSheet(0); return 1; }],
   ["Savings", "Every dollar Basket Radar found you, by month and by source.", () => { TAB = "savings"; }],
-  ["Coupons and points", "Your yuu and MoneyBack coupons applied for you; points from any chain.", () => { TAB = "wallet"; }],
-  ["Family plan (being tested)", "Shared list, waste dashboard, restock cycles, and a sign-up that measures demand.", () => { TAB = "list"; render(); familySheet(); return 1; }],
+  ["Coupons, points and surveys", "Coupons applied for you; points at any chain (500 = a HK$10 e-voucher); paid brand surveys.", () => { TAB = "wallet"; }],
+  ["Family sharing, free", "Shared list, waste dashboard and restock cycles, included for every family.", () => { TAB = "list"; render(); familySheet(); return 1; }],
   ["Light or dark", "Pick your look from the profile button.", () => { render(); settingsSheet(); return 1; }]
 ];
 let STEP = 0;
@@ -737,6 +769,8 @@ document.addEventListener("click", e => {
   if (d.open) { CUR = d.open; TAB = "compare"; close(); return render(); }
   if (d.keep) { KEPT.has(d.keep) ? KEPT.delete(d.keep) : KEPT.add(d.keep); render(1); return; }
   if (d.remove) { REMOVED.add(d.remove); render(1); return toast("Removed. The AI will learn from this."); }
+  if (d.still) { const h = HOME[d.still]; h.stock += h.rate * 2; h.rate *= .9; render(1); return toast(`Got it · ${P[d.still].short} now runs out in about ${Math.round(daysLeft(d.still))} days`); }
+  if (d.tickk) { const on = !TICKED.has(d.tickk); on ? TICKED.add(d.tickk) : TICKED.delete(d.tickk); t.classList.toggle("on", on); t.textContent = on ? "✓" : ""; return; }
   if (d.fam) { FAMILY[+d.fam][2] = !FAMILY[+d.fam][2]; const y = $(".sheet").scrollTop; familySheet(); $(".sheet").scrollTop = y; return; }
   if (d.map) { BARCODE_MAP[d.ean] = d.map; close(); CUR = d.map; TAB = "compare"; render(); return toast("Saved. Live once a second shopper agrees."); }
   if (d.ean) { const k = BARCODE_MAP[d.ean]; if (!k) return unknownSheet(d.ean); close(); CUR = k; TAB = "compare"; render(); return toast("Found: " + P[k].short); }
@@ -745,7 +779,10 @@ document.addEventListener("click", e => {
     case "tour": return tourSheet();
     case "settings": return settingsSheet();
     case "family": return familySheet();
-    case "join": JOINED = true; return settingsSheet();
+    case "invite": return toast("Invite link copied · family sharing is free");
+    case "tick": TICKED.clear(); return tickSheet();
+    case "tick-save": { const n = TICKED.size; TICKED.forEach(k => { HOME[k].stock += HOME[k].rate * HOME[k].every; }); close(); render(1); return toast(n ? `${n} item${n > 1 ? "s" : ""} updated · no points without a receipt` : "Nothing ticked"); }
+    case "survey": SURVEYED = true; addPoints(250, "Survey · Hillside Farm"); render(1); return toast("Thanks · +250 points");
     case "how": return howSheet();
     case "trip": return tripSheet();
     case "undo": REMOVED.clear(); return render(1);
@@ -757,12 +794,12 @@ document.addEventListener("click", e => {
     case "rc-save": receiptSheet(2); return render(1);
     case "see-savings": close(); TAB = "savings"; return render();
     case "rp-send": { const s = $("#rp-store").value, v = parseFloat($("#rp-price").value) || 0; (SHELF[d.k] ||= {}); const prev = SHELF[d.k][s];
-      SHELF[d.k][s] = { price: v, n: prev ? prev.n + 1 : 1, ago: "just now" }; addPoints(5, "Shelf price · " + STORES[s].name); close(); render(1);
-      return toast(prev ? `Thanks · agrees with ${prev.n} others · +5 points` : "Thanks · shows once confirmed · +5 points"); }
+      SHELF[d.k][s] = { price: v, n: prev ? prev.n + 1 : 1, ago: "just now" }; if (prev) addPoints(10, "Shelf price confirmed · " + STORES[s].name); close(); render(1);
+      return toast(prev ? `Confirmed · agrees with ${prev.n} other${prev.n > 1 ? "s" : ""} · +10 points` : "Thanks · +10 points once a second shopper confirms"); }
     case "wc-send": close(); return toast("Thanks · live after a second report");
     case "notlisted": close(); TAB = "compare"; render(); return toast("Added · its price comes from shelf reports");
     case "cp-sample": NEW_COUPONS.forEach(c => { if (!COUPONS.find(x => x.id === c.id)) COUPONS.push(c); }); close(); TAB = "wallet"; render(); return toast("2 coupons read and matched");
-    case "claim": close(); return toast("Offer saved · log the receipt to get it");
+    case "claim": close(); return toast("Offer added · buy at any chain, then log the receipt");
   }
 });
 document.addEventListener("change", e => { const k = e.target.dataset && e.target.dataset.cyc; if (k) { HOME[k].every = Math.max(1, +e.target.value || 1); toast("Restock cycle updated"); } });
