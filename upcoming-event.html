@@ -178,12 +178,40 @@
             .site-bar { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
         }
 
-        .event-card { position: relative; isolation: isolate; transition: transform 220ms ease, box-shadow 220ms ease; }
-        .event-link { margin-top: auto; color: var(--blue); text-decoration: none; padding-block: 0.65rem; font-weight: 600; }
+        .event-card {
+            --card-inset: clamp(1.25rem, 3.5vw, 2rem);
+            position: relative;
+            isolation: isolate;
+            padding: var(--card-inset) var(--card-inset) 0;
+            overflow: hidden;
+            border-color: transparent;
+            box-shadow: 0 2px 12px rgb(0 0 0 / 3%);
+            transition: transform 220ms ease, box-shadow 220ms ease;
+        }
+        .event-grid { gap: 1.5rem; }
+        .event-title { text-wrap: balance; }
+        .event-details { line-height: 1.6; margin-bottom: 0.5rem; }
+        .event-media {
+            width: calc(100% + var(--card-inset) * 2);
+            margin: 1.1rem calc(-1 * var(--card-inset)) 0;
+            aspect-ratio: 4 / 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            overflow: hidden;
+        }
+        .event-link { margin-top: auto; color: var(--blue); text-decoration: none; padding-block: 0.75rem; min-height: 2.75rem; font-weight: 600; }
         .event-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 1.4rem; }
         .event-link:focus-visible { outline: none; }
         .event-card:focus-within { outline: 2px solid var(--blue); outline-offset: 3px; }
-        .event-poster { display: block; width: 100%; height: auto; max-height: 27rem; object-fit: contain; border-radius: 0.7rem; margin: 0.35rem 0 0.65rem; background: #f5f5f7; }
+        .event-poster {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            margin: 0;
+        }
         @media (hover: hover) and (pointer: fine) {
             .event-card:hover { transform: scale(1.015); box-shadow: 0 12px 32px rgb(0 0 0 / 9%); z-index: 1; }
         }
@@ -282,8 +310,10 @@
             </ul>
             <p class="ticket-note">Student discount applied automatically. GA and VIP group packs offer five tickets for the price of four.</p>
         </div>
-        <img class="event-poster" src="https://cdn.evbuc.com/images/1196446048/97313584875/1/original.20261023-145149" alt="ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party — event artwork" loading="lazy" decoding="async">
         <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="event-link" aria-label="View ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1196446048/97313584875/1/original.20261023-145149" alt="ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Lorenzo Ausilia -->
@@ -300,8 +330,10 @@
             <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
             <p class="ticket-note">Online checkout fees and totals are unverified.</p>
         </div>
-        <img class="event-poster" src="assets/posters/lorenzo-ausilia.png" alt="Lorenzo Ausilia at Cassio — event poster" loading="lazy" decoding="async">
         <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="event-link" aria-label="View Cassio Guest DJ Night with Lorenzo Ausilia ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="assets/posters/lorenzo-ausilia.png" alt="Lorenzo Ausilia at Cassio — event poster" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- KAAZE -->
@@ -316,8 +348,10 @@
             </ul>
             <p class="ticket-note">Checkout fees and total could not be verified.</p>
         </div>
-        <img class="event-poster" src="https://event-cf.plvr.io/events/b56bc12b-60c0-4a5a-be92-b87135e635e5.webp" alt="FAYY Presents KAAZE — event artwork" loading="lazy" decoding="async">
         <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="event-link" aria-label="View FAYY Presents KAAZE ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://event-cf.plvr.io/events/b56bc12b-60c0-4a5a-be92-b87135e635e5.webp" alt="FAYY Presents KAAZE — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 2 -->
@@ -333,8 +367,10 @@
             </ul>
             <p class="ticket-note">Children under 5 enter free. Online transaction fee and total could not be verified.</p>
         </div>
-        <img class="event-poster" src="https://totalticketing-ets-ttlcom-prod-singapore-web-files.s3.amazonaws.com/media/CACHE/images/event/image/45622/c22dea14151e15ac4b853818e0af4867_gZ1XjjQ/125467c5e6b3acbf91a2d544b748fee6.jpg" alt="The Big Picnic 2026 — event artwork" loading="lazy" decoding="async">
         <a href="https://www.ticketflap.com/bigpicnic" target="_blank" rel="noopener" class="event-link" aria-label="View The Big Picnic 2026 ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://totalticketing-ets-ttlcom-prod-singapore-web-files.s3.amazonaws.com/media/CACHE/images/event/image/45622/c22dea14151e15ac4b853818e0af4867_gZ1XjjQ/125467c5e6b3acbf91a2d544b748fee6.jpg" alt="The Big Picnic 2026 — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 3 -->
@@ -349,8 +385,10 @@
                 <li><strong>Student (entry before 4:30 PM)</strong> · Ticket HK$464.00 · Transaction fee HK$37.12 · <strong>Total HK$501.12</strong></li>
             </ul>
         </div>
-        <img class="event-poster" src="https://cdn.evbuc.com/images/1195852749/1753540979633/1/original.20261015-100753" alt="Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch — event artwork" loading="lazy" decoding="async">
         <a href="https://www.eventbrite.hk/e/2003117472282" target="_blank" rel="noopener" class="event-link" aria-label="View Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1195852749/1753540979633/1/original.20261015-100753" alt="Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Drinksgiving · Thanksgiving Eve -->
@@ -365,8 +403,10 @@
             </ul>
             <p class="ticket-note">The organizer advertises a buy-one-get-two online offer. Checkout fees and ticket tiers could not be verified.</p>
         </div>
-        <img class="event-poster" src="https://cdn.evbuc.com/images/1197585245/2993445451951/1/original.20261109-120326" alt="Drinksgiving · Thanksgiving Eve — event artwork" loading="lazy" decoding="async">
         <a href="https://www.eventbrite.hk/e/drinksgiving-thanksgiving-eve-tickets-2004581263521" target="_blank" rel="noopener" class="event-link" aria-label="View Drinksgiving · Thanksgiving Eve ticket listing">View Ticket Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1197585245/2993445451951/1/original.20261109-120326" alt="Drinksgiving · Thanksgiving Eve — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 4 -->
@@ -378,8 +418,10 @@
             <strong>🎟️ Tickets:</strong>
             <p class="ticket-note">All tickets sold out.</p>
         </div>
-        <img class="event-poster" src="https://hovylee.com/assets/hongkong-nov.png" alt="HE.R x TEA RAVE (Winter '26 Vol. 3) — event artwork" loading="lazy" decoding="async">
         <a href="https://site.fourvenues.com/en/her/events/her--winter-26-vol-3-ft-tea-rave-26-11-2026-ZXKQ" target="_blank" rel="noopener" class="event-link" aria-label="View HE.R x TEA RAVE (Winter '26 Vol. 3) ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://hovylee.com/assets/hongkong-nov.png" alt="HE.R x TEA RAVE (Winter '26 Vol. 3) — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- AME × 0159 -->
@@ -395,8 +437,10 @@
             </ul>
             <p class="ticket-note">Checkout fees and total could not be verified.</p>
         </div>
-        <img class="event-poster" src="https://event-cf.plvr.io/events/7afa315c-4365-475f-8d1c-ab832b6ba1c6.jpg" alt="Asia Music Event × 0159: Joyhauser &amp; Juliet Fox — event artwork" loading="lazy" decoding="async">
         <a href="https://www.plvr.io/events/ame-0159-official-party-hk" target="_blank" rel="noopener" class="event-link" aria-label="View Asia Music Event × 0159: Joyhauser &amp; Juliet Fox ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://event-cf.plvr.io/events/7afa315c-4365-475f-8d1c-ab832b6ba1c6.jpg" alt="Asia Music Event × 0159: Joyhauser &amp; Juliet Fox — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 5 -->
@@ -418,8 +462,10 @@
             </ul>
             <p class="ticket-note">All tiers include one standard drink.</p>
         </div>
-        <img class="event-poster" src="assets/posters/sarabi.png" alt="HE.R featuring Sarabi — event poster" loading="lazy" decoding="async">
         <a href="https://site.fourvenues.com/en/her/events/her--winter-26-vol-4-ft-sarabi-28-11-20261-B21I" target="_blank" rel="noopener" class="event-link" aria-label="View HE.R - Winter '26 Vol. 4 ft. Sarabi ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="assets/posters/sarabi.png" alt="HE.R featuring Sarabi — event poster" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 6 -->
@@ -439,8 +485,10 @@
             </ul>
             <p class="ticket-note">Children under 3 enter free.</p>
         </div>
-        <img class="event-poster" src="https://lantaulive.com/wp-content/uploads/2026/11/ll2026-poster-logo-asset26.png" alt="Lantau Live — event artwork" loading="lazy" decoding="async">
         <a href="https://www.ticketflap.com/lantaulive2026" target="_blank" rel="noopener" class="event-link" aria-label="View Lantau Live ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://lantaulive.com/wp-content/uploads/2026/11/ll2026-poster-logo-asset26.png" alt="Lantau Live — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 7 -->
@@ -454,8 +502,10 @@
                 <li><strong>Limited advance</strong> · Ticket HK$150.00 · Transaction fee HK$8.99 · <strong>Total HK$158.99</strong></li>
             </ul>
         </div>
-        <img class="event-poster" src="https://cdn.evbuc.com/images/1197754977/2009463465/1/original.20261111-101505" alt="FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush — event artwork" loading="lazy" decoding="async">
         <a href="https://www.eventbrite.hk/e/2004700625536" target="_blank" rel="noopener" class="event-link" aria-label="View FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1197754977/2009463465/1/original.20261111-101505" alt="FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
     <!-- Peel’s Block Party -->
     <div class="event-card" id="event-11">
@@ -469,8 +519,10 @@
                 <li><strong>Optional four-drink package</strong> · Ticket HK$200.00 · Transaction fee HK$11.98 · <strong>Total HK$211.98</strong></li>
             </ul>
         </div>
-        <img class="event-poster" src="https://cdn.evbuc.com/images/1197156313/1665262707293/1/original.20261103-094019" alt="Peel’s Block Party — event artwork" loading="lazy" decoding="async">
         <a href="https://www.eventbrite.hk/e/peels-block-party-tickets-2004279136852" target="_blank" rel="noopener" class="event-link" aria-label="View Peel’s Block Party ticket listing">Get Tickets <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1197156313/1665262707293/1/original.20261103-094019" alt="Peel’s Block Party — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- CASS10 -->
@@ -487,8 +539,10 @@
             <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
             <p class="ticket-note">Online checkout fees and totals are unverified.</p>
         </div>
-        <img class="event-poster" src="assets/posters/cassio-10th-anniversary.png" alt="Cassio 10th anniversary — event poster" loading="lazy" decoding="async">
         <a href="https://site.fourvenues.com/en/cassio/events/cass10---10-years-anniversary-w-balzar-mo-shi-ridha-be-jamie-maddock-28-11-2026-IVJ0" target="_blank" rel="noopener" class="event-link" aria-label="View CASS10: Cassio’s 10th Anniversary with Balzar, Mo-Shi, Ridha Be &amp; Jamie Maddock ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="assets/posters/cassio-10th-anniversary.png" alt="Cassio 10th anniversary — event poster" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 8 -->
@@ -510,8 +564,10 @@
             </ul>
             <p class="ticket-note">Checkout fee and total could not be verified.</p>
         </div>
-        <img class="event-poster" src="https://images.rmba.io/events/019ffa3b-6f15-795f-aa0e-dd8a903150d4/01a03889-3825-7096-83c2-bb36f8af391f.png" alt="UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set] — event artwork" loading="lazy" decoding="async">
         <a href="https://rmba.io/events/maup-ktbridge-18dec" target="_blank" rel="noopener" class="event-link" aria-label="View UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set] ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://images.rmba.io/events/019ffa3b-6f15-795f-aa0e-dd8a903150d4/01a03889-3825-7096-83c2-bb36f8af391f.png" alt="UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set] — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
     <!-- Event 9 -->
@@ -528,8 +584,10 @@
             </ul>
             <p class="ticket-note">All currently listed tiers are sold out.</p>
         </div>
-        <img class="event-poster" src="https://images.rmba.io/events/01a1d5f9-d40a-7de9-814c-59567c3f75b1/01a1e3c8-e560-7710-947f-92d44263ee4b.png" alt="KINETRO : ARGY — event artwork" loading="lazy" decoding="async">
         <a href="https://rmba.io/events/kinetro-argy-9jan" target="_blank" rel="noopener" class="event-link" aria-label="View KINETRO : ARGY ticket listing">View Ticket Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://images.rmba.io/events/01a1d5f9-d40a-7de9-814c-59567c3f75b1/01a1e3c8-e560-7710-947f-92d44263ee4b.png" alt="KINETRO : ARGY — event artwork" loading="lazy" decoding="async">
+        </div>
     </div>
 
         </div>
