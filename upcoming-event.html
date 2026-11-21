@@ -220,6 +220,7 @@
             .event-card:hover, .event-card:active { transform: none; }
         }
         .event-grid.masonry { grid-auto-rows: 1px; row-gap: 0; }
+        .past-events { margin-top: 3.5rem; }
     </style>
 </head>
 <body>
@@ -229,6 +230,7 @@
         <a class="site-name" href="#top">Upcoming Events</a>
         <a class="nav-link" href="#calendar-heading">Calendar</a>
         <a class="nav-link" href="#events-heading">Event details</a>
+        <a class="nav-link" href="#past-events-heading">Past events</a>
     </nav>
 </header>
 
@@ -295,67 +297,8 @@
 
     <section aria-labelledby="events-heading">
         <h2 id="events-heading">Event details</h2>
-        <div class="event-grid">
-    <!-- Event 1 -->
-    <div class="event-card" id="event-1">
-        <h3 class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</h3>
-        <div class="event-details">
-            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026</span><br>
-            <span>📍 <strong>Location:</strong> Pier 1929, Hong Kong</span><br>
-            <strong>🎟️ Tickets:</strong>
-            <ul class="ticket-tiers">
-                <li><strong>General admission (advance)</strong> · Ticket HK$888.00 · Transaction fee HK$53.19 · <strong>Total HK$941.19</strong></li>
-                <li><strong>General admission (late/door)</strong> · Ticket HK$988.00 · Transaction fee HK$59.18 · <strong>Total HK$1,047.18</strong></li>
-                <li><strong>Full-time student (limited quota)</strong> · Ticket HK$488.00 · Transaction fee HK$29.23 · <strong>Total HK$517.23</strong></li>
-            </ul>
-            <p class="ticket-note">Student discount applied automatically. GA and VIP group packs offer five tickets for the price of four.</p>
-        </div>
-        <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="event-link" aria-label="View ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
-        <div class="event-media">
-            <img class="event-poster" src="https://cdn.evbuc.com/images/1196446048/97313584875/1/original.20261023-145149" alt="ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party — event artwork" loading="lazy" decoding="async">
-        </div>
-    </div>
-
-    <!-- Lorenzo Ausilia -->
-    <div class="event-card" id="event-14">
-        <h3 class="event-title">Cassio Guest DJ Night with Lorenzo Ausilia</h3>
-        <div class="event-details">
-            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (6:00 PM – 4:00 AM next day HKT)</span><br>
-            <span>📍 <strong>Location:</strong> Cassio Social Club, 2/F, LKF Tower, 33 Wyndham Street, Central, Hong Kong</span><br>
-            <strong>🎟️ Tickets:</strong>
-            <ul class="ticket-tiers">
-                <li><strong>Advance online (entry only)</strong> · Ticket HK$180</li>
-                <li><strong>Advance online (one standard drink)</strong> · Ticket HK$270</li>
-            </ul>
-            <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
-            <p class="ticket-note">Online checkout fees and totals are unverified.</p>
-        </div>
-        <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="event-link" aria-label="View Cassio Guest DJ Night with Lorenzo Ausilia ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
-        <div class="event-media">
-            <img class="event-poster" src="assets/posters/lorenzo-ausilia.png" alt="Lorenzo Ausilia at Cassio — event poster" loading="lazy" decoding="async">
-        </div>
-    </div>
-
-    <!-- KAAZE -->
-    <div class="event-card" id="event-15">
-        <h3 class="event-title">FAYY Presents KAAZE</h3>
-        <div class="event-details">
-            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
-            <span>📍 <strong>Location:</strong> FAYY, 25–26/F, California Tower, 30–32 D’Aguilar Street, Central, Hong Kong</span><br>
-            <strong>🎟️ Tickets:</strong>
-            <ul class="ticket-tiers">
-                <li><strong>Early bird</strong> · Ticket HK$380.00 · Includes two drinks</li>
-            </ul>
-            <p class="ticket-note">Checkout fees and total could not be verified.</p>
-        </div>
-        <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="event-link" aria-label="View FAYY Presents KAAZE ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
-        <div class="event-media">
-            <img class="event-poster" src="https://event-cf.plvr.io/events/b56bc12b-60c0-4a5a-be92-b87135e635e5.webp" alt="FAYY Presents KAAZE — event artwork" loading="lazy" decoding="async">
-        </div>
-    </div>
-
-    <!-- Event 2 -->
-    <div class="event-card" id="event-2">
+        <div class="event-grid" id="upcoming-events-grid">
+<div class="event-card" data-event-date="2026-11-21" id="event-2">
         <h3 class="event-title">The Big Picnic 2026</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026</span><br>
@@ -373,8 +316,7 @@
         </div>
     </div>
 
-    <!-- Event 3 -->
-    <div class="event-card" id="event-3">
+<div class="event-card" data-event-date="2026-11-21" id="event-3">
         <h3 class="event-title">Magic Room - Year 六 Opener - Frankey &amp; Sandrino, Luch</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 21, 2026 (15:00 HKT)</span><br>
@@ -391,8 +333,7 @@
         </div>
     </div>
 
-    <!-- Drinksgiving · Thanksgiving Eve -->
-    <div class="event-card" id="event-10">
+<div class="event-card" data-event-date="2026-11-25" id="event-10">
         <h3 class="event-title">Drinksgiving · Thanksgiving Eve</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 25, 2026 (10:00 PM - 4:00 AM next day HKT)</span><br>
@@ -409,8 +350,7 @@
         </div>
     </div>
 
-    <!-- Event 4 -->
-    <div class="event-card" id="event-4">
+<div class="event-card" data-event-date="2026-11-26" id="event-4">
         <h3 class="event-title">HE.R x TEA RAVE (Winter '26 Vol. 3)</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 26, 2026 (10:00 PM)</span><br>
@@ -424,8 +364,7 @@
         </div>
     </div>
 
-    <!-- AME × 0159 -->
-    <div class="event-card" id="event-12">
+<div class="event-card" data-event-date="2026-11-27" id="event-12">
         <h3 class="event-title">Asia Music Event × 0159: Joyhauser &amp; Juliet Fox</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 27, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
@@ -443,8 +382,7 @@
         </div>
     </div>
 
-    <!-- Event 5 -->
-    <div class="event-card" id="event-5">
+<div class="event-card" data-event-date="2026-11-28" id="event-5">
         <h3 class="event-title">HE.R - Winter '26 Vol. 4 ft. Sarabi</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM)</span><br>
@@ -468,8 +406,7 @@
         </div>
     </div>
 
-    <!-- Event 6 -->
-    <div class="event-card" id="event-6">
+<div class="event-card" data-event-date="2026-11-29" id="event-6">
         <h3 class="event-title">Lantau Live</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28-29, 2026</span><br>
@@ -491,8 +428,7 @@
         </div>
     </div>
 
-    <!-- Event 7 -->
-    <div class="event-card" id="event-7">
+<div class="event-card" data-event-date="2026-11-28" id="event-7">
         <h3 class="event-title">FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (2:00 PM - 7:00 PM)</span><br>
@@ -507,8 +443,8 @@
             <img class="event-poster" src="https://cdn.evbuc.com/images/1197754977/2009463465/1/original.20261111-101505" alt="FTD Daytime Party - UKG, House, Jungle, UK Bass - Time to Rush — event artwork" loading="lazy" decoding="async">
         </div>
     </div>
-    <!-- Peel’s Block Party -->
-    <div class="event-card" id="event-11">
+
+<div class="event-card" data-event-date="2026-11-28" id="event-11">
         <h3 class="event-title">Peel’s Block Party</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (3:00 PM - 11:59 PM HKT)</span><br>
@@ -525,8 +461,7 @@
         </div>
     </div>
 
-    <!-- CASS10 -->
-    <div class="event-card" id="event-13">
+<div class="event-card" data-event-date="2026-11-28" id="event-13">
         <h3 class="event-title">CASS10: Cassio’s 10th Anniversary with Balzar, Mo-Shi, Ridha Be &amp; Jamie Maddock</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> November 28, 2026 (10:00 PM – 4:30 AM next day HKT)</span><br>
@@ -545,8 +480,7 @@
         </div>
     </div>
 
-    <!-- Event 8 -->
-    <div class="event-card" id="event-8">
+<div class="event-card" data-event-date="2026-12-18" id="event-8">
         <h3 class="event-title">UNDER THE KT-BRIDGE 3.0: MAU P [Extended Set]</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> December 18, 2026 (4:30 PM - 10:30 PM HKT)</span><br>
@@ -570,8 +504,7 @@
         </div>
     </div>
 
-    <!-- Event 9 -->
-    <div class="event-card" id="event-9">
+<div class="event-card" data-event-date="2027-01-09" id="event-9">
         <h3 class="event-title">KINETRO : ARGY</h3>
         <div class="event-details">
             <span>📅 <strong>Date &amp; Time:</strong> January 9, 2027 (3:00 PM - 10:30 PM HKT)</span><br>
@@ -589,7 +522,66 @@
             <img class="event-poster" src="https://images.rmba.io/events/01a1d5f9-d40a-7de9-814c-59567c3f75b1/01a1e3c8-e560-7710-947f-92d44263ee4b.png" alt="KINETRO : ARGY — event artwork" loading="lazy" decoding="async">
         </div>
     </div>
+        </div>
+    </section>
 
+    <section class="past-events" aria-labelledby="past-events-heading">
+        <h2 id="past-events-heading">Past events</h2>
+        <div class="event-grid" id="past-events-grid">
+<div class="event-card" data-event-date="2026-11-20" id="event-1">
+        <h3 class="event-title">ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026</span><br>
+            <span>📍 <strong>Location:</strong> Pier 1929, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <ul class="ticket-tiers">
+                <li><strong>General admission (advance)</strong> · Ticket HK$888.00 · Transaction fee HK$53.19 · <strong>Total HK$941.19</strong></li>
+                <li><strong>General admission (late/door)</strong> · Ticket HK$988.00 · Transaction fee HK$59.18 · <strong>Total HK$1,047.18</strong></li>
+                <li><strong>Full-time student (limited quota)</strong> · Ticket HK$488.00 · Transaction fee HK$29.23 · <strong>Total HK$517.23</strong></li>
+            </ul>
+            <p class="ticket-note">Student discount applied automatically. GA and VIP group packs offer five tickets for the price of four.</p>
+        </div>
+        <a href="https://www.eventbrite.hk/e/2003407499762" target="_blank" rel="noopener" class="event-link" aria-label="View ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://cdn.evbuc.com/images/1196446048/97313584875/1/original.20261023-145149" alt="ELECTRIC WONDERLAND x JOSEPH CAPRIATI - The White Party — event artwork" loading="lazy" decoding="async">
+        </div>
+    </div>
+
+<div class="event-card" data-event-date="2026-11-20" id="event-14">
+        <h3 class="event-title">Cassio Guest DJ Night with Lorenzo Ausilia</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (6:00 PM – 4:00 AM next day HKT)</span><br>
+            <span>📍 <strong>Location:</strong> Cassio Social Club, 2/F, LKF Tower, 33 Wyndham Street, Central, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <ul class="ticket-tiers">
+                <li><strong>Advance online (entry only)</strong> · Ticket HK$180</li>
+                <li><strong>Advance online (one standard drink)</strong> · Ticket HK$270</li>
+            </ul>
+            <p class="ticket-note">Free entry is usually offered before <strong>00:30</strong> and is subject to availability.</p>
+            <p class="ticket-note">Online checkout fees and totals are unverified.</p>
+        </div>
+        <a href="https://site.fourvenues.com/en/cassio/events/guest-dj-night-w-lorenzo-ausilia-friday-nov-20th-20-11-2026-3DJ3" target="_blank" rel="noopener" class="event-link" aria-label="View Cassio Guest DJ Night with Lorenzo Ausilia ticket listing">View Event Listing <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="assets/posters/lorenzo-ausilia.png" alt="Lorenzo Ausilia at Cassio — event poster" loading="lazy" decoding="async">
+        </div>
+    </div>
+
+<div class="event-card" data-event-date="2026-11-20" id="event-15">
+        <h3 class="event-title">FAYY Presents KAAZE</h3>
+        <div class="event-details">
+            <span>📅 <strong>Date &amp; Time:</strong> November 20, 2026 (10:00 PM - 3:00 AM next day HKT)</span><br>
+            <span>📍 <strong>Location:</strong> FAYY, 25–26/F, California Tower, 30–32 D’Aguilar Street, Central, Hong Kong</span><br>
+            <strong>🎟️ Tickets:</strong>
+            <ul class="ticket-tiers">
+                <li><strong>Early bird</strong> · Ticket HK$380.00 · Includes two drinks</li>
+            </ul>
+            <p class="ticket-note">Checkout fees and total could not be verified.</p>
+        </div>
+        <a href="https://www.plvr.io/events/kaaze-november-20-friday-20261120-hk" target="_blank" rel="noopener" class="event-link" aria-label="View FAYY Presents KAAZE ticket listing">Purchase Ticket <span aria-hidden="true">›</span></a>
+        <div class="event-media">
+            <img class="event-poster" src="https://event-cf.plvr.io/events/b56bc12b-60c0-4a5a-be92-b87135e635e5.webp" alt="FAYY Presents KAAZE — event artwork" loading="lazy" decoding="async">
+        </div>
+    </div>
         </div>
     </section>
 </div>
@@ -636,9 +628,22 @@
     calendar.querySelector(".calendar-toolbar").hidden = false;
 </script>
 
+
+<script>
+    const upcomingGrid = document.getElementById("upcoming-events-grid");
+    const pastGrid = document.getElementById("past-events-grid");
+    const currentHongKongDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Hong_Kong", year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+    document.querySelectorAll(".event-card[data-event-date]").forEach(card => {
+        const destination = card.dataset.eventDate < currentHongKongDate ? pastGrid : upcomingGrid;
+        if (card.parentElement !== destination) destination.appendChild(card);
+    });
+</script>
+
 <script>
     // Keep chronological DOM and keyboard order while fitting cards into each column.
-    const eventGrid = document.querySelector(".event-grid");
+    document.querySelectorAll(".event-grid").forEach(eventGrid => {
     const eventCards = [...eventGrid.querySelectorAll(".event-card")];
     const compactLayout = window.matchMedia("(max-width: 42rem)");
     let layoutFrame;
@@ -661,6 +666,7 @@
         compactLayout.addEventListener("change", arrangeCards);
         arrangeCards();
     }
+    });
 </script>
 
 </body>
