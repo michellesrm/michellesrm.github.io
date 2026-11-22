@@ -210,7 +210,7 @@ button.cell:active, .tap:active { background: var(--fill); }
 .cyc { width: 64px; border: 0; background: var(--fill); border-radius: 8px; padding: 5px 8px; font: inherit; font-size: 15px; color: var(--ink); text-align: center; }
 
 
-/* ================= M&S Food-inspired November restyle (student concept) =================
+/* ================= November restyle =================
    Square corners, no shadows, condensed caps headings, letter-spaced eyebrows, typewriter body copy, outlined buttons with a thin arrow. */
 body { letter-spacing: 0; }
 .gnav { backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 1px solid var(--sep); }
@@ -355,6 +355,38 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 }
 @media (min-width: 761px) { .only-phone { display: none !important; } }
 @media (min-width: 761px) and (max-width: 980px) { .stage { grid-template-columns: minmax(0, 1fr); } .device { position: relative; top: 0; margin: 0 auto; } .tour { order: 2; } }
+
+/* Compact proportional body typography. */
+@font-face {
+  font-family: "New MS London";
+  font-style: normal;
+  font-weight: 100 400;
+  font-display: swap;
+  src: url("https://static.marksandspencer.com/fonts/mnsLondon/mnsLondonRegular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "New MS London";
+  font-style: normal;
+  font-weight: 500 900;
+  font-display: swap;
+  src: url("https://static.marksandspencer.com/fonts/mnsLondon/mnsLondonSemiBold.woff2") format("woff2");
+}
+:root {
+  --body-copy: "New MS London", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.hero p, .hero .hero-side span, .tour .lead,
+.steps span.d, .fine, .lsub, .t2, .why, .sheet .t2,
+.ai-card .s, .ring .c span, .bars .b, .bars .b em,
+.search input, .field input, .field select, .cyc, .concept {
+  font-family: var(--body-copy);
+  font-weight: 400;
+  letter-spacing: normal;
+}
+.hero p { font-size: 16px; line-height: 1.5; }
+.hero .hero-side span, .tour .lead { font-size: 14px; line-height: 1.5; }
+.steps span.d { font-size: 14px; line-height: 1.4; }
+.lsub, .t2, .why, .sheet .t2, .ai-card .s { font-size: 13px; line-height: 1.4; }
+.fine, .concept { line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -402,7 +434,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   </div></div>
 </div>
 
-<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Smart cookies is a student concept and is not affiliated with any retailer. <strong>Design note:</strong> the colours and type are a student homage to the M&amp;S Food website's November style; this page is not made by, endorsed by or affiliated with Marks &amp; Spencer. No M&amp;S logos, images or fonts are used.</p>
+<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Smart cookies is a student concept and is not affiliated with any retailer.</p>
 
 <script>
 /* ======================= real date and time (Hong Kong) ======================= */
@@ -833,7 +865,7 @@ function settingsSheet() {
     <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Included for every family</div></div><span class="chev">›</span></button></div>
     <button class="btn fill lg" type="button" data-act="invite" style="margin-top:12px">Invite a family member</button>
     <p class="t2" style="margin-top:8px">Smart cookies is free for families. Brands pay us only when a receipt proves a sale.</p>
-    <p class="concept">Student concept. Visual style inspired by M&amp;S Food; not affiliated with or endorsed by Marks &amp; Spencer.</p>`);
+    <p class="concept">Smart cookies is a student concept.</p>`);
   paintTheme();
 }
 function familySheet() {
