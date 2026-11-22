@@ -387,6 +387,26 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .steps span.d { font-size: 14px; line-height: 1.4; }
 .lsub, .t2, .why, .sheet .t2, .ai-card .s { font-size: 13px; line-height: 1.4; }
 .fine, .concept { line-height: 1.5; }
+
+/* Store-by-store shopping list. */
+.trip-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--tint); color:var(--on-tint); padding:12px 14px; margin:12px 0 10px; }
+.trip-summary-label { display:block; font-family:var(--body-copy); font-size:12px; line-height:1.4; }
+.trip-summary strong { display:block; font-family:var(--sans); font-size:19px; line-height:1.3; }
+.trip-summary > .price { font-family:var(--body-copy); font-size:21px; }
+.trip-shop { background:var(--card); border:1px solid var(--sep); margin-bottom:10px; }
+.trip-shop-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:10px 12px; border-bottom:1px solid var(--sep); }
+.trip-shop-head .t1 { font-size:16px; }
+.trip-shop-head .price { font-family:var(--body-copy); font-size:15px; }
+.trip-item { width:100%; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:9px 12px; border:0; background:transparent; text-align:left; }
+.trip-item + .trip-item { border-top:1px solid var(--sep); }
+.trip-item-copy { min-width:0; display:grid; gap:2px; }
+.trip-item-name { font-family:var(--body-copy); font-weight:500; font-size:14px; line-height:1.3; }
+.trip-item .t2 { font-size:12px; line-height:1.35; }
+.trip-item > .price { font-family:var(--body-copy); font-size:14px; flex:none; }
+.trip-item:hover { background:var(--fill); }
+.trip-item:focus-visible { outline:2px solid var(--tint); outline-offset:-2px; }
+.trip-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin:8px 0 18px; }
+.trip-actions .btn { font-size:12px; padding:6px 10px; }
 </style>
 </head>
 <body>
@@ -659,14 +679,21 @@ function list() {
   const uses = WATCH.filter(k => HOME[k].useBy);
   return `
   <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Smart cookies AI.</p>
-  <div class="hdr">My trip</div>
-  <div class="group">${Object.entries(trip).map(([s, its]) => `<div class="cell"><span class="storedot" style="background:${STORES[s].c}">${STORES[s].name[0]}</span><div class="main">
-    <div class="t1 b">${STORES[s].name} · ${STORES[s].branch}</div><div class="t2">${its.map(i => esc(P[i.k].short)).join(", ")}</div></div>
-    <div style="text-align:right">${isOpen(s) ? `<span class="badge g">Open till ${STORES[s].close}</span>` : `<span class="badge o">Closed · opens ${OPENS}</span>`}<div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
-  <div class="ai-card"><div class="k">${sparkle(15)} AI GROCERY LIST · THIS WEEK</div>
-    <div class="h">${items.length} things before you run out</div>
-    <div class="s">${hk(total)} at the stores we picked, after offers and coupons. Buying where the sticker is lowest: ${hk(shelfTotal)}. You save <b>${hk(shelfTotal - total)}</b>.</div>
-    <div class="acts"><button class="btn fill" type="button" data-act="trip">Plan my trip</button><button class="btn" type="button" data-act="how">How it works</button></div></div>
+  <div class="trip-summary">
+    <div><span class="trip-summary-label">This trip · ${Object.keys(trip).length} shops</span><strong>${items.length} items to buy</strong></div>
+    <span class="price">${hk(total)}</span>
+  </div>
+  ${Object.entries(trip).map(([s, its]) => `<section class="trip-shop" aria-label="Shopping list for ${esc(STORES[s].name)}">
+    <div class="trip-shop-head">
+      <div><div class="t1 b">${STORES[s].name}</div><div class="t2">${STORES[s].branch} · ${STORES[s].walk} min walk</div></div>
+      <span class="price">${hk(sum(its.map(i => i.b.final * i.b.q)))}</span>
+    </div>
+    ${its.map(i => `<button class="trip-item" type="button" data-open="${i.k}" aria-label="Compare ${esc(P[i.k].short)}">
+      <div class="trip-item-copy"><span class="trip-item-name">${esc(P[i.k].short)}</span><span class="t2">${i.b.q} × ${P[i.k].size}${i.b.o ? " · " + esc(i.b.o) : ""}${i.b.coupon ? " · " + esc(i.b.coupon.src) + " coupon" : ""}</span></div>
+      <span class="price">${hk(i.b.final * i.b.q)}</span>
+    </button>`).join("")}
+  </section>`).join("") || `<p class="t2">Your shopping list is empty.</p>`}
+  <div class="trip-actions"><span class="t2">After offers and coupons · save ${hk(shelfTotal - total)}</span><button class="btn" type="button" data-act="trip">Trip details →</button></div>
   <div class="hdr">Suggested by AI · tap ✓ to keep</div>
   <div class="group">${items.map(i => `<div class="cell wa" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${art(i.k)}<div class="main">
       <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="t1 b">${esc(P[i.k].short)}</span><span class="price">${hk(i.b.final * i.b.q)}</span></div>
