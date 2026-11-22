@@ -3,34 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E8E0DB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E0E0B" media="(prefers-color-scheme: dark)">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Smart cookies Demo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap">
 <style>
 /* Layout: on a phone the app fills the screen; on a computer it sits in a device frame on a product page with a guided tour. */
 :root {
-  --page: #f5f5f7;  --app: #f2f2f7;  --card: #ffffff;  --ink: #1d1d1f;
-  --ink2: rgba(60, 60, 67, .64);  --sep: rgba(60, 60, 67, .16);  --fill: rgba(120, 120, 128, .12);
-  --tint: #0071e3;  --green: #248a3d;  --green-bg: rgba(52, 199, 89, .14);  --orange: #c93400;  --orange-bg: rgba(255, 149, 0, .16);
-  --purple: #8944ab;  --purple-bg: rgba(175, 82, 222, .12);  --bar: rgba(250, 250, 252, .78);  --scrim: rgba(0, 0, 0, .32);
-  --hero-a: #1d1d1f;  --frame: #1d1d1f;
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
-  --round: ui-rounded, "SF Pro Rounded", -apple-system, "Inter", sans-serif;
+  --page: #E8E0DB; --app: #EDE6E1; --card: #DACFC6; --ink: #1C1210; --ink2: rgba(46, 28, 22, .70); --sep: rgba(59, 26, 20, .18); --fill: rgba(59, 26, 20, .08);
+  --tint: #A50E2D; --on-tint: #FBF3EE; --green: #2D6A3A; --green-bg: rgba(45, 106, 58, .13); --orange: #B4421A; --orange-bg: rgba(180, 66, 26, .12);
+  --purple: #7B2340; --purple-bg: rgba(165, 14, 45, .09); --bar: #E8E0DB; --scrim: rgba(30, 14, 11, .45); --hero-a: #FBF3EE; --frame: #3B1A14;
+  --burgundy: #A50E2D; --choc: #3B1A14; --apricot: #F6B07F; --offwhite: #F4ECE6; --ai: #A50E2D; --ai-ink: #F4ECE6; --wallet: #3B1A14; --wallet-ink: #F6B07F; --step-on: #3B1A14; --step-on-ink: #F6B07F;
+  --display: "Barlow Condensed", "Oswald", "Arial Narrow", sans-serif;
+  --sans: "Barlow", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --round: var(--display);
   font-synthesis-weight: none;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --page: #000000; --app: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: rgba(235, 235, 245, .62); --sep: rgba(84, 84, 88, .55);
-  --fill: rgba(120, 120, 128, .26); --tint: #2997ff; --green: #30d158; --green-bg: rgba(48, 209, 88, .16); --orange: #ff9f0a; --orange-bg: rgba(255, 159, 10, .16);
-  --purple: #bf5af2; --purple-bg: rgba(191, 90, 242, .16); --bar: rgba(22, 22, 24, .78); --scrim: rgba(0, 0, 0, .55); --hero-a: #f5f5f7; --frame: #2c2c2e; color-scheme: dark } }
+  --page: #1E0E0B; --app: #1E0E0B; --card: #321914; --ink: #F4ECE6; --ink2: rgba(244, 236, 230, .66); --sep: rgba(246, 176, 127, .20); --fill: rgba(246, 176, 127, .10);
+  --tint: #F6B07F; --on-tint: #2A120E; --green: #8FD19E; --green-bg: rgba(143, 209, 158, .14); --orange: #FF9B73; --orange-bg: rgba(255, 155, 115, .14);
+  --purple: #F4A3B5; --purple-bg: rgba(244, 163, 181, .12); --bar: #1E0E0B; --scrim: rgba(0, 0, 0, .6); --hero-a: #FBF3EE; --frame: #0F0605;
+  --burgundy: #8E0C27; --choc: #3B1A14; --apricot: #F6B07F; --offwhite: #F4ECE6; --ai: #8E0C27; --ai-ink: #F4ECE6; --wallet: #3B1A14; --wallet-ink: #F6B07F; --step-on: #8E0C27; --step-on-ink: #F4ECE6; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --page: #000000; --app: #000000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: rgba(235, 235, 245, .62); --sep: rgba(84, 84, 88, .55);
-  --fill: rgba(120, 120, 128, .26); --tint: #2997ff; --green: #30d158; --green-bg: rgba(48, 209, 88, .16); --orange: #ff9f0a; --orange-bg: rgba(255, 159, 10, .16);
-  --purple: #bf5af2; --purple-bg: rgba(191, 90, 242, .16); --bar: rgba(22, 22, 24, .78); --scrim: rgba(0, 0, 0, .55); --hero-a: #f5f5f7; --frame: #2c2c2e; color-scheme: dark }
+  --page: #1E0E0B; --app: #1E0E0B; --card: #321914; --ink: #F4ECE6; --ink2: rgba(244, 236, 230, .66); --sep: rgba(246, 176, 127, .20); --fill: rgba(246, 176, 127, .10);
+  --tint: #F6B07F; --on-tint: #2A120E; --green: #8FD19E; --green-bg: rgba(143, 209, 158, .14); --orange: #FF9B73; --orange-bg: rgba(255, 155, 115, .14);
+  --purple: #F4A3B5; --purple-bg: rgba(244, 163, 181, .12); --bar: #1E0E0B; --scrim: rgba(0, 0, 0, .6); --hero-a: #FBF3EE; --frame: #0F0605;
+  --burgundy: #8E0C27; --choc: #3B1A14; --apricot: #F6B07F; --offwhite: #F4ECE6; --ai: #8E0C27; --ai-ink: #F4ECE6; --wallet: #3B1A14; --wallet-ink: #F6B07F; --step-on: #8E0C27; --step-on-ink: #F4ECE6; color-scheme: dark }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; }
@@ -206,6 +209,131 @@ button.cell:active, .tap:active { background: var(--fill); }
 .who { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; flex: none; }
 .cyc { width: 64px; border: 0; background: var(--fill); border-radius: 8px; padding: 5px 8px; font: inherit; font-size: 15px; color: var(--ink); text-align: center; }
 
+
+/* ================= M&S Food-inspired November restyle (student concept) =================
+   Square corners, no shadows, condensed caps headings, letter-spaced eyebrows, typewriter body copy, outlined buttons with a thin arrow. */
+body { letter-spacing: 0; }
+.gnav { backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 1px solid var(--sep); }
+.gnav .logo { font-family: var(--display); font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; color: var(--tint); }
+.gnav nav { font-family: var(--sans); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; }
+.seg { border-radius: 0; background: transparent; border: 1px solid var(--ink); padding: 0; gap: 0; }
+.seg button { border-radius: 0; font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 5px 10px; }
+.seg button.on { background: var(--ink); color: var(--page); box-shadow: none; }
+
+/* hero: split block, burgundy colour panel + chocolate panel */
+.hero { max-width: 1024px; margin: 32px auto 0; padding: 0; text-align: left; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  margin-left: max(22px, env(safe-area-inset-left, 0px)); margin-right: max(22px, env(safe-area-inset-right, 0px)); }
+@media (min-width: 1069px) { .hero { margin-left: auto; margin-right: auto; } }
+.hero .hero-main { background: var(--burgundy); color: var(--offwhite); padding: 56px 44px 48px; }
+.hero .hero-side { background: var(--choc); color: var(--apricot); padding: 48px 40px; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; }
+.hero .eyebrow, .eyebrow-sm { font-family: var(--sans); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .16em; color: inherit; }
+.hero h1 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(48px, 6vw, 76px); line-height: .98; margin: 10px 0 18px; color: var(--offwhite); text-wrap: balance; }
+.hero p { font-family: var(--mono); font-weight: 300; font-size: 15px; line-height: 1.75; letter-spacing: .04em; color: var(--offwhite); opacity: .95; max-width: 520px; margin: 0; text-wrap: pretty; }
+.note-pill { border-radius: 0; background: transparent; border: 1px solid currentColor; color: var(--offwhite); font-family: var(--sans); font-weight: 500; font-size: 13px; letter-spacing: .02em; padding: 9px 16px; margin-top: 26px; }
+.hero .hero-side b { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(34px, 3.6vw, 46px); line-height: 1; letter-spacing: .01em; }
+.hero .hero-side span { font-family: var(--mono); font-weight: 300; font-size: 14px; line-height: 1.7; letter-spacing: .04em; color: var(--apricot); opacity: .9; }
+.arrow { display: inline-block; width: 22px; height: 12px; margin-left: 8px; vertical-align: middle; }
+
+/* tour */
+.stage { padding-top: 48px; }
+.tour h2 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 46px; line-height: 1; margin-top: 8px; }
+.tour .lead { font-family: var(--mono); font-weight: 300; font-size: 14px; line-height: 1.7; letter-spacing: .04em; }
+.steps { gap: 8px; }
+.steps button { border-radius: 0; background: var(--card); padding: 14px 16px; }
+.steps button:hover { background: var(--fill); outline: 1px solid var(--sep); }
+.steps button.on { background: var(--step-on); color: var(--step-on-ink); box-shadow: none; }
+.steps button.on span.d { color: var(--offwhite); opacity: .85; }
+.steps .i { border-radius: 0; background: transparent; border: 1px solid currentColor; font-family: var(--mono); font-weight: 500; }
+.steps button.on .i { background: var(--apricot); color: var(--choc); border-color: var(--apricot); }
+.steps b { font-family: var(--sans); font-weight: 600; letter-spacing: 0; }
+.steps span.d, .fine { font-family: var(--mono); font-weight: 300; letter-spacing: .03em; }
+.steps span.d { font-size: 13px; line-height: 1.6; }
+.fine { line-height: 1.75; border-top: 1px solid var(--sep); }
+.fine strong { font-family: var(--sans); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+
+/* device + app chrome */
+.device { box-shadow: none; }
+.status { font-family: var(--sans); }
+.navbar .left { font-family: var(--sans); font-weight: 500; }
+#dateline { font-family: var(--mono) !important; font-size: 12px !important; letter-spacing: .08em; text-transform: uppercase; }
+.avatar { background: var(--burgundy); color: var(--offwhite); font-family: var(--display); font-size: 17px; }
+.ltitle { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 40px; line-height: 1; margin: 8px 0 6px; }
+.lsub, .t2, .why, .sheet .t2 { font-family: var(--mono); font-weight: 300; letter-spacing: .02em; }
+.lsub { font-size: 13px; line-height: 1.6; }
+.t2 { line-height: 1.5; }
+.hdr { font-family: var(--sans); font-weight: 700; font-size: 12px; letter-spacing: .16em; margin: 24px 2px 8px; }
+.hdr.big { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: 26px; letter-spacing: .01em; line-height: 1; }
+.group { border-radius: 0; }
+.t1 { font-family: var(--sans); letter-spacing: 0; }
+.cell + .cell::before { height: 1px; }
+.price { font-family: var(--mono); font-weight: 500; letter-spacing: 0; }
+.strike { font-family: var(--mono); }
+.badge { border-radius: 0; font-family: var(--sans); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.btn { border-radius: 0; background: transparent; color: var(--ink); border: 1px solid currentColor; font-family: var(--sans); font-weight: 500; letter-spacing: .01em; padding: 8px 14px; }
+.btn.fill { background: var(--tint); color: var(--on-tint); border-color: var(--tint); }
+.btn.lg { border-radius: 0; padding: 15px 18px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+.btn.lg::after, .ai-card .btn.fill::after { content: ""; flex: none; width: 22px; height: 12px; margin-left: 10px; display: inline-block; vertical-align: middle; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 12' fill='none' stroke='black' stroke-width='1.3'%3E%3Cpath d='M0 6h20.5M15.5 1l5 5-5 5'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 12' fill='none' stroke='black' stroke-width='1.3'%3E%3Cpath d='M0 6h20.5M15.5 1l5 5-5 5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.art { border-radius: 0; }
+.art.xl { border-radius: 0; }
+
+/* AI list card = burgundy panel */
+.ai-card { border-radius: 0; background: var(--ai); color: var(--ai-ink); padding: 22px 20px 20px; }
+.ai-card::after { display: none; }
+.ai-card .k { font-family: var(--sans); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; opacity: 1; }
+.ai-card .h { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 32px; line-height: 1; margin: 8px 0 8px; }
+.ai-card .s { font-family: var(--mono); font-weight: 300; font-size: 13px; line-height: 1.65; letter-spacing: .03em; opacity: .95; }
+.ai-card .acts { margin-top: 16px; flex-wrap: wrap; }
+.ai-card .btn { background: transparent; color: var(--ai-ink); border-color: var(--ai-ink); backdrop-filter: none; }
+.ai-card .btn.fill { background: transparent; color: var(--ai-ink); display: inline-flex; align-items: center; }
+.ai-card .btn:hover { background: rgba(255,255,255,.08); }
+.conf, .conf i, .mini, .mini i { border-radius: 0; }
+.xbtn { border-radius: 0; }
+
+/* savings */
+.save-hero { border-radius: 0; }
+.ring .c b, .celebrate .amt { font-family: var(--display); font-weight: 600; letter-spacing: 0; }
+.ring .c b { font-size: 38px; }
+.ring .c span { font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .04em; }
+.ring svg circle[stroke-linecap] { stroke-linecap: butt; }
+.bars .b { font-family: var(--mono); font-size: 10px; }
+.bars .b i { border-radius: 0; }
+.bars .b em { font-family: var(--mono); font-weight: 500; }
+
+/* compare */
+.phead, .offer { border-radius: 0; }
+.offer .lbl { font-family: var(--sans); letter-spacing: .14em; }
+.search { border-radius: 0; background: var(--card); border: 1px solid var(--sep); }
+.search input { font-family: var(--mono); font-size: 15px; letter-spacing: .02em; }
+
+/* wallet = chocolate panel with apricot heading */
+.pcard { border-radius: 0; background: var(--wallet); color: var(--wallet-ink); box-shadow: none; }
+.pcard .big { font-family: var(--display); font-weight: 600; font-size: 54px; line-height: 1; letter-spacing: 0; }
+.pcard .t2, .pcard span { color: inherit; }
+
+/* tab bar, FAB */
+.tabbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--page); border-top: 1px solid var(--sep); }
+.tabbar button { font-family: var(--sans); font-weight: 600; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.fab { border-radius: 0; box-shadow: none; background: var(--tint); color: var(--on-tint); font-family: var(--sans); font-weight: 600; letter-spacing: .02em; padding: 13px 18px; }
+
+/* sheets, toast, forms */
+.sheet { border-radius: 0; background: var(--app); }
+.sheet .grab::before { border-radius: 0; height: 3px; background: var(--ink2); opacity: .5; }
+.sheet h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 30px; line-height: 1.02; margin: 6px 0 8px; }
+.rcpt { border-radius: 0; font-family: var(--mono); }
+.scanner { border-radius: 0; background: #1E0E0B; }
+.scanner::before { border-radius: 0; border-color: rgba(246, 176, 127, .8); }
+.scanner::after { background: var(--apricot); box-shadow: none; }
+.field label { font-family: var(--sans); font-weight: 700; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding-left: 0; }
+.field input, .field select, .cyc { border-radius: 0; border: 1px solid var(--sep); font-family: var(--mono); font-size: 15px; letter-spacing: .02em; }
+.toast { border-radius: 0; background: var(--choc); color: var(--apricot); box-shadow: none; font-family: var(--sans); letter-spacing: .02em; }
+.chk { border-radius: 0; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--tint); outline-offset: 2px; }
+.concept { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .04em; color: var(--ink2); margin: 14px 0 0; line-height: 1.6; }
+
+@media (max-width: 980px) { .hero { grid-template-columns: minmax(0, 1fr); } .hero .hero-side { padding: 28px 44px 32px; } }
+
 @media (prefers-reduced-motion: reduce) {
   .sheet, .scrim, .toast { animation: fade .2s ease; }
   .scanner::after { animation: none; top: 84px; }
@@ -238,14 +366,22 @@ button.cell:active, .tap:active { background: var(--fill); }
 </div></header>
 
 <section class="hero">
-  <div class="eyebrow">Smart cookies 格咗未</div>
-  <h1>Groceries,<br>figured out.</h1>
-  <p>Your AI list knows what's running out. Every price is the real price after offers and your coupons. And you can see how much you've saved.</p>
-  <span class="note-pill">Interactive demo · sample data, not live prices or real offers</span>
+  <div class="hero-main">
+    <div class="eyebrow">Smart cookies 格咗未</div>
+    <h1>Groceries,<br>figured out.</h1>
+    <p>Your AI list knows what's running out. Every price is the real price after offers and your coupons. And you can see how much you've saved.</p>
+    <span class="note-pill">Interactive demo · sample data, not live prices or real offers</span>
+  </div>
+  <a class="hero-side" href="#try" style="text-decoration:none">
+    <div class="eyebrow-sm">November picks</div>
+    <b>Try the app</b>
+    <span>Tap through the AI list, compare, savings and wallet on the phone below.</span>
+  </a>
 </section>
 
 <div class="stage" id="try">
   <section class="tour" id="features" aria-label="Feature tour">
+    <div class="eyebrow-sm" style="color:var(--tint)">If you try one thing</div>
     <h2>Take the tour.</h2>
     <p class="lead">Tap a feature to see it on the phone, or just use the app.</p>
     <ol class="steps" id="steps"></ol>
@@ -266,7 +402,7 @@ button.cell:active, .tap:active { background: var(--fill); }
   </div></div>
 </div>
 
-<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Smart cookies is a student concept and is not affiliated with any retailer.</p>
+<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Smart cookies is a student concept and is not affiliated with any retailer. <strong>Design note:</strong> the colours and type are a student homage to the M&amp;S Food website's November style; this page is not made by, endorsed by or affiliated with Marks &amp; Spencer. No M&amp;S logos, images or fonts are used.</p>
 
 <script>
 /* ======================= real date and time (Hong Kong) ======================= */
@@ -696,7 +832,8 @@ function settingsSheet() {
     <div class="hdr">Family sharing · free</div>
     <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Included for every family</div></div><span class="chev">›</span></button></div>
     <button class="btn fill lg" type="button" data-act="invite" style="margin-top:12px">Invite a family member</button>
-    <p class="t2" style="margin-top:8px">Smart cookies is free for families. Brands pay us only when a receipt proves a sale.</p>`);
+    <p class="t2" style="margin-top:8px">Smart cookies is free for families. Brands pay us only when a receipt proves a sale.</p>
+    <p class="concept">Student concept. Visual style inspired by M&amp;S Food; not affiliated with or endorsed by Marks &amp; Spencer.</p>`);
   paintTheme();
 }
 function familySheet() {
