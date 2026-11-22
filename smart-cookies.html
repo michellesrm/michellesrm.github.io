@@ -659,6 +659,10 @@ function list() {
   const uses = WATCH.filter(k => HOME[k].useBy);
   return `
   <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Smart cookies AI.</p>
+  <div class="hdr">My trip</div>
+  <div class="group">${Object.entries(trip).map(([s, its]) => `<div class="cell"><span class="storedot" style="background:${STORES[s].c}">${STORES[s].name[0]}</span><div class="main">
+    <div class="t1 b">${STORES[s].name} · ${STORES[s].branch}</div><div class="t2">${its.map(i => esc(P[i.k].short)).join(", ")}</div></div>
+    <div style="text-align:right">${isOpen(s) ? `<span class="badge g">Open till ${STORES[s].close}</span>` : `<span class="badge o">Closed · opens ${OPENS}</span>`}<div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
   <div class="ai-card"><div class="k">${sparkle(15)} AI GROCERY LIST · THIS WEEK</div>
     <div class="h">${items.length} things before you run out</div>
     <div class="s">${hk(total)} at the stores we picked, after offers and coupons. Buying where the sticker is lowest: ${hk(shelfTotal)}. You save <b>${hk(shelfTotal - total)}</b>.</div>
@@ -681,13 +685,9 @@ function list() {
       <div class="t2">${b.q} × ${P[k].size} · ${STORES[b.s].name}${b.o ? " · " + esc(b.o) : ""}</div>
       <div class="why">${sparkle(12)}<span>${Math.round(dealPct(k) * 100)}% below its usual price this week. You'll need more in about ${Math.round(daysLeft(k))} days, and it keeps.</span></div>
       <div class="row" style="margin-top:8px"><button class="btn" type="button" data-open="${k}" style="margin-left:auto;padding:5px 12px;font-size:13px">Compare</button></div></div></div>`; }).join("")}</div>
-  <p class="t2" style="margin:8px 16px">We only say "stock up now", never "wait for a sale": waiting guesses wrong too often.</p>` : ""}
+` : ""}
   <div class="hdr">Use first</div>
   <div class="group">${uses.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Bought ${HOME[k].last} · best before ${HOME[k].useBy}</div></div><span class="badge o">Use by ${HOME[k].useBy}</span></div>`).join("")}</div>
-  <div class="hdr">Your trip</div>
-  <div class="group">${Object.entries(trip).map(([s, its]) => `<div class="cell"><span class="storedot" style="background:${STORES[s].c}">${STORES[s].name[0]}</span><div class="main">
-    <div class="t1 b">${STORES[s].name} · ${STORES[s].branch}</div><div class="t2">${its.map(i => esc(P[i.k].short)).join(", ")}</div></div>
-    <div style="text-align:right">${isOpen(s) ? `<span class="badge g">Open till ${STORES[s].close}</span>` : `<span class="badge o">Closed · opens ${OPENS}</span>`}<div class="t2" style="margin-top:3px">${STORES[s].walk} min walk</div></div></div>`).join("")}</div>
   <div class="hdr">Not needed this week</div>
   <div class="group">${skip.map(k => `<div class="cell wa">${art(k)}<div class="main"><div class="t1">${esc(P[k].short)}</div><div class="t2">Lasts about ${Math.round(daysLeft(k))} more days</div></div></div>`).join("")}</div>`;
 }
