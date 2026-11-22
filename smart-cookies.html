@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Basket Radar Demo</title>
+<title>Smart cookies Demo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -232,13 +232,13 @@ button.cell:active, .tap:active { background: var(--fill); }
 <body>
 
 <header class="gnav"><div class="in">
-  <span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.4 11a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Basket Radar</span>
+  <span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.4 11a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Smart cookies</span>
   <nav><a href="#try">Try it</a><a href="#features">Features</a><a href="#about">About the data</a></nav>
   <div class="seg" role="group" aria-label="Appearance" data-themeseg></div>
 </div></header>
 
 <section class="hero">
-  <div class="eyebrow">Basket Radar 慳家雷達</div>
+  <div class="eyebrow">Smart cookies 格咗未</div>
   <h1>Groceries,<br>figured out.</h1>
   <p>Your AI list knows what's running out. Every price is the real price after offers and your coupons. And you can see how much you've saved.</p>
   <span class="note-pill">Interactive demo · sample data, not live prices or real offers</span>
@@ -266,7 +266,7 @@ button.cell:active, .tap:active { background: var(--fill); }
   </div></div>
 </div>
 
-<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Basket Radar is a student concept and is not affiliated with any retailer.</p>
+<p class="fine" id="about">Prices and offers at Wellcome, ParknShop, AEON and Jasons (Market Place) for the Kowloon Dairy, Nestlé Dairy Farm, Vita, Trappist, Meiji and Meadows low-fat milks and DQY eggs are copied from the Consumer Council's Online Price Watch open data, 17 November 2026. Fusion, city'super, M&S Food and Best Mart 360 are not in that file; their prices here stand in for shopper shelf reports and are invented. Product photos of the Kowloon Dairy and Nestlé cartons were supplied by the team. Every other price, coupon, branch, opening time, the household, its savings, points, the brand offer and the survey are invented for this demo. "Hillside Farm" is a fictional brand. Other product pictures are generic illustrations, not real packaging. Smart cookies is a student concept and is not affiliated with any retailer.</p>
 
 <script>
 /* ======================= real date and time (Hong Kong) ======================= */
@@ -481,7 +481,7 @@ function list() {
   const skip = WATCH.filter(k => daysLeft(k) > 5 && !ups.includes(k));
   const uses = WATCH.filter(k => HOME[k].useBy);
   return `
-  <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Basket Radar AI.</p>
+  <h1 class="ltitle">My List</h1><p class="lsub">Made for your family by Smart cookies AI.</p>
   <div class="ai-card"><div class="k">${sparkle(15)} AI GROCERY LIST · THIS WEEK</div>
     <div class="h">${items.length} things before you run out</div>
     <div class="s">${hk(total)} at the stores we picked, after offers and coupons. Buying where the sticker is lowest: ${hk(shelfTotal)}. You save <b>${hk(shelfTotal - total)}</b>.</div>
@@ -572,7 +572,7 @@ function watch() {
 
 function savings() {
   const now = savedNow(), pct = Math.min(1, now / SAVED.goal), C = 2 * Math.PI * 74, max = Math.max(...SAVED.months.map(m => m[1]));
-  return `<h1 class="ltitle">Savings</h1><p class="lsub">Money Basket Radar found for you.</p>
+  return `<h1 class="ltitle">Savings</h1><p class="lsub">Money Smart cookies found for you.</p>
   <div class="save-hero">
     <div class="ring"><svg viewBox="0 0 170 170"><circle cx="85" cy="85" r="74" fill="none" stroke="var(--fill)" stroke-width="12"/>
       <circle cx="85" cy="85" r="74" fill="none" stroke="var(--green)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/></svg>
@@ -593,7 +593,7 @@ function savings() {
 function wallet() {
   const used = COUPONS.filter(c => WATCH.includes(c.item));
   return `<h1 class="ltitle">Wallet</h1><p class="lsub">Points from every chain, and the coupons you already have.</p>
-  <div class="pcard"><div class="row" style="justify-content:space-between"><span style="font-weight:600">Basket Radar Points</span>${sparkle(18, "#fff")}</div>
+  <div class="pcard"><div class="row" style="justify-content:space-between"><span style="font-weight:600">Smart cookies Points</span>${sparkle(18, "#fff")}</div>
     <div><div class="big">${POINTS.toLocaleString()} <span style="font-size:17px;font-weight:600">points</span></div><div style="opacity:.9;font-size:15px">Worth ${hk(POINTS * PT)} · ${POINTS >= VOUCHER ? `${Math.floor(POINTS / VOUCHER)} × HK$10 e-voucher ready` : `${VOUCHER - POINTS} more for a HK$10 e-voucher`}</div></div></div>
   <p class="t2" style="margin:8px 16px">500 points = a HK$10 e-voucher at any chain. Points are never paid out as cash.</p>
   ${SURVEYED ? "" : `<div class="hdr">Brand survey · for verified buyers</div><div class="offer"><div class="lbl">Survey · paid by Hillside Farm</div>
@@ -696,7 +696,7 @@ function settingsSheet() {
     <div class="hdr">Family sharing · free</div>
     <div class="group"><button class="cell" type="button" data-act="family"><div class="main"><div class="t1">Shared list, waste dashboard, restock cycles</div><div class="t2">Included for every family</div></div><span class="chev">›</span></button></div>
     <button class="btn fill lg" type="button" data-act="invite" style="margin-top:12px">Invite a family member</button>
-    <p class="t2" style="margin-top:8px">Basket Radar is free for families. Brands pay us only when a receipt proves a sale.</p>`);
+    <p class="t2" style="margin-top:8px">Smart cookies is free for families. Brands pay us only when a receipt proves a sale.</p>`);
   paintTheme();
 }
 function familySheet() {
@@ -746,7 +746,7 @@ const STEPS = [
   ["Watchlist", "Staples tracked like stocks: price, change, real deals, stock left.", () => { TAB = "watch"; }],
   ["Stock up now, never \"wait\"", "For things that keep: a real deal, 10%+ below usual, when you'll need more soon.", () => { TAB = "list"; render(); setTimeout(() => { const o = $("#stockup"); o && o.scrollIntoView({ block: "start" }); }, 30); return 1; }],
   ["Log a shop, see your saving", "Snap a receipt, share an e-receipt, forward an order email, or just tick what you bought.", () => { TAB = "list"; render(); receiptSheet(0); return 1; }],
-  ["Savings", "Every dollar Basket Radar found you, by month and by source.", () => { TAB = "savings"; }],
+  ["Savings", "Every dollar Smart cookies found you, by month and by source.", () => { TAB = "savings"; }],
   ["Coupons, points and surveys", "Coupons applied for you; points at any chain (500 = a HK$10 e-voucher); paid brand surveys.", () => { TAB = "wallet"; }],
   ["Family sharing, free", "Shared list, waste dashboard and restock cycles, included for every family.", () => { TAB = "list"; render(); familySheet(); return 1; }],
   ["Light or dark", "Pick your look from the profile button.", () => { render(); settingsSheet(); return 1; }]
